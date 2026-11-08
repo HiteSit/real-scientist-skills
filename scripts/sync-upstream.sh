@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Merge mattpocock/skills main into this fork, then:
-#   - keep the fork's own README.md and CHANGELOG.md,
+#   - keep the fork's own README.md, CHANGELOG.md and MAINTAINING.md,
 #   - delete every path in fork-removed.txt again,
 #   - rebuild customized/ with scripts/build.sh,
 # and commit the merge. Exits non-zero, leaving the merge in progress, on any
@@ -9,7 +9,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-OWNED=(README.md CHANGELOG.md)
+OWNED=(README.md CHANGELOG.md MAINTAINING.md)
 git remote get-url upstream >/dev/null 2>&1 || git remote add upstream https://github.com/mattpocock/skills.git
 git fetch --quiet upstream main
 
