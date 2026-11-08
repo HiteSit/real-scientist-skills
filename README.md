@@ -66,12 +66,24 @@ Each step in detail: [the science flow, step by step](./skills/science/README.md
 
 ## What lives where
 
+The science skills keep everything they write in a `.science/` folder at the root of your repo, the way Matt's local issue tracker uses `.scratch/`:
+
 ```
-main                      .science/SETUP.md and the promoted protocol
-science/<study>           one branch per study, never merged into main
-  .science/<study>/       STUDY.md, NOTEBOOK.md, dashboard.html, research/, probes/
-protocol/<step>           one branch per promotion, merged into main by pull request
+.science/
+  SETUP.md              your setup, on main
+  <study>/              one folder per study, on that study's branch
+    STUDY.md            the starting direction, frozen
+    NOTEBOOK.md         the current direction, probe map and probe index
+    dashboard.html      the study's dashboard
+    research/           desk-research items
+    probes/NN-<slug>/   one folder per probe
 ```
+
+Each part lives on its own git branch:
+
+- `main` has `.science/SETUP.md` and the promoted protocol, in the folders you approved.
+- `science/<study>` has one study's `.science/<study>/` folder. It's cut from `main`, and after each promotion it merges `main` back in. It never merges into `main` itself.
+- `protocol/<step>` carries one promoted step into `main` through a pull request.
 
 The full layout: [folder layout](./skills/science/README.md#folder-layout).
 
@@ -115,11 +127,21 @@ For the full list and what each skill does, see [Matt's README](https://github.c
 
 ## Install
 
-```bash
-git clone https://github.com/HiteSit/real-scientist-skills
+Ask your coding agent to do it. Paste this prompt:
+
+```text
+Install the skills from https://github.com/HiteSit/real-scientist-skills.
+
+1. Clone the repo, or pull it if I already have a clone.
+2. Find my agent's skills folder (for example ~/.claude/skills, ~/.agents/skills, or .claude/skills in this project). Ask me if you're not sure.
+3. Symlink the six skills in skills/science/ into that folder, so a git pull updates them.
+4. Check whether I already have Matt Pocock's skills (for example grilling, tdd, domain-modeling).
+   - If I do, keep mine.
+   - If I don't, also symlink every skill folder under skills/engineering/ and skills/productivity/. When customized/<skill> exists, link that folder instead.
+5. Tell me what you installed and what you skipped. Then remind me to run /setup-science once in my repo, and /setup-matt-pocock-skills too if you installed Matt's skills.
 ```
 
-Each skill is a folder with a `SKILL.md`. Copy or symlink the ones you want into your agent's skills folder. If a skill has a folder under `customized/`, use that one. Then run `/setup-matt-pocock-skills` and `/setup-science` once in your repo. To update, run `git pull`.
+To update, ask your agent to pull the repo.
 
 ## This fork
 
