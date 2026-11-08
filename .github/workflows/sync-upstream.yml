@@ -1,0 +1,38 @@
+name: Sync upstream
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+
+concurrency: sync-upstream
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge mattpocock/skills, re-delete removed paths, rebuild customizations
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          scripts/sync-upstream.sh | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Push
+        run: git push origin HEAD:main
+
+      - name: Open an issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "Upstream sync failed ($(date -u +%F))" \
+            --body "The weekly merge of mattpocock/skills failed: unresolved conflict, broken customization anchor, or a push GITHUB_TOKEN may not make (upstream changed .github/workflows). Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Fix locally with \`scripts/sync-upstream.sh\`, then commit and push."

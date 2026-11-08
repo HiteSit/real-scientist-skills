@@ -1,0 +1,5 @@
+interface:
+  display_name: "To Study"
+  short_description: "Open a science study from the current conversation"
+policy:
+  allow_implicit_invocation: false

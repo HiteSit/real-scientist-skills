@@ -1,0 +1,5 @@
+interface:
+  display_name: "Promote"
+  short_description: "Promote a validated probe into the main protocol"
+policy:
+  allow_implicit_invocation: false

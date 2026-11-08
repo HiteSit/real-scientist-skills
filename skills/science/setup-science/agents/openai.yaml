@@ -1,0 +1,5 @@
+interface:
+  display_name: "Setup Science"
+  short_description: "Configure this repo for the science skills"
+policy:
+  allow_implicit_invocation: false

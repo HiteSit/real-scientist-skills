@@ -1,0 +1,5 @@
+interface:
+  display_name: "Experiment"
+  short_description: "Run a science study one probe at a time"
+policy:
+  allow_implicit_invocation: false

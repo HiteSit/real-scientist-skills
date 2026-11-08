@@ -1,0 +1,11 @@
+# Upstream paths this fork deletes. scripts/sync-upstream.sh deletes them again after
+# every upstream merge, so upstream edits to them never come back. One path per line.
+.claude-plugin
+.changeset
+package.json
+package-lock.json
+scripts/sync-plugin-version.mjs
+.github/workflows/release.yml
+.github/workflows/needs-info.yml
+.github/workflows/triage-label.yml
+.github/ISSUE_TEMPLATE
