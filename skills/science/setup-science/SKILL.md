@@ -16,7 +16,7 @@ This is a prompt-driven skill, not a deterministic script. Explore, present what
 
 Look at the repo before asking anything, so each question can lead with a recommended answer:
 
-- `git remote -v`, the current branch, and whether `main` exists.
+- `git remote -v` and the current branch. The current branch becomes the **base branch**: studies are cut from it and promotions return to it. Confirm it with the user.
 - `CLAUDE.md` / `AGENTS.md`: is there already a `## Science skills` section?
 - `.science/SETUP.md`: does a previous run's output exist? If so, this run updates it.
 - Environment files (`environment.yml`, `pixi.toml`, `requirements.txt`, `pyproject.toml`, `Dockerfile`, `renv.lock`, and the like), job scripts for a scheduler, notebooks, existing data and output folders.
@@ -50,6 +50,9 @@ Show the user a draft of `.science/SETUP.md` and of the `## Science skills` bloc
 ## Domain
 <field>: <one line on the kind of work>
 
+## Base branch
+<the branch this setup ran on>
+
 ## Tools and environments
 ## Compute
 ## Data
@@ -61,13 +64,14 @@ Gitignore probe outputs above <N> MB.
 The `## Science skills` block goes into `CLAUDE.md` if it exists, else `AGENTS.md`; if neither exists, ask which to create. It states the conventions every science session follows:
 
 - `.science/` is tracked by git, never gitignored.
-- Each study lives on its own `science/<study>` branch, one level deep (git refuses `science/<study>/...` beside `science/<study>`), cut from `main` or, for a spin-off, from its parent study's branch.
-- Several studies can run at once, each in its own git worktree or with its own agent.
+- Each study lives on its own `science/<study>` branch, one level deep (git refuses `science/<study>/...` beside `science/<study>`), cut from the base branch named in `.science/SETUP.md` or, for a spin-off, from its parent study's branch.
+- A session works on one study: `/experiment <study>` loads it, and work for another study starts in a new session.
+- Several studies can run at once, each in its own session, git worktree or agent.
 - One commit per probe on the study branch.
-- Promoted protocol reaches `main` only through a `protocol/<step>` branch and a pull request.
-- A study branch never merges into `main`; it merges `main` in after each promotion.
+- Promoted protocol reaches the base branch only through a `protocol/<step>` branch and a pull request.
+- A study branch never merges into the base branch; it merges the base branch in after each promotion.
 - The stack is in `.science/SETUP.md`.
 
-Commit both on `main` (`science: setup`), so every study branch cut afterwards inherits them.
+Commit both on the base branch (`science: setup`), so every study branch cut afterwards inherits them.
 
-Done when `.science/SETUP.md` exists on `main` with every section filled or marked "not used", and the agent docs carry the `## Science skills` block. Then tell the user the next step is `/to-study`.
+Done when `.science/SETUP.md` exists on the base branch with every section filled or marked "not used", and the agent docs carry the `## Science skills` block. Then tell the user the next step is `/to-study`.

@@ -57,11 +57,11 @@ Done when a reader could plan a first probe from it and every section is either 
 
 ### 5. Open the study
 
-1. Cut `science/<study>` from `main`, or, for a spin-off, from the starting point agreed at the split (see **Off-axis** in `lab-notebook`). If the study runs in its own worktree or with another agent, create the branch there or hand it over, as agreed.
-2. Write `.science/<study>/STUDY.md`, then treat it as **frozen**.
+1. Cut `science/<study>` from the base branch named in `.science/SETUP.md`, or, for a spin-off, from the starting point agreed at the split (see **Off-axis** in `lab-notebook`). If the study runs in its own worktree or with another agent, create the branch there or hand it over, as agreed.
+2. Write `.science/<study>/STUDY.md`. Its starting sections are **frozen** from here on (see `lab-notebook`).
 3. Write `.science/<study>/NOTEBOOK.md`: current direction and probe map copied from `STUDY.md`, the **Not yet mapped** list, an empty drift log, and no probes run yet.
 4. Create an empty `probes/` folder and the study dashboard (see `lab-notebook`).
 5. Commit: `study: <study>: open`.
 6. If the frontier holds research entries, call the Skill tool with `desk-research` to dispatch them now, so they are read while the first probe is planned.
 
-Done when the branch exists with that commit and the notebook's probe map has a non-empty frontier. Tell the user the next step is `/experiment`.
+Done when the branch exists with that commit and the notebook's probe map has a non-empty frontier. Tell the user the next step is `/experiment <study>`, in this session or a new one.

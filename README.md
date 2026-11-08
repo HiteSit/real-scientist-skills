@@ -26,10 +26,11 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 - **Plan one probe at a time.** A probe is a small experiment that fits in one session. The study keeps a rough map of probes, but each one is planned properly only when it's next.
 - **Predict before you run.** Each probe says what the result should show if your current belief is right. The prediction is written before anything runs.
 - **Start from a direction.** Results are allowed to change the direction and the map. Each change is logged against the probe that caused it.
-- **Scratch is free, the protocol is agreed.** Inside a probe, the agent organizes files however the work needs. Before anything joins the main protocol, you approve where it goes.
+- **Scratch is free, the protocol is agreed.** Inside a probe, the agent organizes files however the work needs. Before anything joins the protocol, you approve where it goes.
 - **Show results.** Each probe ends with a short brief and plots, and one dashboard shows the whole study.
 - **Keep dead ends.** A failed probe stays in the record, so nobody runs it again.
 - **You decide.** After every probe, the agent stops, asks how you read the result, and you choose the next step.
+- **One study per session.** `/experiment <study>` loads a study in any session and picks up where the last one stopped. When you ask about another study, the agent records it and gives you the command for a new session.
 - **Keep everything in git.** Each study has its own branch, with one commit per probe.
 
 ## The science flow
@@ -50,16 +51,16 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 └────────┤ continue / branch / drop
          │ promote
          ▼
-      /promote           agree where it goes, port it to protocol/<step>, regression check, PR into main
+      /promote           agree where it goes, port it to protocol/<step>, regression check, PR into the base branch
          │
          ▼
       stable protocol ─► /to-spec → /to-tickets → /implement-spec   (Matt's engineering flow)
 ```
 
-1. **`/setup-science`**, once per repo, records your field, tools, compute and data locations in `.science/SETUP.md`.
+1. **`/setup-science`**, once per repo, records your field, tools, compute and data locations in `.science/SETUP.md`. The branch you run it on becomes the **base branch**, usually `main`.
 2. **`/to-study`** asks just enough questions to frame the question, splits your plan into a rough probe map, and opens a `science/<study>` branch with a lab notebook.
-3. **`/experiment`** runs one probe per pass: plan it with a prediction, run it, show the result, talk it through with you, and record your decision. Questions that need reading go to **`desk-research`**, which works in the background.
-4. **`/promote`** moves a probe that held up into the main protocol, through a pull request with a regression check.
+3. **`/experiment <study>`** loads the study and runs one probe per pass: plan it with a prediction, run it, show the result, talk it through with you, and record your decision. Without a study name, it lists your studies and asks. Questions that need reading go to **`desk-research`**, which works in the background.
+4. **`/promote`** moves a probe that held up into the protocol on the base branch, through a pull request with a regression check.
 5. When the protocol stops changing, Matt's `/to-spec`, `/to-tickets` and `/implement-spec` take it from there.
 
 Each step in detail: [the science flow, step by step](./skills/science/README.md#the-flow-step-by-step).
@@ -70,9 +71,9 @@ The science skills keep everything they write in a `.science/` folder at the roo
 
 ```
 .science/
-  SETUP.md              your setup, on main
+  SETUP.md              your setup, on the base branch
   <study>/              one folder per study, on that study's branch
-    STUDY.md            the starting direction, frozen
+    STUDY.md            the starting direction, frozen; promotions and the outcome are added at the end
     NOTEBOOK.md         the current direction, probe map and probe index
     dashboard.html      the study's dashboard
     research/           desk-research items
@@ -81,9 +82,9 @@ The science skills keep everything they write in a `.science/` folder at the roo
 
 Each part lives on its own git branch:
 
-- `main` has `.science/SETUP.md` and the promoted protocol, in the folders you approved.
-- `science/<study>` has one study's `.science/<study>/` folder. It's cut from `main`, and after each promotion it merges `main` back in. It never merges into `main` itself.
-- `protocol/<step>` carries one promoted step into `main` through a pull request.
+- The **base branch** (usually `main`) has `.science/SETUP.md` and the promoted protocol, in the folders you approved. A study's `STUDY.md` arrives there with its first promotion, so the base branch shows every study that produced protocol.
+- `science/<study>` has one study's `.science/<study>/` folder. It's cut from the base branch, and after each promotion it merges the base branch back in. It never merges into the base branch itself.
+- `protocol/<step>` carries one promoted step into the base branch through a pull request.
 
 The full layout: [folder layout](./skills/science/README.md#folder-layout).
 
@@ -100,7 +101,8 @@ The full layout: [folder layout](./skills/science/README.md#folder-layout).
 - **Drift log**: every change of direction or of the map, each citing the probe that caused it.
 - **Desk research**: answering a question from papers, databases or datasets.
 - **Dead end**: a probe whose answer was no, kept so nobody reruns it.
-- **Protocol**: the promoted, rerunnable steps on `main`.
+- **Base branch**: the branch you ran `/setup-science` on, usually `main`. Studies start from it and promotions return to it.
+- **Protocol**: the promoted, rerunnable steps on the base branch.
 - **Promote**: moving a validated probe into the protocol.
 
 ## Skills
@@ -111,8 +113,8 @@ You start the first four by typing them. The agent can also load the last two on
 
 - **[setup-science](./skills/science/setup-science/SKILL.md)**: Set up a repo for the science skills. Run once.
 - **[to-study](./skills/science/to-study/SKILL.md)**: Frame the question, draw the probe map, and open the study's branch and notebook.
-- **[experiment](./skills/science/experiment/SKILL.md)**: Run the study one probe at a time.
-- **[promote](./skills/science/promote/SKILL.md)**: Move a validated probe into the main protocol.
+- **[experiment](./skills/science/experiment/SKILL.md)**: Load a study and run it one probe at a time.
+- **[promote](./skills/science/promote/SKILL.md)**: Move a validated probe into the protocol.
 - **[lab-notebook](./skills/science/lab-notebook/SKILL.md)**: The study's layout and formats: notebook, probe folders, result briefs, plots and dashboard.
 - **[desk-research](./skills/science/desk-research/SKILL.md)**: Gather papers, database records and data files in parallel, with citations and provenance.
 

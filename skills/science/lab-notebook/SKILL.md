@@ -13,9 +13,9 @@ The repo's stack (tools, environments, compute, data locations, heavy-output thr
 
 ```
 .science/
-  SETUP.md                    on main, written by setup-science
-  <study>/                    on science/<study> only
-    STUDY.md                  the starting direction, frozen
+  SETUP.md                    on the base branch, written by setup-science
+  <study>/                    on science/<study>
+    STUDY.md                  the starting direction, frozen; reaches the base branch with the first promotion
     NOTEBOOK.md               current direction, drift log, probe map, probe index
     dashboard.html            the study's one live dashboard, grown probe after probe
     dashboard.<ext>           the script that builds it
@@ -30,13 +30,18 @@ The repo's stack (tools, environments, compute, data locations, heavy-output thr
         <scripts, small inputs, outputs>
 ```
 
-Inside a probe folder, organise files however the probe needs; only `README.md`, `.gitignore` and `figures/` are fixed. The tree of the main protocol is a different matter: it is agreed with the human at promotion, never chosen alone.
+Inside a probe folder, organise files however the probe needs; only `README.md`, `.gitignore` and `figures/` are fixed. The protocol's tree is a different matter: it is agreed with the human at promotion, never chosen alone.
 
 Probe folders are `NN-<slug>`: `NN` counts probes in run order from `01`, `<slug>` says what the probe does. A number is never reused or renumbered: a dropped probe keeps its number, so the numbers stay a faithful history.
 
 ## STUDY.md
 
-The **direction** the study started from. Written once by `to-study`, then **frozen**: never edited again, because the gap between it and the notebook's current direction is the record of how far the experiments moved the study.
+The **direction** the study started from. Written once by `to-study`. Its starting sections are **frozen**: never edited again, because the gap between them and the notebook's current direction is the record of how far the experiments moved the study.
+
+Two sections at the end only grow, one line at a time:
+
+- **Promoted**: one line per promotion, written by `promote` identically on `protocol/<step>` and on the study branch. The first promotion carries `STUDY.md` to the base branch, so the base branch shows every study that has produced protocol.
+- **Outcome**: one line when the study closes: the answer, or why it was dropped, and the probes behind it. Commit it on the study branch (`study: <study>: close`). If the study has promoted anything, commit the same line on the base branch too.
 
 ```markdown
 # <Study title>
@@ -52,6 +57,12 @@ The **direction** the study started from. Written once by `to-study`, then **fro
 ## Constraints
 ## Starting probe map
 <the probe map as first charted: see below>
+
+## Promoted
+- `<step>` (`protocol/<step>`): from <NN-slug>, <NN-slug>
+
+## Outcome
+<answered | dropped>: <one line, with the probes behind it>
 ```
 
 ## NOTEBOOK.md
@@ -86,7 +97,7 @@ An **index**, not a store: each probe's detail lives in its own README, and the 
 - <what was tried, which probe showed it fails, so nobody reruns it>
 
 ## Spin-offs
-- [<study>](../<study>/NOTEBOOK.md) on `science/<study>`: <its question>, raised by <probe NN or the user's ask>, started from <`main` or this branch at probe NN>, run in <this session, another agent, or a worktree path>
+- [<study>](../<study>/NOTEBOOK.md) on `science/<study>`: <its question>, raised by <probe NN or the user's ask>, started from <the base branch or this branch at probe NN>, run in <a new session, another agent, or a worktree path>
 ```
 
 A drift log entry is written whenever a decision changes the current direction or reshapes the probe map (a phase added, dropped or reordered, a planned probe dropped), even slightly. Ticking a probe that ran as planned is not drift. No entry means the direction held.
@@ -111,12 +122,12 @@ Triage it into one of three homes, testing in this order:
 
 1. **Research entry**: it can be answered from existing sources, with nothing run. It goes on the map marked `(research)`.
 2. **New probe in this study**: its answer would change this study's current direction or map. It goes on the map, or under **Not yet mapped** if it cannot be phrased sharply yet. A probe in progress stays one question: the new one is its own probe, never an enlargement of the running one.
-3. **New study**: its answer would leave this study's direction untouched, because it asks a different question, often about a different system. It gets its own `science/<study>` branch and `.science/<study>/` directory through `/to-study`, with **Spun off from** filled in, and a line under **Spin-offs** here.
+3. **Another study**: its answer would leave this study's direction untouched, because it asks a different question, often about a different system. If an open study already covers it (check the `science/*` branches), it goes on that study's map in that study's session. Otherwise it gets its own `science/<study>` branch and `.science/<study>/` directory through `/to-study`, with **Spun off from** filled in, and a line under **Spin-offs** here.
 
 A new study runs **in parallel** with this one, not after it. Several studies at once is the normal shape of the work, and each keeps its own branch, directory and notebook, so they never collide. Agree two things with the user when splitting:
 
-- **Where it starts.** From `main`, when it needs only the shared protocol. From this study's branch at the probe that raised it, when it builds on this study's scratch work: it inherits those probes as they are. Promotion is not the way to share work between studies; promote a step only when it has earned a place in the protocol on its own merits.
-- **Who runs it.** This session, once it switches branch; another agent, handed the new study's `STUDY.md`; or a separate git worktree (`git worktree add -b science/<study> ../<repo>-<study> <start>`), so both studies run side by side in their own folders.
+- **Where it starts.** From the base branch, when it needs only the shared protocol. From this study's branch at the probe that raised it, when it builds on this study's scratch work: it inherits those probes as they are. Promotion is not the way to share work between studies; promote a step only when it has earned a place in the protocol on its own merits.
+- **Who runs it.** A **session is bound to one study**, so the default is a new session: give the user the exact command to start it (`/to-study` for a new study, `/experiment <study>` for an open one). Another agent, handed the new study's `STUDY.md`, or a separate git worktree (`git worktree add -b science/<study> ../<repo>-<study> <start>`) also work. This session switches branch only when the user asks for it, after the current probe's state is committed.
 
 Then confirm with the user before creating anything: one question naming the item, the home you recommend and the test that put it there, worded so "yes" accepts it. Their answer decides. When the item is new to this study (a new probe or research entry), adding it reshapes the map, so it also gets a **Drift log** entry citing the ask or the probe that raised it.
 

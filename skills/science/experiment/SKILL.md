@@ -1,6 +1,6 @@
 ---
 name: experiment
-description: Run a science study one probe at a time. Plan a probe with a prediction, run it, show the result as plots and a brief, grill the user on what it means, and let them decide the next step after every probe.
+description: Load a science study (/experiment <study>, from any session) and run it one probe at a time. Plan a probe with a prediction, run it, show the result as plots and a brief, grill the user on what it means, and let them decide the next step after every probe.
 disable-model-invocation: true
 ---
 
@@ -12,7 +12,17 @@ The study's **direction** is allowed to **drift**. `STUDY.md` is where the study
 
 Watch the **axis** the whole time. Whenever an ask from the user or a result leaves it, at any step, triage it as `lab-notebook` describes under **Off-axis** and confirm its home with the user before creating anything. Then return to the step you were on.
 
-You must be on a `science/<study>` branch with a `NOTEBOOK.md`. If not, tell the user to run `/to-study` and stop. Call the Skill tool with `lab-notebook` for the tree and formats, and read `.science/SETUP.md` for the domain and stack.
+## Load the study
+
+Every run starts by loading one **study**, so a fresh session continues exactly where the last one stopped, the way a wayfinder session picks up the next ticket from the map.
+
+1. **Pick it.** With `/experiment <study>`, the study is `science/<study>`. Without an argument, use the current branch if it is a `science/*` branch. Otherwise list the studies: for each `science/*` branch, read `.science/<study>/STUDY.md` and `NOTEBOOK.md` with `git show <branch>:<path>`, without switching branch, and show its question, last probe with verdict, and current direction; then ask which one to load. If there are no study branches, tell the user to run `/to-study` and stop.
+2. **Switch to it.** If the working tree has uncommitted changes, stop and ask the user what to do with them before switching. Then check out `science/<study>`.
+3. Call the Skill tool with `lab-notebook` for the tree and formats, and read `.science/SETUP.md` for the domain, stack and base branch.
+
+Done when you are on the study branch with its `NOTEBOOK.md` open.
+
+This session is now **bound** to the study. When an ask belongs to another study (see **Off-axis** in `lab-notebook`), record it where the triage says, then recommend a new session and give the user the exact command (`/experiment <other-study>` or `/to-study`). Switch branch in this session only when the user asks, after committing the current probe's state.
 
 ## The loop
 
@@ -20,7 +30,7 @@ Run steps 1 to 6 once per probe. One probe per pass, never two in parallel: the 
 
 ### 1. Orient
 
-Read `NOTEBOOK.md` (current direction, probe map, dead ends) and the README of the most recent probe.
+Read `NOTEBOOK.md` (current direction, probe map, dead ends) and the README of the most recent probe, including its **Decision** and **Next**: that is where the last session, possibly a different one, left the study.
 
 If the frontier holds research entries not yet dispatched, call the Skill tool with `desk-research` to start them in the background now; they run alongside the probe.
 
@@ -91,7 +101,7 @@ Done when the commit exists and the notebook reads correctly without opening the
 ## Leaving the loop
 
 - **promote**: tell the user the next step is `/promote` with this probe.
-- **The user stops**: the notebook already holds the state; the next session picks up at step 1.
-- **The question is answered**: say so at the checkpoint, and propose closing the study with a final line under **Current direction** that states the answer and the probes that support it.
+- **The user stops**: the notebook already holds the state; any later session continues with `/experiment <study>`.
+- **The question is answered**: say so at the checkpoint, and propose closing the study: a final line under **Current direction**, and the **Outcome** line in `STUDY.md` (see `lab-notebook`), both stating the answer and the probes that support it.
 
 Otherwise, go back to step 1.
