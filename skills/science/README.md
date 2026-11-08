@@ -1,6 +1,6 @@
 # Science
 
-A flow for scientific work, where you can't know the next step until the last result is in. A study starts from a loose direction and moves one probe at a time. Each probe runs in scratch on a study branch, its result comes back as plots and a brief, and you decide what happens next. A probe that holds up is promoted into the main protocol through a pull request.
+A flow for scientific work, where you can't know the next step until the last result is in. A study starts from a loose direction and moves one probe at a time. Each probe runs in scratch on a study branch, its result comes back as plots and a brief, and you decide what happens next. A probe that holds up is promoted into the protocol on your base branch through a pull request.
 
 This is a draft and can change without warning. For the short version and the reasoning behind it, see the [main README](../../README.md).
 
