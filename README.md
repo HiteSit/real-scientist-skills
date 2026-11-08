@@ -1,17 +1,14 @@
 # Skills for Real Scientists
 
-Agent skills for doing science with a coding agent. They adapt [Matt Pocock's skills for real engineers](https://github.com/mattpocock/skills) to research, where you can't plan the next step until you've seen the last result.
+Agent skills for doing science with a coding agent. They adapt [Matt Pocock's skills for real engineers](https://github.com/mattpocock/skills) to research, where each step follows from the last result.
 
 This repo is a fork of Matt's. His engineering and productivity skills are here as he wrote them, and they still do most of the work. What's new is the `science/` bucket: six skills that run a study one experiment at a time. The ideas underneath are Matt's: grill before you build, share a vocabulary, keep feedback loops tight, and care about design. If you like these skills, read [his README](https://github.com/mattpocock/skills#why-these-skills-exist) and join [his newsletter](https://www.aihero.dev/s/skills-newsletter).
-
-> [!NOTE]
-> The science skills are a first draft. All six are written, but none has been used on a real study yet.
 
 ## Why science needs its own flow
 
 Matt's engineering flow plans the whole route first. `/to-spec` writes down the goal, `/to-tickets` splits it into tickets, and `/implement-spec` builds them, many in parallel. That works because building software is predictable once you agree on what to build.
 
-Research isn't predictable. The unknown is what's true, and you only learn it by running something and looking at the result. Plan ten experiments up front and the second one often makes the other eight pointless. So the science flow plans one step at a time.
+Research is exploratory. The unknown is what's true, and you learn it by running something and looking at the result. Plan ten experiments up front and the second one often makes the other eight pointless. So the science flow plans one step at a time.
 
 |                    | Engineering flow                    | Science flow                                         |
 | ------------------ | ----------------------------------- | ---------------------------------------------------- |
@@ -28,10 +25,10 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 
 - **Plan one probe at a time.** A probe is a small experiment that fits in one session. The study keeps a rough map of probes, but each one is planned properly only when it's next.
 - **Predict before you run.** Each probe says what the result should show if your current belief is right. The prediction is written before anything runs.
-- **Start from a direction, not a spec.** Results are allowed to change the direction and the map. Each change is logged against the probe that caused it.
+- **Start from a direction.** Results are allowed to change the direction and the map. Each change is logged against the probe that caused it.
 - **Scratch is free, the protocol is agreed.** Inside a probe, the agent organizes files however the work needs. Before anything joins the main protocol, you approve where it goes.
 - **Show results.** Each probe ends with a short brief and plots, and one dashboard shows the whole study.
-- **Keep dead ends.** A failed probe is recorded, not deleted, so nobody runs it again.
+- **Keep dead ends.** A failed probe stays in the record, so nobody runs it again.
 - **You decide.** After every probe, the agent stops, asks how you read the result, and you choose the next step.
 - **Keep everything in git.** Each study has its own branch, with one commit per probe.
 
@@ -61,7 +58,7 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 
 1. **`/setup-science`**, once per repo, records your field, tools, compute and data locations in `.science/SETUP.md`.
 2. **`/to-study`** asks just enough questions to frame the question, splits your plan into a rough probe map, and opens a `science/<study>` branch with a lab notebook.
-3. **`/experiment`** runs one probe per pass: plan it with a prediction, run it, show the result, talk it through with you, and record your decision. Questions that need reading instead of running go to **`desk-research`**, which works in the background.
+3. **`/experiment`** runs one probe per pass: plan it with a prediction, run it, show the result, talk it through with you, and record your decision. Questions that need reading go to **`desk-research`**, which works in the background.
 4. **`/promote`** moves a probe that held up into the main protocol, through a pull request with a regression check.
 5. When the protocol stops changing, Matt's `/to-spec`, `/to-tickets` and `/implement-spec` take it from there.
 
@@ -89,7 +86,7 @@ The full layout: [folder layout](./skills/science/README.md#folder-layout).
 - **Prediction**: what a probe should show if your current belief is right, written before it runs.
 - **Lab notebook**: the study's index and current state, one line per probe.
 - **Drift log**: every change of direction or of the map, each citing the probe that caused it.
-- **Desk research**: answering a question from papers, databases or datasets instead of running something.
+- **Desk research**: answering a question from papers, databases or datasets.
 - **Dead end**: a probe whose answer was no, kept so nobody reruns it.
 - **Protocol**: the promoted, rerunnable steps on `main`.
 - **Promote**: moving a validated probe into the protocol.
