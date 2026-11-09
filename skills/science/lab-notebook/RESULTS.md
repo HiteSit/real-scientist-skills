@@ -45,8 +45,8 @@ It shows, top to bottom:
 
 1. **The question and the current direction**, with the starting direction from `STUDY.md` beside it, so the drift is visible at once.
 2. **The drift log** as a timeline: each entry, the probe that caused it, and what changed.
-3. **The probes** in run order: number, title, verdict, the key figure, the headline and a short explanation of what the result means for the study, and a link to the probe README. Promoted probes say where they went.
-4. **The probe map**, current beside the starting one from `STUDY.md`, with the frontier marked, and the **dead ends**.
+3. **The probes** in run order: number, title, verdict, the key figure, the headline and a short explanation of what the result means for the study, and a link to the probe README. Promoted probes say where they went; revised probes list their revisions and the **Lessons** they produced.
+4. **The probe map**: the current table beside the starting one from `STUDY.md`, compared row by row (added, dropped, moved to another phase), with the frontier marked, and the **dead ends**.
 
 Write the explanations for the user who will open the dashboard cold: what was tested, what came out, and why it matters, in plain sentences.
 

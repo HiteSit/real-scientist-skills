@@ -27,11 +27,18 @@ All of this goes into `.science/SETUP.md`, committed on the branch you ran it on
 
 Unlike `grilling`, it stops early. Once the question is clear enough to plan a first probe, it stops asking. Anything still open goes on the map or into "not yet mapped", to be settled by data instead of more discussion.
 
-Then it draws the **probe map**. You often arrive with a long list of steps, conditions and checks. `/to-study` splits them into probes, the way Matt's `/wayfinder` splits a large project into tickets:
+Then it draws the **probe map**, a table in the notebook. You often arrive with a long list of steps, conditions and checks. `/to-study` splits them into probes, the way Matt's `/wayfinder` splits a large project into tickets. Each row is one probe:
+
+| # | Probe | Phase | After | Status | Rev | Commit |
+|---|-------|-------|-------|--------|-----|--------|
+| 01 | redock-xtal: does the co-crystal ligand redock? | 1 | | held | 0 | `a1b2c3d` |
+| 02 | protonation: does pH 7.4 prep change the poses? | 2 | redock-xtal | held | 1 | `e4f5a6b` |
+| | ensemble-dock: do extra receptor states help? | 2 | protonation | planned | | |
 
 - **Phases** group the probes. Each phase is one stage of the work, such as the probes that answer one sub-question, and phases are listed in the order they run.
-- **`after:` links** set the order. Each probe names the probes whose results it needs.
-- The **frontier** is every probe whose prerequisites have all run. Those are the ones you can do next.
+- **After** sets the order. Each probe names the probes whose results it needs.
+- The **frontier** is every planned probe whose prerequisites have all run. Those are the ones you can do next.
+- **Status** goes from planned to running to the verdict (held, failed, inconclusive), and to promoted once the probe reaches the protocol. **Rev** counts in-place fixes, and **Commit** is the probe's latest commit.
 - **Not yet mapped** holds questions you can see coming but can't yet turn into a probe. They join the map once a result makes them clear.
 
 A simple question might need two or three probes in one phase. You revise the map until you accept it.
@@ -50,9 +57,22 @@ Each pass runs exactly one probe:
 2. **Run** it in its own folder, `.science/<study>/probes/NN-<slug>/`, with its scripts, small inputs, outputs, and the exact commands, versions and seeds, so anyone can rerun it. A crash isn't a result: it gets fixed and rerun in the same probe. A long cluster job is submitted, marked as running, and picked up in the next session.
 3. **Inspect.** The agent makes the figures, compares the result with the prediction (held, failed, or inconclusive), writes the result brief, and updates the study dashboard. [`lab-notebook/RESULTS.md`](./lab-notebook/RESULTS.md) sets how results are presented.
 4. **Decide, with you.** The agent always stops here, whatever the verdict. It shows the verdict, the key figures and a link to the dashboard, and recommends continue, branch, drop, or promote. Then it asks you about the result in rounds: do you read it the way the brief does, which caveat matters most, what it changes in your belief, and which decision it supports. A clean result may need one round or none; a surprise may need several. Your decision wins.
-5. **Record.** Your reading of the result and your decision go into the probe's README. In the notebook, the probe is ticked off on the map, and the map is updated: probes the result made clear are added, probes it made pointless are dropped or moved, and the `after:` links are fixed. Any change of direction or of the map's structure (a phase added, dropped or moved, a planned probe dropped) gets a drift log entry that cites the probe. Ticking off a probe that ran as planned isn't drift. The probe is committed as `probe NN: <slug>: <verdict>`.
+5. **Record.** Your reading of the result and your decision go into the probe's README. In the notebook, the probe's row gets its verdict, and the probe gets a few lines under **Probe notes**: what it ran, the key numbers, your decision. The map changes only as you agreed: probes you added become planned rows, probes the result made pointless are marked dropped. Any change of direction or of the map's structure gets a drift log entry that cites the probe. A probe that ran as planned isn't drift. The probe is committed as `probe NN: <slug>: <verdict>`.
+
+The agent never adds probes to the map on its own. When you ask "what should we do next?", or say "we're running X, but the aim is Y", it works out the next probes with you in rounds of questions, and only the ones you agree to go on the map.
 
 Then `/experiment` goes back to step 1. It leaves the loop when you decide to promote, when you stop (the notebook keeps the state, so any later session continues with `/experiment <study>`), or when the question is answered. In that last case, the notebook gets a final line naming the answer and the probes behind it, and `STUDY.md` gets an **Outcome** line.
+
+### Fix a probe
+
+Sometimes a recorded probe turns out to have been run wrong: a bug, a wrong input or parameter, a mistake in the analysis or the plots. You might catch it, or the agent might. Tell `/experiment` which probe, and it fixes the probe in place instead of starting a new one:
+
+1. It confirms with you what was wrong. A new question or a changed prediction is a new probe, not a fix.
+2. It fixes and reruns the probe in the same folder, then judges the new result against the original prediction, which never changes.
+3. If the verdict or the reading changed, it talks the result through with you again, and your decision may change.
+4. It records the fix. The probe's README gets a **Revisions** entry: what was wrong, who caught it, what changed, and the verdict before and after. The map row's **Rev** goes up by one. The mistake becomes a rule under **Lessons**, which the agent reads before planning every later probe; a lesson that holds for the whole repo can also go into `.science/SETUP.md`, with your ok.
+5. For every probe built on the old result, it asks you whether to rerun it or keep it.
+6. It commits `fix NN: <slug>: <what was wrong> (<old verdict> → <new verdict>)`. The wrong outputs stay in git history.
 
 ### Desk research
 
@@ -85,7 +105,7 @@ Everything the science skills write lives in `.science/` at the root of your rep
   SETUP.md                    your setup, on the base branch
   <study>/                    one folder per study, on science/<study>
     STUDY.md                  starting direction and probe map, frozen; Promoted and Outcome lines added at the end
-    NOTEBOOK.md               current direction, drift log, current map, not yet mapped, probe index, dead ends
+    NOTEBOOK.md               current direction, probe map table, probe notes, lessons, not yet mapped, research, dead ends, drift log
     dashboard.html            one dashboard for the study (starting vs current map), updated after every probe
     research/
       <slug>.md               a desk-research item: a cited note

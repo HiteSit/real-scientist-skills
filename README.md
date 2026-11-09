@@ -23,15 +23,15 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 
 ## How the flow works
 
-- **Plan one probe at a time.** A probe is a small experiment that fits in one session. The study keeps a rough map of probes, but each one is planned properly only when it's next.
+- **Plan one probe at a time.** A probe is a small experiment that fits in one session. The study keeps a rough map of probes as a table, but each one is planned properly only when it's next, and only the probes you agree to go on the map.
 - **Predict before you run.** Each probe says what the result should show if your current belief is right. The prediction is written before anything runs.
 - **Start from a direction.** Results are allowed to change the direction and the map. Each change is logged against the probe that caused it.
 - **Scratch is free, the protocol is agreed.** Inside a probe, the agent organizes files however the work needs. Before anything joins the protocol, you approve where it goes.
 - **Show results.** Each probe ends with a short brief and plots, and one dashboard shows the whole study.
-- **Keep dead ends.** A failed probe stays in the record, so nobody runs it again.
+- **Keep dead ends and mistakes.** A failed probe stays in the record, so nobody runs it again. A probe that was run wrong is fixed in place, the fix is logged in its README, and the mistake becomes a lesson the agent checks before every later probe.
 - **You decide.** After every probe, the agent stops, asks how you read the result, and you choose the next step.
 - **One study per session.** `/experiment <study>` loads a study in any session and picks up where the last one stopped. When you ask about another study, the agent records it and gives you the command for a new session.
-- **Keep everything in git.** Each study has its own branch, with one commit per probe.
+- **Keep everything in git.** Each study has its own branch, with one commit per probe and one per fix. The probe map shows the latest commit for each probe.
 
 ## The science flow
 
@@ -74,7 +74,7 @@ The science skills keep everything they write in a `.science/` folder at the roo
   SETUP.md              your setup, on the base branch
   <study>/              one folder per study, on that study's branch
     STUDY.md            the starting direction, frozen; promotions and the outcome are added at the end
-    NOTEBOOK.md         the current direction, probe map and probe index
+    NOTEBOOK.md         the current direction, the probe map table, notes on each probe, lessons
     dashboard.html      the study's dashboard
     research/           desk-research items
     probes/NN-<slug>/   one folder per probe
@@ -93,11 +93,13 @@ The full layout: [folder layout](./skills/science/README.md#folder-layout).
 - **Study**: one investigation around one question.
 - **Direction**: where the study is heading now. The starting one is frozen in `STUDY.md`; the current one lives in the notebook.
 - **Probe**: one small experiment that fits in one session.
-- **Probe map**: the study's rough plan: probes in ordered phases, linked by `after:` dependencies.
+- **Probe map**: the study's plan and history in one table: every probe with its phase, the probes it needs, its status, how often it was fixed, and its latest commit.
 - **Frontier**: the probes whose prerequisites have all run.
 - **Not yet mapped**: questions you can see coming but can't yet turn into a probe.
 - **Prediction**: what a probe should show if your current belief is right, written before it runs.
-- **Lab notebook**: the study's index and current state, one line per probe.
+- **Lab notebook**: the study's current state: the probe map, a few lines on each probe, and the lessons learned.
+- **Revision**: an in-place fix of a probe that was run wrong. The probe keeps its number, and its README says what was wrong and what changed.
+- **Lesson**: a rule drawn from a mistake, read before planning each probe.
 - **Drift log**: every change of direction or of the map, each citing the probe that caused it.
 - **Desk research**: answering a question from papers, databases or datasets.
 - **Dead end**: a probe whose answer was no, kept so nobody reruns it.

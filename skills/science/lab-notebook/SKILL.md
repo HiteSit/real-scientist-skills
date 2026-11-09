@@ -16,7 +16,7 @@ The repo's stack (tools, environments, compute, data locations, heavy-output thr
   SETUP.md                    on the base branch, written by setup-science
   <study>/                    on science/<study>
     STUDY.md                  the starting direction, frozen; reaches the base branch with the first promotion
-    NOTEBOOK.md               current direction, drift log, probe map, probe index
+    NOTEBOOK.md               current direction, probe map table, probe notes, lessons, drift log
     dashboard.html            the study's one live dashboard, grown probe after probe
     dashboard.<ext>           the script that builds it
     research/                 desk research items, see desk-research
@@ -56,7 +56,7 @@ Two sections at the end only grow, one line at a time:
 <the result that would settle the question, as observable as possible>
 ## Constraints
 ## Starting probe map
-<the probe map as first charted: see below>
+<the probe map table as first charted, every row planned: see below>
 
 ## Promoted
 - `<step>` (`protocol/<step>`): from <NN-slug>, <NN-slug>
@@ -67,7 +67,7 @@ Two sections at the end only grow, one line at a time:
 
 ## NOTEBOOK.md
 
-An **index**, not a store: each probe's detail lives in its own README, and the notebook gists it in one line and links.
+Where the study stands, readable without opening any probe: the probe map table on top, then a short description of every probe that has started. Each probe's full detail stays in its own README.
 
 ```markdown
 # <Study title>: notebook
@@ -75,14 +75,24 @@ An **index**, not a store: each probe's detail lives in its own README, and the 
 ## Current direction
 <2 to 4 lines. Starts as a copy of STUDY.md's direction and drifts.>
 
-## Drift log
-- [NN-slug](probes/NN-slug/README.md): <how the direction changed, and what in the result forced it>
-
 ## Probe map
-### <phase title>
-- [ ] <slug>: <what it finds out> <(after: <slug>, <slug>)>
-- [ ] <slug> (research): <the question it answers>
-- [x] [NN-slug](probes/NN-slug/README.md)
+**Phases:** 1 <title>: <what it answers or prepares> · 2 <title>: <...>
+
+| # | Probe | Phase | After | Status | Rev | Commit |
+|---|-------|-------|-------|--------|-----|--------|
+| 01 | [<slug>](probes/01-<slug>/README.md): <what it finds out> | 1 | | held | 0 | `a1b2c3d` |
+| | [<slug>](research/<slug>.md) (research): <the question it answers> | 1 | | done | | `b2c3d4e` |
+| 02 | [<slug>](probes/02-<slug>/README.md): <what it finds out> | 2 | <slug> | inconclusive | 1 | pending |
+| | <slug>: <what it finds out> | 2 | <slug>, <slug> | planned | | |
+
+## Probe notes
+### 02 <slug>
+<3 to 6 lines: the operations it ran, in plain words; the key numbers; the user's decision and why.>
+- rev 1, fixing `<hash>`: <what was wrong>, caught by <the user | the agent>; <old verdict> → <new verdict>
+- built on 01 before its rev 1: <rerun as rev N | kept>, the user's call
+
+## Lessons
+- <a rule that holds from now on, stated as what to do> (from 02 rev 1)
 
 ## Not yet mapped
 - <a question you can tell is coming but cannot yet phrase as a probe>
@@ -90,27 +100,38 @@ An **index**, not a store: each probe's detail lives in its own README, and the 
 ## Research
 - [<slug>](research/<slug>/README.md): <one-line gist> (feeds: <probes>)
 
-## Probes
-- [NN-slug](probes/NN-slug/README.md): **held | failed | inconclusive | running**: <one-line gist> <(promoted: protocol/<step>) when it was>
-
 ## Dead ends
 - <what was tried, which probe showed it fails, so nobody reruns it>
+
+## Drift log
+- [NN-slug](probes/NN-slug/README.md): <how the direction changed, and what in the result forced it>
 
 ## Spin-offs
 - [<study>](../<study>/NOTEBOOK.md) on `science/<study>`: <its question>, raised by <probe NN or the user's ask>, started from <the base branch or this branch at probe NN>, run in <a new session, another agent, or a worktree path>
 ```
 
-A drift log entry is written whenever a decision changes the current direction or reshapes the probe map (a phase added, dropped or reordered, a planned probe dropped), even slightly. Ticking a probe that ran as planned is not drift. No entry means the direction held.
+A drift log entry is written whenever a decision changes the current direction or reshapes the probe map (a phase added, dropped or reordered, a planned row dropped), even slightly. A probe that ran as planned is not drift. No entry means the direction held.
+
+**Probe notes** get an entry when a probe starts, filled in as it runs and is decided, and one line per revision. Write them for someone who never opened the README: what was done and what came out, not how.
+
+**Lessons** are the study's memory of its mistakes. Every fix (see **Revisions**) adds one, phrased as the rule that would have prevented the mistake. Read them before planning any probe. A lesson that holds for the whole repo, not just this study, can go into `.science/SETUP.md` too, once the user agrees.
 
 ## The probe map
 
-The **probe map** is the study's provisional plan: the probes that can be stated sharply today, grouped into **phases** and ordered. A phase is a stage of the work (the probes that answer one sub-question, or prepare what later phases need); phases are listed in the order they run. Within and across phases, `after:` names the probes whose results a probe needs, so the chronological order follows from those edges. The **frontier** is every unticked probe whose `after:` probes have all run.
+The **probe map** is the study's plan and its history in one table: the probes that can be stated sharply today, the ones running, and every one that has run. It is provisional by nature: every result may reorder it, add to it or prune it.
 
-The map is provisional by nature: every result may reorder it, add to it or prune it. Planned probes carry a slug and no number, because a number is given only when a probe runs. When it runs, its entry is ticked and becomes a link to its folder.
+- **#**: empty while planned. A probe gets its number when it starts, and the slug becomes a link to its folder.
+- **Phase**: a stage of the work (the probes that answer one sub-question, or prepare what later phases need). Phases run in the order of the **Phases** line; rows are ordered by phase, then by run order.
+- **After**: the probes whose results this one needs, so the chronological order follows from those edges. The **frontier** is every planned row whose **After** probes have all run.
+- **Status**: `planned` → `running` → `held` · `failed` · `inconclusive` (the verdict) → `promoted` once it reaches the protocol. A planned row the results made pointless becomes `dropped` and stays, with a drift log entry. Research rows go `planned` → `running` → `done`.
+- **Rev**: how many times the probe was fixed in place (see **Revisions**); `0` for a probe never fixed.
+- **Commit**: the latest commit that changed the probe: its run, its last fix, or its promotion. A commit cannot contain its own hash, so the cell reads `pending` until the next commit that touches the notebook. Before staging that commit, replace every `pending` with `git log -1 --format=%h -- <the probe's folder or research item>`.
 
-A **research entry**, marked `(research)`, is a question answered from existing sources instead of a run: no number, no prediction, run by `desk-research` in parallel with everything else. Probes list it under `after:` like any other entry.
+A **research entry**, marked `(research)`, is a question answered from existing sources instead of a run: no number, no prediction, run by `desk-research` in parallel with everything else. Probes list it under **After** like any other row.
 
 Chart only what can be stated sharply. A question you can see coming but cannot yet phrase as a probe goes under **Not yet mapped**, and graduates into the map once a result makes it sharp.
+
+**The user decides what goes on the map.** Next probes come out of a conversation, usually started by the user ("what should we do next?", "we are running X, but the aim is Y"): work them out with the user in rounds, the way `grilling` does, and add as `planned` rows only the probes they agree to. Never add a planned row on your own.
 
 ## Off-axis
 
@@ -150,9 +171,20 @@ Then confirm with the user before creating anything: one question naming the ite
 ## Decision
 continue | branch | drop | promote: <the human's call and why>
 **Next:** <the probe this points to, if any>
+
+## Revisions
+- rev 1, fixing `<hash of the wrong commit>`: <what was wrong>, caught by <the user | the agent>. <what changed>. Verdict <old> → <new>; decision <kept | changed from ...>.
 ```
 
-A **prediction** turns "look at the result" into a binary check. Write it before running, never after.
+A **prediction** turns "look at the result" into a binary check. Write it before running, never after, and never rewrite it in a revision.
+
+## Revisions
+
+A probe that was **run wrong** is fixed **in place**: a bug, a wrong input or parameter, a mistake in the analysis or the plots. The fix goes in the same `NN` folder, the probe reruns, and **Method**, **Result** and (if the user changes it) **Decision** describe the corrected run. The README's **Revisions** section keeps one entry per fix, so the mistake stays on record; the wrong outputs survive only in git history.
+
+A new question, a changed prediction or a deliberate change of plan is never a revision: it is a new probe.
+
+Fixing a crash before the probe's first commit is part of running it, noted under **Method**. A revision is a fix after that commit. `/experiment` describes how to make one.
 
 ## Heavy outputs
 
@@ -164,4 +196,4 @@ How to present a result (the brief, plots, the study dashboard) is in [RESULTS.m
 
 ## Commits
 
-One commit per probe on the study branch, made once its decision is recorded: `probe NN: <slug>: <verdict>`. The branch log then reads as the lab history.
+One commit per probe on the study branch, made once its decision is recorded: `probe NN: <slug>: <verdict>`. Each revision is its own commit: `fix NN: <slug>: <what was wrong> (<old verdict> → <new verdict>)`. The branch log then reads as the lab history.

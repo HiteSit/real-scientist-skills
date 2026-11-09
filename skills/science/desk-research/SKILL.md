@@ -59,8 +59,8 @@ If no literature tool is available, use web search on primary sources and say so
 1. Collect the questions: every research entry on the probe map's frontier, plus any question the caller hands over.
 2. Start one **research subagent** per item, all at once, in the background, each with a fresh context window. Work in the same working tree and the same branch: no worktrees, no branches, no git commands in the subagents. Each subagent writes only inside its own item path, so they never collide.
 3. Brief each subagent with **context pointers**, not copies: the item's question and slug, `.science/<study>/STUDY.md`, `NOTEBOOK.md`, `.science/SETUP.md`, the item format above, and the literature tools available.
-4. Keep working while they read. A probe whose `after:` names an unfinished item waits for it; everything else goes on.
+4. Keep working while they read. A probe whose **After** names an unfinished item waits for it; everything else goes on.
 5. As each subagent reports, check its item: every file listed with source and licence, every claim cited, a fetch script for every downloaded file. Send anything missing back to the same subagent.
-6. Commit each finished item yourself: `research: <slug>`. Tick its entry on the probe map, add it to the notebook's **Research** index, and add any probe or research entry its findings made sharp.
+6. Commit each finished item yourself: `research: <slug>`. Set its row on the probe map to `done` and link it, fill in any `pending` commit hashes first (see `lab-notebook`), and add it to the notebook's **Research** index. Probes its findings made sharp are proposed to the user at the next checkpoint, not added on your own.
 
 Done when every dispatched item is committed and indexed. Its findings are presented to the user at the next checkpoint of `/experiment`, not at a gate of their own.

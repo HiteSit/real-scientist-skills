@@ -2,6 +2,13 @@
 
 This fork has no versions; git history is the record. Matt Pocock's releases are in [his CHANGELOG](https://github.com/mattpocock/skills/blob/main/CHANGELOG.md) and arrive here through the weekly upstream sync.
 
+## 2026-11-09
+
+- Science studies now start from a configurable base branch recorded in `.science/SETUP.md`. `/experiment <study>` loads a study in any session, and each session stays with one study.
+- `STUDY.md` gains **Promoted** and **Outcome** lines, which reach the base branch through promotion.
+- The probe map is now one table holding both the plan and the history (phase, after, status, revisions, latest commit), with **Probe notes** and **Lessons** below it. Only the probes the user agrees to go on the map.
+- A probe that was run wrong is fixed in place: there is a **Revisions** entry in its README, a `fix NN:` commit, and a lesson, and the user is asked about every later probe built on the old result.
+
 ## 2026-11-08 (later)
 
 - Rewrote the README in plain language under the title "Skills for Real Scientists". It still covers every topic, and Matt's skill list now links to his README.

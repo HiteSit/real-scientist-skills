@@ -48,9 +48,9 @@ Done when the pull request is open and links all three.
 
 Back on `science/<study>`:
 
-1. Mark the probe's line in `NOTEBOOK.md` with `(promoted: protocol/<step>)`, and note the pull request in the probe README under **Decision**.
+1. In `NOTEBOOK.md`, set the probe's row to `promoted` with **Commit** `pending`, add `promoted to protocol/<step>` to its probe notes, and note the pull request in the probe README under **Decision**.
 2. Append the same `## Promoted` line to `.science/<study>/STUDY.md`, byte for byte as on `protocol/<step>`, so both branches hold the same file and the later merge is clean.
-3. Commit: `promote NN: <step>`.
+3. Fill in every earlier `pending` commit hash (see `lab-notebook`), then commit: `promote NN: <step>`.
 4. Once the pull request has merged, merge the base branch into the study branch, so later probes call the promoted step instead of the probe's scratch copy. The study branch itself never merges into the base branch.
 
 Done when the notebook and `STUDY.md` name the promotion and, after the merge, the study branch contains the promoted step. Tell the user the next step is back to `/experiment <study>`, building on the protocol.

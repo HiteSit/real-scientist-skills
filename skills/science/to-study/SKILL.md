@@ -37,11 +37,11 @@ The user often arrives with a long, complex set of indications: many steps, cond
 1. Fan out **breadth-first** over the indications: list every piece of work they imply, without going deep on any one.
 2. Cut the work into probes, each the smallest run that answers one thing, sized to one session. Work that reads or gathers instead of runs (literature, reference data, tool documentation) becomes a **research entry**, marked `(research)`.
 3. Find the **hierarchy**: group the probes into phases, each a stage that answers one sub-question or prepares what later stages need.
-4. Find the **chronological order**: for each probe, name the probes whose results it needs (`after:`). Order the phases so their edges point forward.
+4. Find the **chronological order**: for each probe, name the probes whose results it needs (**After**). Order the phases so their edges point forward.
 5. Leave in **Not yet mapped** whatever depends on results too much to state as a probe yet. Chart only what is sharp.
 6. Check the indications for more than one study. A piece whose answer would not change this study's direction is a separate study: propose splitting it off, and on the user's yes list it under the notebook's **Spin-offs**, marked not yet opened, for its own `/to-study` run, instead of mapping it here.
 
-Show the map as an indented tree with the edges, and the frontier marked. Iterate until the user accepts it. The map is a provisional plan, not a schedule: `/experiment` still plans each probe properly from the result before it, and reshapes the map as results come in.
+Show the map as the `lab-notebook` table, every row `planned`, with the frontier marked. Iterate until the user accepts it. The map is a provisional plan, not a schedule: `/experiment` still plans each probe properly from the result before it, and reshapes the map with the user as results come in.
 
 For a simple question the map may be two or three probes in one phase. That is fine.
 
@@ -59,7 +59,7 @@ Done when a reader could plan a first probe from it and every section is either 
 
 1. Cut `science/<study>` from the base branch named in `.science/SETUP.md`, or, for a spin-off, from the starting point agreed at the split (see **Off-axis** in `lab-notebook`). If the study runs in its own worktree or with another agent, create the branch there or hand it over, as agreed.
 2. Write `.science/<study>/STUDY.md`. Its starting sections are **frozen** from here on (see `lab-notebook`).
-3. Write `.science/<study>/NOTEBOOK.md`: current direction and probe map copied from `STUDY.md`, the **Not yet mapped** list, an empty drift log, and no probes run yet.
+3. Write `.science/<study>/NOTEBOOK.md`: current direction and probe map table copied from `STUDY.md`, the **Not yet mapped** list, and empty probe notes, lessons and drift log.
 4. Create an empty `probes/` folder and the study dashboard (see `lab-notebook`).
 5. Commit: `study: <study>: open`.
 6. If the frontier holds research entries, call the Skill tool with `desk-research` to dispatch them now, so they are read while the first probe is planned.
