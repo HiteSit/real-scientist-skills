@@ -23,7 +23,7 @@ The repo's stack (tools, environments, compute, data locations, heavy-output thr
       <slug>.md               prose only
       <slug>/                 README.md plus data files of any format
     probes/
-      01-<slug>/
+      01-r0-held-<slug>/      NN-r<revisions>-<state>-<slug>, see below
         README.md             intent, prediction, method, result, decision
         .gitignore            this probe's heavy outputs
         figures/
@@ -32,7 +32,16 @@ The repo's stack (tools, environments, compute, data locations, heavy-output thr
 
 Inside a probe folder, organise files however the probe needs; only `README.md`, `.gitignore` and `figures/` are fixed. The protocol's tree is a different matter: it is agreed with the human at promotion, never chosen alone.
 
-Probe folders are `NN-<slug>`: `NN` counts probes in run order from `01`, `<slug>` says what the probe does. A number is never reused or renumbered: a dropped probe keeps its number, so the numbers stay a faithful history.
+Probe folders are named `NN-r<R>-<state>-<slug>`, for example `03-r2-failed-protonation`:
+
+- `NN` counts probes in run order from `01`. A number is never reused or renumbered: a dropped probe keeps its number, so the numbers stay a faithful history.
+- `r<R>` is how many times the probe was fixed in place (see **Revisions**), from `r0`.
+- `<state>` is where the probe stands now, one of six words: `running` while it runs; then its verdict, `held`, `failed` or `inconclusive`; unless the user decided **promote** (`promoted`) or **drop** (`dropped`, a dead end), which override the verdict. The README keeps the original verdict. A fix sets the state to the new verdict, so a promoted probe that gets fixed stops being `promoted` until it is promoted again.
+- `<slug>` says what the probe does, and never changes.
+
+The short form `NN-<slug>` (`03-protonation`) is the probe's stable name: use it in plain-text references (**After**, **Builds on**, the drift log, **Promoted** lines, commit messages).
+
+**Renaming.** Whenever the revision count or the state changes, rename the folder with `git mv` in the same commit as the change: the probe commit, a fix, a promotion, a drop. In that commit, search `.science/<study>/` for the old folder name and rewrite every link to it (the notebook, other probes' READMEs, research items, the dashboard and its script), so no link breaks. Links in pull requests already opened keep the old name; they also cite the commit hash, which is enough.
 
 ## STUDY.md
 
@@ -80,9 +89,9 @@ Where the study stands, readable without opening any probe: the probe map table 
 
 | # | Probe | Phase | After | Status | Rev | Commit |
 |---|-------|-------|-------|--------|-----|--------|
-| 01 | [<slug>](probes/01-<slug>/README.md): <what it finds out> | 1 | | held | 0 | `a1b2c3d` |
+| 01 | [<slug>](probes/01-r0-held-<slug>/README.md): <what it finds out> | 1 | | held | 0 | `a1b2c3d` |
 | | [<slug>](research/<slug>.md) (research): <the question it answers> | 1 | | done | | `b2c3d4e` |
-| 02 | [<slug>](probes/02-<slug>/README.md): <what it finds out> | 2 | <slug> | inconclusive | 1 | pending |
+| 02 | [<slug>](probes/02-r1-inconclusive-<slug>/README.md): <what it finds out> | 2 | 01-<slug> | inconclusive | 1 | pending |
 | | <slug>: <what it finds out> | 2 | <slug>, <slug> | planned | | |
 
 ## Probe notes
@@ -104,7 +113,7 @@ Where the study stands, readable without opening any probe: the probe map table 
 - <what was tried, which probe showed it fails, so nobody reruns it>
 
 ## Drift log
-- [NN-slug](probes/NN-slug/README.md): <how the direction changed, and what in the result forced it>
+- [NN-slug](probes/<the probe's folder>/README.md): <how the direction changed, and what in the result forced it>
 
 ## Spin-offs
 - [<study>](../<study>/NOTEBOOK.md) on `science/<study>`: <its question>, raised by <probe NN or the user's ask>, started from <the base branch or this branch at probe NN>, run in <a new session, another agent, or a worktree path>
@@ -123,9 +132,9 @@ The **probe map** is the study's plan and its history in one table: the probes t
 - **#**: empty while planned. A probe gets its number when it starts, and the slug becomes a link to its folder.
 - **Phase**: a stage of the work (the probes that answer one sub-question, or prepare what later phases need). Phases run in the order of the **Phases** line; rows are ordered by phase, then by run order.
 - **After**: the probes whose results this one needs, so the chronological order follows from those edges. The **frontier** is every planned row whose **After** probes have all run.
-- **Status**: `planned` → `running` → `held` · `failed` · `inconclusive` (the verdict) → `promoted` once it reaches the protocol. A planned row the results made pointless becomes `dropped` and stays, with a drift log entry. Research rows go `planned` → `running` → `done`.
+- **Status**: `planned`, then the same word as the probe's folder name once it starts (see **The tree**): `running`, `held`, `failed`, `inconclusive`, `promoted` or `dropped`. A planned row the results made pointless becomes `dropped` too and stays, with a drift log entry; it never had a folder. Research rows go `planned` → `running` → `done`.
 - **Rev**: how many times the probe was fixed in place (see **Revisions**); `0` for a probe never fixed.
-- **Commit**: the latest commit that changed the probe: its run, its last fix, or its promotion. A commit cannot contain its own hash, so the cell reads `pending` until the next commit that touches the notebook. Before staging that commit, replace every `pending` with `git log -1 --format=%h -- <the probe's folder or research item>`.
+- **Commit**: the latest commit that changed the probe: its run, its last fix, or its promotion. A commit cannot contain its own hash, so the cell reads `pending` until the next commit that touches the notebook. Before staging that commit, replace every `pending` with `git log -1 --format=%h -- 'probes/NN-*'` (the glob follows the folder through its renames), or `-- research/<slug>` for a research row.
 
 A **research entry**, marked `(research)`, is a question answered from existing sources instead of a run: no number, no prediction, run by `desk-research` in parallel with everything else. Probes list it under **After** like any other row.
 

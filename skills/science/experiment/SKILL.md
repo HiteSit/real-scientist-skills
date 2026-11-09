@@ -44,7 +44,7 @@ When the user asks what to do next, or says where the current work should lead (
 
 A good probe is the **smallest run that could prove the current belief wrong**. Size it to one session. Prefer reusing promoted protocol steps over scratch copies of them. Check the plan against every entry under **Lessons**.
 
-Create `probes/NN-<slug>/` with the next free number and write the top of its README: **Builds on**, **Intent**, **Prediction**. Write the prediction now, before anything runs, as a statement the result will either match or contradict. Cite under **Builds on** any research items the probe uses. In the notebook, give the probe's row its number and link, set it to `running`, and start its **Probe notes** entry.
+Create `probes/NN-r0-running-<slug>/` with the next free number (see `lab-notebook` for the folder name) and write the top of its README: **Builds on**, **Intent**, **Prediction**. Write the prediction now, before anything runs, as a statement the result will either match or contradict. Cite under **Builds on** any research items the probe uses. In the notebook, give the probe's row its number and link, set it to `running`, and start its **Probe notes** entry.
 
 If the plan matches what the user already chose, go straight on. If it departs from it, show the plan in a few lines and wait for the user.
 
@@ -94,9 +94,10 @@ Their call wins over your recommendation.
 ### 6. Record
 
 1. Write the user's decision and its reason under **Decision**, with the reading of the result the grilling settled, and **Next** if it points to a probe.
-2. Update `NOTEBOOK.md`: set the probe's row to its verdict, with **Rev** `0` and **Commit** `pending`; finish its **Probe notes** entry (what it ran, the key numbers, the decision); add new dead ends. Then reshape the map as the checkpoint agreed: add the rows the user agreed to, set the rows it made pointless to `dropped`, fix the **After** edges.
-3. If the decision moved the direction or reshaped the map even slightly, rewrite **Current direction** and add a **Drift log** entry that cites this probe and says what in its result forced the move.
-4. Fill in every earlier `pending` commit hash, then commit: `probe NN: <slug>: <verdict>`.
+2. Rename the probe folder from `running` to its state with `git mv`: the verdict, or `dropped` if the user decided drop. Rewrite every link to the old name (see **Renaming** in `lab-notebook`).
+3. Update `NOTEBOOK.md`: set the probe's row to that state, with **Rev** `0` and **Commit** `pending`; finish its **Probe notes** entry (what it ran, the key numbers, the decision); add new dead ends. Then reshape the map as the checkpoint agreed: add the rows the user agreed to, set the rows it made pointless to `dropped`, fix the **After** edges.
+4. If the decision moved the direction or reshaped the map even slightly, rewrite **Current direction** and add a **Drift log** entry that cites this probe and says what in its result forced the move.
+5. Fill in every earlier `pending` commit hash, then commit: `probe NN: <slug>: <verdict>`.
 
 Done when the commit exists and the notebook reads correctly without opening the probe.
 
@@ -110,7 +111,7 @@ When the user, or you, finds that a recorded probe was **run wrong** (a bug, a w
 4. **Take it to the user** as step 5 does when the verdict or the reading of the result changed; the decision may change with it. When nothing changed but the numbers, report the fix in a few lines.
 5. **Record the revision.**
    1. In the README, add a **Revisions** entry: the hash of the wrong commit, what was wrong, who caught it, what changed, the verdict and decision before and after.
-   2. In the notebook, update the row's **Status**, add 1 to **Rev**, set **Commit** to `pending`, and add the revision line to the probe's notes.
+   2. Rename the folder with `git mv` to the new revision count and state, for example `03-r0-held-<slug>` → `03-r1-failed-<slug>`, and rewrite every link to the old name (see **Renaming** in `lab-notebook`). In the notebook, set the row's **Status** to the new state, add 1 to **Rev**, set **Commit** to `pending`, and add the revision line to the probe's notes.
    3. Add a **Lessons** entry: the rule that would have prevented the mistake. If it holds for the whole repo, ask the user whether it also goes into `.science/SETUP.md`.
    4. If the corrected result moves the direction or the map, update them and add a **Drift log** entry, as step 6 does.
 6. **Check what was built on it.** For every row whose **After** names the fixed probe, add a line to its notes (`built on NN before its rev N`) and ask the user, probe by probe, whether to rerun it (a fix of its own, through these same steps) or keep it. Leave its status as it is until they decide. If the fixed probe was promoted, tell the user the protocol step carries the mistake and needs a new promotion.

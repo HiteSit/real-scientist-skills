@@ -54,7 +54,7 @@ The session then stays with that study. If you ask about something that belongs 
 Each pass runs exactly one probe:
 
 1. **Plan** the next probe only. It comes from your last decision. If you haven't picked one, it comes from the map's frontier, earliest phase first. The map entry was sketched before any results, so the probe is planned properly now, using what the results so far have shown. A good probe is the smallest run that could prove the current belief wrong. Its prediction is written before anything runs.
-2. **Run** it in its own folder, `.science/<study>/probes/NN-<slug>/`, with its scripts, small inputs, outputs, and the exact commands, versions and seeds, so anyone can rerun it. A crash isn't a result: it gets fixed and rerun in the same probe. A long cluster job is submitted, marked as running, and picked up in the next session.
+2. **Run** it in its own folder, `.science/<study>/probes/NN-r0-running-<slug>/`, with its scripts, small inputs, outputs, and the exact commands, versions and seeds, so anyone can rerun it. A crash isn't a result: it gets fixed and rerun in the same probe. A long cluster job is submitted, marked as running, and picked up in the next session.
 3. **Inspect.** The agent makes the figures, compares the result with the prediction (held, failed, or inconclusive), writes the result brief, and updates the study dashboard. [`lab-notebook/RESULTS.md`](./lab-notebook/RESULTS.md) sets how results are presented.
 4. **Decide, with you.** The agent always stops here, whatever the verdict. It shows the verdict, the key figures and a link to the dashboard, and recommends continue, branch, drop, or promote. Then it asks you about the result in rounds: do you read it the way the brief does, which caveat matters most, what it changes in your belief, and which decision it supports. A clean result may need one round or none; a surprise may need several. Your decision wins.
 5. **Record.** Your reading of the result and your decision go into the probe's README. In the notebook, the probe's row gets its verdict, and the probe gets a few lines under **Probe notes**: what it ran, the key numbers, your decision. The map changes only as you agreed: probes you added become planned rows, probes the result made pointless are marked dropped. Any change of direction or of the map's structure gets a drift log entry that cites the probe. A probe that ran as planned isn't drift. The probe is committed as `probe NN: <slug>: <verdict>`.
@@ -111,11 +111,27 @@ Everything the science skills write lives in `.science/` at the root of your rep
       <slug>.md               a desk-research item: a cited note
       <slug>/                 or a folder: findings, provenance, fetch script, data files
     probes/
-      01-<slug>/
+      01-r0-held-<slug>/      NN-r<fixes>-<state>-<slug>
         README.md             intent, prediction, method, result, decision
         .gitignore            this probe's large outputs
         figures/
 ```
+
+A probe folder's name carries its state, so a plain `ls probes/` shows where the study stands:
+
+```
+01-r0-promoted-redock-xtal
+02-r1-held-protonation
+03-r2-failed-ensemble-dock
+04-r0-running-water-maps
+```
+
+- The **number** counts probes in run order and never changes.
+- **r** and a count say how many times the probe was fixed in place. `r2-failed` is a probe that failed even after two fixes.
+- The **state** is where it stands now: `running`, then its verdict (`held`, `failed`, `inconclusive`), or `promoted` or `dropped` once you decide so. The README keeps the original verdict.
+- The **slug** says what the probe does and never changes.
+
+When the count or the state changes, the agent renames the folder with `git mv` and updates every link to it in the same commit. Elsewhere, probes are named by their stable short form, like `02-protonation`.
 
 The branches:
 

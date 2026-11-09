@@ -8,6 +8,7 @@ This fork has no versions; git history is the record. Matt Pocock's releases are
 - `STUDY.md` gains **Promoted** and **Outcome** lines, which reach the base branch through promotion.
 - The probe map is now one table holding both the plan and the history (phase, after, status, revisions, latest commit), with **Probe notes** and **Lessons** below it. Only the probes the user agrees to go on the map.
 - A probe that was run wrong is fixed in place: there is a **Revisions** entry in its README, a `fix NN:` commit, and a lesson, and the user is asked about every later probe built on the old result.
+- Probe folders are now named `NN-r<fixes>-<state>-<slug>` (for example `03-r2-failed-protonation`). When the fix count or state changes, the folder is renamed and every link to it is updated in the same commit. Plain-text references use the stable `NN-<slug>`.
 
 ## 2026-11-08 (later)
 

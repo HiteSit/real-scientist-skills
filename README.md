@@ -43,7 +43,7 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
       ▼
 ┌─► /experiment ──────── one probe per pass:
 │     1. plan            the next probe only, with a prediction
-│     2. run             in .science/<study>/probes/NN-<slug>/
+│     2. run             in .science/<study>/probes/NN-r0-running-<slug>/
 │     3. inspect         plots, brief, dashboard, verdict against the prediction
 │     4. decide          talk the result through, then you pick: continue | branch | drop | promote
 │     5. record          notebook, update the map, commit
@@ -77,8 +77,10 @@ The science skills keep everything they write in a `.science/` folder at the roo
     NOTEBOOK.md         the current direction, the probe map table, notes on each probe, lessons
     dashboard.html      the study's dashboard
     research/           desk-research items
-    probes/NN-<slug>/   one folder per probe
+    probes/             one folder per probe, named like 03-r2-failed-<slug>
 ```
+
+A probe folder's name shows the probe's number, how many times it was fixed in place, and where it stands now (`running`, `held`, `failed`, `inconclusive`, `promoted` or `dropped`). The agent renames the folder when that changes, and updates every link to it in the same commit.
 
 Each part lives on its own git branch:
 
