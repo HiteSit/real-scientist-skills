@@ -4,7 +4,11 @@ This fork has no versions; git history is the record. Matt Pocock's releases are
 
 ## 2026-11-12
 
-- New user-invoked skill `ask-science`: it shows the science flow, checks the current branch, study and notebook for drift, repairs it with the user, suggests a guard so it doesn't recur, and ends with the command to resume. `experiment` suggests it when the notebook and folders disagree.
+- New user-invoked skill `ask-science`: it shows the science flow, checks the current study, notebook and library for drift, repairs it with the user, suggests a guard so it doesn't recur, and ends with the command to resume. `experiment` suggests it when the notebook and folders disagree.
+- Simpler git: every study is a folder on one branch, and several studies run at once as separate sessions in the same checkout. Each session commits only its own folder, history is never rewritten, commit messages start with `<study>:`, and tags (`<study>/open`, `<study>/NN-r<R>`, `<study>/promote-<step>`, `<study>/close`) mark each version. The study and protocol branches are gone; `setup-science` records the **home branch**, and each notebook records the branch its study runs on.
+- Promotion is one commit by default, or a pull request from a worktree when `SETUP.md` says so.
+- Desk research now writes to a shared library, `.science/library/`, which belongs to no study: an index read first, an append-only log, one page per question, and the raw search outputs and files behind it. `to-study` sends framing questions to it during the interview, and `STUDY.md` lists the pages it used under **Background**.
+- The probe map's **After** column is now **Blocked by**, also written in each probe README, and its **Commit** column is now **Tag**. Two independent frontier probes may run at once when the user agrees.
 
 ## 2026-11-09
 

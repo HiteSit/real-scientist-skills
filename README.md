@@ -2,7 +2,7 @@
 
 Agent skills for doing science with a coding agent. They adapt [Matt Pocock's skills for real engineers](https://github.com/mattpocock/skills) to research, where each step follows from the last result.
 
-This repo is a fork of Matt's. His engineering and productivity skills are here as he wrote them, and they still do most of the work. What's new is the `science/` bucket: six skills that run a study one experiment at a time. The ideas underneath are Matt's: grill before you build, share a vocabulary, keep feedback loops tight, and care about design. If you like these skills, read [his README](https://github.com/mattpocock/skills#why-these-skills-exist) and join [his newsletter](https://www.aihero.dev/s/skills-newsletter).
+This repo is a fork of Matt's. His engineering and productivity skills are here as he wrote them, and they still do most of the work. What's new is the `science/` bucket: seven skills that run a study one experiment at a time. The ideas underneath are Matt's: grill before you build, share a vocabulary, keep feedback loops tight, and care about design. If you like these skills, read [his README](https://github.com/mattpocock/skills#why-these-skills-exist) and join [his newsletter](https://www.aihero.dev/s/skills-newsletter).
 
 ## Why science needs its own flow
 
@@ -15,7 +15,7 @@ Research is exploratory. The unknown is what's true, and you learn it by running
 | The unknown        | How to build it                     | What's true, and so what to do next                  |
 | Plan               | Every ticket, up front              | A rough map; only the next probe is planned          |
 | Shape of the work  | A task graph, run in parallel       | A chain of probes, each one checked by you           |
-| Where work happens | Feature branches, into the codebase | Scratch probes on a study branch, promoted when they hold up |
+| Where work happens | Feature branches, into the codebase | Scratch probes in a study folder, promoted when they hold up |
 | The starting doc   | A spec, which is a contract         | A direction, which is expected to change             |
 | Failure            | A bug to fix                        | A result to record                                   |
 
@@ -23,22 +23,23 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 
 ## How the flow works
 
-- **Plan one probe at a time.** A probe is a small experiment that fits in one session. The study keeps a rough map of probes as a table, but each one is planned properly only when it's next, and only the probes you agree to go on the map.
+- **Plan one probe at a time.** A probe is a small experiment that fits in one session. The study keeps a rough map of probes as a table, where each probe names what blocks it, like a ticket. Each one is planned properly only when it's next, and only the probes you agree to go on the map.
 - **Predict before you run.** Each probe says what the result should show if your current belief is right. The prediction is written before anything runs.
 - **Start from a direction.** Results are allowed to change the direction and the map. Each change is logged against the probe that caused it.
 - **Scratch is free, the protocol is agreed.** Inside a probe, the agent organizes files however the work needs. Before anything joins the protocol, you approve where it goes.
 - **Show results.** Each probe ends with a short brief and plots, and one dashboard shows the whole study.
 - **Keep dead ends and mistakes.** A failed probe stays in the record, so nobody runs it again. A probe that was run wrong is fixed in place, the fix is logged in its README, and the mistake becomes a lesson the agent checks before every later probe.
 - **You decide.** After every probe, the agent stops, asks how you read the result, and you choose the next step.
-- **One study per session.** `/experiment <study>` loads a study in any session and picks up where the last one stopped. When you ask about another study, the agent records it and gives you the command for a new session.
-- **Keep everything in git.** Each study has its own branch, with one commit per probe and one per fix. The probe map shows the latest commit for each probe.
+- **One study per session, many studies at once.** `/experiment <study>` loads a study in any session and picks up where the last one stopped. Several studies run side by side, each in its own session. When you ask about another study, the agent records it and gives you the command for a new session.
+- **Read once, share everywhere.** What you read along the way (papers, databases, datasets) goes into one shared library. Every study links to it, and nothing is searched twice.
+- **Keep everything in git, simply.** One branch for all studies, each study in its own folder, each session committing only its own folder. Every probe and every fix gets a tag, so you can go back to any version.
 
 ## The science flow
 
 ```
-/setup-science           once per repo: domain, tools, conventions
+/setup-science           once per repo: domain, tools, conventions, an empty library
       │
-/to-study                frame the question, draw a rough probe map, open science/<study>
+/to-study                frame the question (reading the library where needed), draw a rough probe map, open .science/<study>/
       │
       ▼
 ┌─► /experiment ──────── one probe per pass:
@@ -51,16 +52,16 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 └────────┤ continue / branch / drop
          │ promote
          ▼
-      /promote           agree where it goes, port it to protocol/<step>, regression check, PR into the base branch
+      /promote           agree where it goes, port it, regression check, one commit (or a PR)
          │
          ▼
       stable protocol ─► /to-spec → /to-tickets → /implement-spec   (Matt's engineering flow)
 ```
 
-1. **`/setup-science`**, once per repo, records your field, tools, compute and data locations in `.science/SETUP.md`. The branch you run it on becomes the **base branch**, usually `main`.
-2. **`/to-study`** asks just enough questions to frame the question, splits your plan into a rough probe map, and opens a `science/<study>` branch with a lab notebook.
-3. **`/experiment <study>`** loads the study and runs one probe per pass: plan it with a prediction, run it, show the result, talk it through with you, and record your decision. Without a study name, it lists your studies and asks. Questions that need reading go to **`desk-research`**, which works in the background.
-4. **`/promote`** moves a probe that held up into the protocol on the base branch, through a pull request with a regression check.
+1. **`/setup-science`**, once per repo, records your field, tools, compute and data locations in `.science/SETUP.md`, and starts the shared library.
+2. **`/to-study`** asks just enough questions to frame the question, sends what needs reading to **`desk-research`**, splits your plan into a rough probe map, and opens the study's folder with a lab notebook.
+3. **`/experiment <study>`** loads the study and runs one probe per pass: plan it with a prediction, run it, show the result, talk it through with you, and record your decision. Without a study name, it lists your studies and asks. Questions that need reading go to `desk-research`, which works in the background and answers into the library.
+4. **`/promote`** moves a probe that held up into the protocol, with a regression check, as one commit or a pull request.
 5. When the protocol stops changing, Matt's `/to-spec`, `/to-tickets` and `/implement-spec` take it from there.
 
 Lost, or think something has drifted? **`/ask-science`** shows where you are, repairs the drift with you, and tells you how to resume.
@@ -73,22 +74,18 @@ The science skills keep everything they write in a `.science/` folder at the roo
 
 ```
 .science/
-  SETUP.md              your setup, on the base branch
-  <study>/              one folder per study, on that study's branch
+  SETUP.md              your setup
+  library/              shared reading: index, log, one page per question, the raw search results
+  <study>/              one folder per study
     STUDY.md            the starting direction, frozen; promotions and the outcome are added at the end
     NOTEBOOK.md         the current direction, the probe map table, notes on each probe, lessons
     dashboard.html      the study's dashboard
-    research/           desk-research items
     probes/             one folder per probe, named like 03-r2-failed-<slug>
 ```
 
 A probe folder's name shows the probe's number, how many times it was fixed in place, and where it stands now (`running`, `held`, `failed`, `inconclusive`, `promoted` or `dropped`). The agent renames the folder when that changes, and updates every link to it in the same commit.
 
-Each part lives on its own git branch:
-
-- The **base branch** (usually `main`) has `.science/SETUP.md` and the promoted protocol, in the folders you approved. A study's `STUDY.md` arrives there with its first promotion, so the base branch shows every study that produced protocol.
-- `science/<study>` has one study's `.science/<study>/` folder. It's cut from the base branch, and after each promotion it merges the base branch back in. It never merges into the base branch itself.
-- `protocol/<step>` carries one promoted step into the base branch through a pull request.
+All studies share one branch and one checkout. Every commit starts with its study (`<study>: probe 03: …`), and tags like `<study>/03-r1` mark each probe's versions. The rules for running several sessions side by side: [one branch, many studies](./skills/science/README.md#git-one-branch-many-studies).
 
 The full layout: [folder layout](./skills/science/README.md#folder-layout).
 
@@ -97,32 +94,32 @@ The full layout: [folder layout](./skills/science/README.md#folder-layout).
 - **Study**: one investigation around one question.
 - **Direction**: where the study is heading now. The starting one is frozen in `STUDY.md`; the current one lives in the notebook.
 - **Probe**: one small experiment that fits in one session.
-- **Probe map**: the study's plan and history in one table: every probe with its phase, the probes it needs, its status, how often it was fixed, and its latest commit.
-- **Frontier**: the probes whose prerequisites have all run.
+- **Probe map**: the study's plan and history in one table: every probe with its phase, what blocks it, its status, how often it was fixed, and its tag.
+- **Frontier**: the probes whose blockers are all done.
 - **Not yet mapped**: questions you can see coming but can't yet turn into a probe.
 - **Prediction**: what a probe should show if your current belief is right, written before it runs.
 - **Lab notebook**: the study's current state: the probe map, a few lines on each probe, and the lessons learned.
 - **Revision**: an in-place fix of a probe that was run wrong. The probe keeps its number, and its README says what was wrong and what changed.
 - **Lesson**: a rule drawn from a mistake, read before planning each probe.
 - **Drift log**: every change of direction or of the map, each citing the probe that caused it.
-- **Desk research**: answering a question from papers, databases or datasets.
+- **Library**: the repo's shared reading, kept by `desk-research`: one page per question, with the searches behind it.
 - **Dead end**: a probe whose answer was no, kept so nobody reruns it.
-- **Base branch**: the branch you ran `/setup-science` on, usually `main`. Studies start from it and promotions return to it.
-- **Protocol**: the promoted, rerunnable steps on the base branch.
+- **Home branch**: the branch you ran `/setup-science` on, where the science work started.
+- **Protocol**: the promoted, rerunnable steps.
 - **Promote**: moving a validated probe into the protocol.
 
 ## Skills
 
 ### Science
 
-You start the first four by typing them. The agent can also load the last two on its own when the task fits.
+You start `setup-science`, `to-study`, `experiment`, `promote` and `ask-science` by typing them. The agent can also load `lab-notebook` and `desk-research` on its own when the task fits.
 
 - **[setup-science](./skills/science/setup-science/SKILL.md)**: Set up a repo for the science skills. Run once.
-- **[to-study](./skills/science/to-study/SKILL.md)**: Frame the question, draw the probe map, and open the study's branch and notebook.
+- **[to-study](./skills/science/to-study/SKILL.md)**: Frame the question, draw the probe map, and open the study's folder and notebook.
 - **[experiment](./skills/science/experiment/SKILL.md)**: Load a study and run it one probe at a time.
 - **[promote](./skills/science/promote/SKILL.md)**: Move a validated probe into the protocol.
 - **[lab-notebook](./skills/science/lab-notebook/SKILL.md)**: The study's layout and formats: notebook, probe folders, result briefs, plots and dashboard.
-- **[desk-research](./skills/science/desk-research/SKILL.md)**: Gather papers, database records and data files in parallel, with citations and provenance.
+- **[desk-research](./skills/science/desk-research/SKILL.md)**: Answer questions from papers, databases and datasets in parallel, into the shared library, with citations and provenance.
 - **[ask-science](./skills/science/ask-science/SKILL.md)**: Find where you are in a study, repair what drifted, and get back on track.
 
 ### Matt's skills
@@ -143,7 +140,7 @@ Install the skills from https://github.com/HiteSit/real-scientist-skills.
 
 1. Clone the repo, or pull it if I already have a clone.
 2. Find my agent's skills folder (for example ~/.claude/skills, ~/.agents/skills, or .claude/skills in this project). Ask me if you're not sure.
-3. Symlink the six skills in skills/science/ into that folder, so a git pull updates them.
+3. Symlink the seven skills in skills/science/ into that folder, so a git pull updates them.
 4. Check whether I already have Matt Pocock's skills (for example grilling, tdd, domain-modeling).
    - If I do, keep mine.
    - If I don't, also symlink every skill folder under skills/engineering/ and skills/productivity/. When customized/<skill> exists, link that folder instead.
