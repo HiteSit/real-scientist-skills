@@ -1,8 +1,14 @@
 # Skills for Real Scientists
 
+[![skills.sh](https://skills.sh/b/HiteSit/real-scientist-skills)](https://skills.sh/HiteSit/real-scientist-skills)
+
 Agent skills for doing science with a coding agent. They adapt [Matt Pocock's skills for real engineers](https://github.com/mattpocock/skills) to research, where each step follows from the last result.
 
-This repo is a fork of Matt's. His engineering and productivity skills are here as he wrote them, and they still do most of the work. What's new is the `science/` bucket: seven skills that run a study one experiment at a time. The ideas underneath are Matt's: grill before you build, share a vocabulary, keep feedback loops tight, and care about design. If you like these skills, read [his README](https://github.com/mattpocock/skills#why-these-skills-exist) and join [his newsletter](https://www.aihero.dev/s/skills-newsletter).
+```bash
+npx skills add HiteSit/real-scientist-skills --skill setup-science --skill to-study --skill experiment --skill promote --skill desk-research --skill lab-notebook --skill ask-science
+```
+
+This repo builds on Matt's. His engineering and productivity skills are here as he wrote them, and they still do most of the work. What's new is the `science/` bucket: seven skills that run a study one experiment at a time. The ideas underneath are Matt's: grill before you build, share a vocabulary, keep feedback loops tight, and care about design. If you like these skills, read [his README](https://github.com/mattpocock/skills#why-these-skills-exist) and join [his newsletter](https://www.aihero.dev/s/skills-newsletter).
 
 ## Why science needs its own flow
 
@@ -134,7 +140,17 @@ For the full list and what each skill does, see [Matt's README](https://github.c
 
 ## Install
 
-Ask your coding agent to do it. Paste this prompt:
+The science skills call Matt's skills (`grilling`, `domain-modeling`, `tdd`, `code-review`, `pr`), so install his first if you don't have them: see [his installation steps](https://github.com/mattpocock/skills#installation-30-second-setup) for the plugin or skills.sh command.
+
+Then install the seven science skills with [skills.sh](https://skills.sh):
+
+```bash
+npx skills add HiteSit/real-scientist-skills --skill setup-science --skill to-study --skill experiment --skill promote --skill desk-research --skill lab-notebook --skill ask-science
+```
+
+To update them later, run `npx skills update`.
+
+Or ask your coding agent to install from a clone, so a `git pull` updates everything. Paste this prompt:
 
 ```text
 Install the skills from https://github.com/HiteSit/real-scientist-skills.
@@ -148,12 +164,18 @@ Install the skills from https://github.com/HiteSit/real-scientist-skills.
 5. Tell me what you installed and what you skipped. Then remind me to run /setup-science once in my repo, and /setup-matt-pocock-skills too if you installed Matt's skills.
 ```
 
-To update, ask your agent to pull the repo.
+To update a clone install, ask your agent to pull the repo.
 
-## This fork
+## Staying in step with Matt
 
-The fork follows Matt's `main` every week and keeps a few small edits to his skills. [MAINTAINING.md](./MAINTAINING.md) explains how.
+Every week this repo merges Matt's latest skills, and it keeps a few small edits to two of them. [MAINTAINING.md](./MAINTAINING.md) explains how.
 
 ## Credits and license
 
-The engineering and productivity skills, the repo's structure, and the ideas the science bucket grows from are the work of [Matt Pocock](https://www.aihero.dev). MIT licensed, like the original; see [LICENSE](./LICENSE).
+The engineering and productivity skills, the repo's structure, and the ideas the science bucket grows from are the work of [Matt Pocock](https://www.aihero.dev).
+
+- Everything under `skills/` except `skills/science/` is Matt's, from [mattpocock/skills](https://github.com/mattpocock/skills), merged in unchanged every week.
+- `customized/` holds edited copies of two of his skills, `grilling` and `chief-of-staff`, rebuilt from his originals plus the edits in `customizations/`.
+- `skills/science/` and the docs around it are new here.
+
+Matt's skills are MIT licensed, and so is this repo. His [LICENSE](./LICENSE) is kept as he wrote it.

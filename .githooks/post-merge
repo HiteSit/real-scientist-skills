@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# After a pull or merge: report skills this merge added that $SKILLS_POOL doesn't link yet, and links
+# in $SKILLS_POOL into this clone that now point nowhere (Matt removed or renamed the skill).
+# Reports only; linking is the user's call. SKILLS_POOL comes from
+# ~/.config/real-scientist-skills/env (written by scripts/local/install.sh); unset means no report.
+conf="${XDG_CONFIG_HOME:-$HOME/.config}/real-scientist-skills/env"
+[ -f "$conf" ] && . "$conf"
+[ -d "${SKILLS_POOL:-}" ] || exit 0
+repo=$(git rev-parse --show-toplevel)
+
+new=$(git diff --name-only --diff-filter=A ORIG_HEAD HEAD -- 'skills/*/*/SKILL.md' 'customized/*/SKILL.md' 2>/dev/null |
+    while read -r f; do
+        n=$(basename "$(dirname "$f")")
+        [ -e "$SKILLS_POOL/$n" ] || [ -L "$SKILLS_POOL/$n" ] || echo "$n"
+    done | sort -u | paste -sd' ')
+broken=$(for l in "$SKILLS_POOL"/*; do
+    [ -L "$l" ] && [ ! -e "$l" ] && case "$(readlink "$l")" in "$repo"/*) basename "$l" ;; esac
+done | paste -sd' ')
+
+[ -z "$new$broken" ] && exit 0
+msg=""
+[ -n "$new" ] && msg="New skills, not linked in $SKILLS_POOL: $new."
+[ -n "$broken" ] && msg="${msg:+$msg }Links that now point nowhere: $broken."
+echo "post-merge: $msg"
+command -v notify-send >/dev/null && notify-send "real-scientist-skills" "$msg"
+exit 0

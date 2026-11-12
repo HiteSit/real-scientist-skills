@@ -1,9 +1,11 @@
 # Changelog
 
-This fork has no versions; git history is the record. Matt Pocock's releases are in [his CHANGELOG](https://github.com/mattpocock/skills/blob/main/CHANGELOG.md) and arrive here through the weekly upstream sync.
+Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock's releases are in [his CHANGELOG](https://github.com/mattpocock/skills/blob/main/CHANGELOG.md) and arrive here through the weekly upstream sync.
 
 ## 2026-11-12
 
+- The repo is no longer a GitHub fork, so repository search and code search find it; it still merges Matt's `main` every Monday. The README leads with a skills.sh install command for the seven science skills and the skills.sh badge, says the science skills need Matt's, and credits his folders in **Credits and license**.
+- A clone can follow the weekly merge on its own: `scripts/local/install.sh [skills-folder]` installs a systemd user timer that fast-forwards the clone every Monday at 12:00, and a `post-merge` hook that notifies about skills the merge added but the skills folder doesn't link, and links that now point nowhere.
 - `setup-science` initialises git when the folder isn't a repository and keeps the work local (no remote, no push unless asked). It lets the user choose conda, pixi or uv and creates the environment file, always writes the conventions into `AGENTS.md`, and starts a data folder for the user's input data, at `data/` or `.science/data/` as the user chooses. Only the user's own data goes there, at setup or later; probes read it and never write to it. Data a probe fetches (database exports, datasets, checkpoints) lives in that probe and outlives the study only through promotion. `desk-research` only reads, into the library.
 - New user-invoked skill `ask-science`: it shows the science flow, checks the current study, notebook and library for drift, repairs it with the user, suggests a guard so it doesn't recur, and ends with the command to resume. `experiment` suggests it when the notebook and folders disagree.
 - Simpler git: every study is a folder on one branch, and several studies run at once as separate sessions in the same checkout. Each session commits only its own folder, history is never rewritten, commit messages start with `<study>:`, and tags (`<study>/open`, `<study>/NN-r<R>`, `<study>/promote-<step>`, `<study>/close`) mark each version. The study and protocol branches are gone; `setup-science` records the **home branch**, and each notebook records the branch its study runs on.

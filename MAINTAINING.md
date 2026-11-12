@@ -1,6 +1,6 @@
-# Maintaining this fork
+# Maintaining this repo
 
-This repo is a fork of [mattpocock/skills](https://github.com/mattpocock/skills). It follows Matt's `main` every week, adds the `skills/science/` bucket, and keeps a few small edits to his skills, called customizations.
+This repo builds on [mattpocock/skills](https://github.com/mattpocock/skills). It's a normal repo, not a GitHub fork, so search finds it; it follows Matt's `main` every week, adds the `skills/science/` bucket, and keeps a few small edits to his skills, called customizations.
 
 ## Customizations
 
@@ -41,3 +41,20 @@ After that:
 
 - every commit on `main` is pushed automatically;
 - every push is first checked with [gitleaks](https://github.com/gitleaks/gitleaks) and with an optional private list of names that must never be published. The list lives at `~/.config/real-scientist-skills/leak-patterns`, one regular expression per line, and is never committed. A match blocks the push.
+
+## Following the sync on your machine
+
+The weekly merge happens on GitHub. To have a local clone follow it on its own, install the timer and hook in `scripts/local/` once:
+
+```bash
+scripts/local/install.sh
+```
+
+- A systemd user timer runs `git pull --ff-only` in the clone every Monday at 12:00, or at the next boot if the machine was off then.
+- The `post-merge` hook runs after every pull that brings commits. When `SKILLS_POOL` is set in `~/.config/real-scientist-skills/env` (a skills folder that links into this clone, like `~/.agents/skills`), it compares the repo's skill folders with that folder's links and sends a desktop notification listing skills that are new and not yet linked, and links that now point nowhere because Matt removed or renamed a skill. It changes nothing; linking is your call.
+
+A pull that can't fast-forward (the clone has commits GitHub doesn't) stops and notifies you instead of merging.
+
+## Releases
+
+Release with `gh skill publish`: run it with `--dry-run` first, which checks every skill against the Agent Skills spec, then without it to tag the version and create the GitHub release. Add a dated entry to `CHANGELOG.md` before each release.
