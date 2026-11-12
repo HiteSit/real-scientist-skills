@@ -13,7 +13,8 @@ Change nothing until the user approves it. Call the Skill tool with `lab-noteboo
 Show this map, then mark where the user is once step 2 knows.
 
 ```
-/setup-science        once per repo: .science/SETUP.md, the home branch, an empty library
+/setup-science        once per repo: git init if needed, .science/SETUP.md, the home branch,
+      │               an empty library and data folder, the conventions in AGENTS.md
       │
 /to-study             frames the question, reading the library where needed;
       │               opens .science/<study>/ with STUDY.md + NOTEBOOK.md, tag <study>/open
@@ -43,7 +44,7 @@ A read-only check.
 | Git | The current branch against the study's recorded **Branch**. Uncommitted changes, sorted by owner: this study's folder, another study's folder, the library, the protocol, elsewhere. Commits whose `<study>:` prefix does not match the paths they touch, and science commits with no prefix. Decided probes, fixes, promotions and closes with no tag, and tags whose probe row says otherwise. Stashes, a detached HEAD, a branch switch in the reflog during a running study. |
 | Science | The **Current direction** against the question in `STUDY.md`: has it moved away with no **Drift log** entry? Probes whose **Intent** does not serve the question. Work in this session that belongs to another study, or to no study. A question that has drifted so far it is a different study. |
 | Notebook | Every started row in the probe map has a folder whose name matches its number, **Rev** and **Status**, and every folder has a row. **Blocked by** matches between each row and its README. A `running` probe has a job id or an active run. Every decided probe has a **Decision**, and the last one a **Next**. Every revision has its probe notes line and a **Lessons** entry. Links resolve. |
-| Library | Every page has an index line, and every index line a page. Every `done` research row links to a page. Every page's **Evidence** points to saved searches or files. Pages that name a study. |
+| Library and data | Every library page and every `.science/data/` folder has an index line, and every index line a target. Every `done` research row links to a page. Every page's **Evidence** points to saved searches or files. Pages that name a study. Every data folder's README names a source for each file. Data copied into probe folders instead of read from `.science/data/`. |
 
 Report the result in a few lines: the branch, the study and its last probe, and the drift found, most serious first. A clean check says so and goes to step 5.
 

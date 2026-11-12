@@ -7,16 +7,17 @@ description: "Layout and formats for science studies: the .science/ tree, STUDY.
 
 A **study** is one investigation around one question, living in its own folder `.science/<study>/`. It moves forward one **probe** at a time: a small run, sized to one session, planned only once the results it depends on are in. The **lab notebook** is the study's single source of truth for where it stands.
 
-All studies live on one branch, in one checkout. Several studies run at once as separate sessions in that checkout, each writing only inside its own folder. Literature and reference data live once, in the shared **library** (`.science/library/`, see `desk-research`), and studies link to it.
+All studies live on one branch, in one checkout. Several studies run at once as separate sessions in that checkout, each writing only inside its own folder. Literature and downloaded reference data live once, in the shared **library** (`.science/library/`, see `desk-research`); the repo's own data lives once, in the shared **data folder** (`.science/data/`, see **Data**). Studies link to both.
 
-The repo's stack (tools, environments, compute, data locations, heavy-output threshold, home branch, promotion mode) is in `.science/SETUP.md`. Read it before writing any command or script.
+The repo's stack (environment and its run command, compute, data, heavy-output threshold, home branch, promotion mode) is in `.science/SETUP.md`. Read it before writing any command or script.
 
 ## The tree
 
 ```
 .science/
   SETUP.md                    the repo's science setup, written by setup-science
-  library/                    shared literature and reference data, see desk-research
+  library/                    shared literature and downloaded reference data, see desk-research
+  data/                       the repo's own data, shared by every study, see Data
   <study>/
     STUDY.md                  the starting direction, frozen; Promoted and Outcome lines added at the end
     NOTEBOOK.md               branch, current direction, probe map, probe notes, lessons, drift log
@@ -201,6 +202,24 @@ A new question, a changed prediction or a deliberate change of plan is never a r
 
 Fixing a crash before the probe's first commit is part of running it, noted under **Method**. A revision is a fix after that commit. `/experiment` describes how to make one.
 
+## Data
+
+`.science/data/` holds the repo's own data: what the user brings (measurements, structures, sample sheets) and what promotion moves out of a probe because later work needs it. It sits beside the library and follows its shape:
+
+```
+.science/data/
+  index.md                  one line per dataset: - [<slug>](<slug>/README.md): <what it is>
+  <slug>/
+    README.md               one row per file: what it is, source (a lab, an instrument, or <study>/NN-<slug>), date, licence, checksum
+    fetch.<ext>             only for files kept outside the repo: regenerates or downloads them
+    .gitignore              files above the heavy-output threshold
+    <files>
+```
+
+Probes read data by its repo-relative path (`.science/data/<slug>/<file>`) and never copy it into their folder. A probe's own outputs stay in the probe until `/promote` moves the ones later work needs into a new `.science/data/<slug>/`, with the probe as its source. Data kept outside the repo (too large, or private) gets a folder here all the same, holding the README and the fetch script, so its path never changes.
+
+Data changes only through its own commits, limited to `.science/data/`: `data: <slug>`, or inside a promotion commit.
+
 ## Heavy outputs
 
 Every probe folder gets its own `.gitignore` listing outputs above the heavy-output threshold in `SETUP.md`. Commit everything needed to rerun the probe and read its result: scripts, small inputs, the README, the figures, small summary tables. The test: a fresh clone can rerun the probe and regenerate every ignored file from what is committed.
@@ -214,7 +233,7 @@ How to present a result (the brief, plots, the study dashboard) is in [RESULTS.m
 The checkout is **shared**: other sessions may be working in other study folders at this moment. Every science session keeps to these rules:
 
 - **Stay on the current branch.** Changing branch moves every other session's files too.
-- **Commit only your own paths**: `git add <paths>`, then `git commit -m "<message>" -- <paths>`. A study session's paths are its own `.science/<study>/` folder, plus the protocol files of a promotion; the library's are `.science/library/`. Changes elsewhere in the tree belong to someone else: leave them as they are.
+- **Commit only your own paths**: `git add <paths>`, then `git commit -m "<message>" -- <paths>`. A study session's paths are its own `.science/<study>/` folder, plus the protocol and data files of a promotion; the library's are `.science/library/`; added data's are `.science/data/<slug>/` and `.science/data/index.md`. Changes elsewhere in the tree belong to someone else: leave them as they are.
 - **Add history, keep it**: every correction is a new commit. Stash, reset, amend and rebase reach into other sessions' work.
 - When git reports its lock file (`index.lock`) is busy, another session is committing: wait a few seconds and retry.
 
@@ -229,5 +248,6 @@ Messages start with the study, so `git log --grep '^<study>:'` shows one study's
 | Probe promoted | `<study>: promote NN: <step>` | `<study>/promote-<step>` |
 | Study closed | `<study>: close` | `<study>/close` |
 | Library page | `library: <slug>` | |
+| Data added | `data: <slug>` | |
 
-Tag right after the commit with `git tag <name>`. `git tag -l '<study>/*'` lists a study's milestones. When the repo pushes to a remote, push the tags too: `git push origin --tags`.
+Tag right after the commit with `git tag <name>`. `git tag -l '<study>/*'` lists a study's milestones. The work is **local**: commits and tags stay in this repository, and reach a remote only when the user asks (`git push`, then `git push origin --tags`).

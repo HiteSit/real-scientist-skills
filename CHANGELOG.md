@@ -4,6 +4,7 @@ This fork has no versions; git history is the record. Matt Pocock's releases are
 
 ## 2026-11-12
 
+- `setup-science` initialises git when the folder isn't a repository and keeps the work local (no remote, no push unless asked). It lets the user choose conda, pixi or uv and creates the environment file, always writes the conventions into `AGENTS.md`, and starts `.science/data/`: the repo's own data, beside the library, with an index and one folder per dataset. Probes read data from there, and `promote` moves the probe data later work needs into it.
 - New user-invoked skill `ask-science`: it shows the science flow, checks the current study, notebook and library for drift, repairs it with the user, suggests a guard so it doesn't recur, and ends with the command to resume. `experiment` suggests it when the notebook and folders disagree.
 - Simpler git: every study is a folder on one branch, and several studies run at once as separate sessions in the same checkout. Each session commits only its own folder, history is never rewritten, commit messages start with `<study>:`, and tags (`<study>/open`, `<study>/NN-r<R>`, `<study>/promote-<step>`, `<study>/close`) mark each version. The study and protocol branches are gone; `setup-science` records the **home branch**, and each notebook records the branch its study runs on.
 - Promotion is one commit by default, or a pull request from a worktree when `SETUP.md` says so.

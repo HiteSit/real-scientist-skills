@@ -37,7 +37,7 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 ## The science flow
 
 ```
-/setup-science           once per repo: domain, tools, conventions, an empty library
+/setup-science           once per repo: git init if needed, domain, conda | pixi | uv, AGENTS.md, empty library and data folder
       │
 /to-study                frame the question (reading the library where needed), draw a rough probe map, open .science/<study>/
       │
@@ -58,7 +58,7 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
       stable protocol ─► /to-spec → /to-tickets → /implement-spec   (Matt's engineering flow)
 ```
 
-1. **`/setup-science`**, once per repo, records your field, tools, compute and data locations in `.science/SETUP.md`, and starts the shared library.
+1. **`/setup-science`**, once per repo, initialises git if needed (the work stays local), lets you choose conda, pixi or uv, records your field, compute and data in `.science/SETUP.md`, writes the conventions into `AGENTS.md`, and starts the shared library and data folder.
 2. **`/to-study`** asks just enough questions to frame the question, sends what needs reading to **`desk-research`**, splits your plan into a rough probe map, and opens the study's folder with a lab notebook.
 3. **`/experiment <study>`** loads the study and runs one probe per pass: plan it with a prediction, run it, show the result, talk it through with you, and record your decision. Without a study name, it lists your studies and asks. Questions that need reading go to `desk-research`, which works in the background and answers into the library.
 4. **`/promote`** moves a probe that held up into the protocol, with a regression check, as one commit or a pull request.
@@ -76,6 +76,7 @@ The science skills keep everything they write in a `.science/` folder at the roo
 .science/
   SETUP.md              your setup
   library/              shared reading: index, log, one page per question, the raw search results
+  data/                 your own data, one folder per dataset, shared by every study
   <study>/              one folder per study
     STUDY.md            the starting direction, frozen; promotions and the outcome are added at the end
     NOTEBOOK.md         the current direction, the probe map table, notes on each probe, lessons

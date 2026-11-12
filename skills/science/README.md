@@ -18,9 +18,16 @@ This is a draft and can change without warning. For the short version and the re
 
 ### Set up the repo
 
-Run `/setup-science` once per repo. It first asks which field the work belongs to (chemistry, bioinformatics, physics, ecology, and so on). Then it records the setup every probe will use: tools and environments, compute (local or a cluster scheduler), where the data lives, the size above which outputs aren't committed, how plots and the dashboard are built, and whether promotions are plain commits or pull requests.
+Run `/setup-science` once per repo. If the folder isn't a git repository yet, it runs `git init`; the work stays local, and nothing is pushed unless you ask. It first asks which field the work belongs to (chemistry, bioinformatics, physics, ecology, and so on). Then it records the setup every probe will use:
 
-All of this goes into `.science/SETUP.md`. The branch you ran it on is recorded as the **home branch**, where the science work started; studies may later run elsewhere. It also starts the empty library, and writes the conventions into your `CLAUDE.md` or `AGENTS.md`. The skills themselves don't depend on your field; the field lives in that file.
+- **Environment:** you choose conda, pixi or uv. It recommends the one your repo already uses, or pixi for conda-forge and bioconda tools and uv for pure Python, creates the environment file if there isn't one, and records the command that runs things in it.
+- **Compute:** local, a cluster scheduler, or both.
+- **Data:** your own data goes into `.science/data/`, beside the library, one folder per dataset with an index and a README saying where each file came from. Every study reads it from the same path, and data a promoted probe produced lands there too. Data too large or too private for the repo stays where it is, and its folder in `.science/data/` holds the README and a fetch script.
+- **Heavy outputs:** the size above which files aren't committed.
+- **Plots and the dashboard:** how they're built.
+- **Promotion:** plain commits, or pull requests when the repo has a remote where changes are reviewed.
+
+All of this goes into `.science/SETUP.md`. The branch you ran it on is recorded as the **home branch**, where the science work started; studies may later run elsewhere. It also starts the empty library and data folder, and writes the conventions into `AGENTS.md`. The skills themselves don't depend on your field; the field lives in that file.
 
 ### Frame the study
 
@@ -135,6 +142,7 @@ Everything the science skills write lives in `.science/` at the root of your rep
 .science/
   SETUP.md                    your setup: domain, stack, home branch, promotion mode
   library/                    shared reading: index, log, pages, searches, files
+  data/                       the repo's own data: index, one folder per dataset, promoted probe data
   <study>/                    one folder per study
     STUDY.md                  starting direction, background and probe map, frozen; Promoted and Outcome lines added at the end
     NOTEBOOK.md               branch, current direction, probe map, probe notes, lessons, library links, dead ends, drift log
@@ -180,5 +188,6 @@ Every commit message starts with its study, and tags mark the moments worth comi
 | Probe promoted | `<study>: promote NN: <step>` | `<study>/promote-<step>` |
 | Study closed | `<study>: close` | `<study>/close` |
 | Library page | `library: <slug>` | |
+| Data added | `data: <slug>` | |
 
 `git log --grep '^<study>:'` shows one study's history, `git tag -l '<study>/*'` its milestones, and `git checkout <study>/03-r1` takes you back to exactly that version of a probe.
