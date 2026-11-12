@@ -7,7 +7,7 @@ description: "Layout and formats for science studies: the .science/ tree, STUDY.
 
 A **study** is one investigation around one question, living in its own folder `.science/<study>/`. It moves forward one **probe** at a time: a small run, sized to one session, planned only once the results it depends on are in. The **lab notebook** is the study's single source of truth for where it stands.
 
-All studies live on one branch, in one checkout. Several studies run at once as separate sessions in that checkout, each writing only inside its own folder. Literature and downloaded reference data live once, in the shared **library** (`.science/library/`, see `desk-research`); the repo's own data lives once, in the shared **data folder** (`.science/data/`, see **Data**). Studies link to both.
+All studies live on one branch, in one checkout. Several studies run at once as separate sessions in that checkout, each writing only inside its own folder. Two shared places sit beside the studies, split by one test: **read it to learn → library; a script loads it → data.** The **library** (`.science/library/`, see `desk-research`) holds what is read: papers, software documentation, reviews. The **data folder** (`.science/data/`, see **Data**) holds what probes load: external database exports, structures, datasets, model checkpoints, the user's own measurements. Studies link to both.
 
 The repo's stack (environment and its run command, compute, data, heavy-output threshold, home branch, promotion mode) is in `.science/SETUP.md`. Read it before writing any command or script.
 
@@ -16,8 +16,8 @@ The repo's stack (environment and its run command, compute, data, heavy-output t
 ```
 .science/
   SETUP.md                    the repo's science setup, written by setup-science
-  library/                    shared literature and downloaded reference data, see desk-research
-  data/                       the repo's own data, shared by every study, see Data
+  library/                    what is read: papers, software docs, reviews; see desk-research
+  data/                       what probes load: databases, datasets, checkpoints, measurements; see Data
   <study>/
     STUDY.md                  the starting direction, frozen; Promoted and Outcome lines added at the end
     NOTEBOOK.md               branch, current direction, probe map, probe notes, lessons, drift log
@@ -204,19 +204,29 @@ Fixing a crash before the probe's first commit is part of running it, noted unde
 
 ## Data
 
-`.science/data/` holds the repo's own data: what the user brings (measurements, structures, sample sheets) and what promotion moves out of a probe because later work needs it. It sits beside the library and follows its shape:
+`.science/data/` holds everything a probe **loads**, shared by every study:
+
+- **the user's own data**: measurements, instrument output, sample sheets, structures they bring;
+- **external databases**: records, query results and full exports (ChEMBL, PDB, UniProt and the like), at a pinned release;
+- **datasets**: benchmarks and published data releases;
+- **models**: ML checkpoints and weights, with their configuration;
+- **promoted outputs**: what `/promote` moves out of a probe because later work needs it.
+
+What is **read** to learn something goes to the library instead, even when it lives in a database: a paper, a tool's manual, a database's documentation. One question often feeds both: the library page says what is known and where it comes from, the data folder holds the table the probes load, and each links to the other.
 
 ```
 .science/data/
-  index.md                  one line per dataset: - [<slug>](<slug>/README.md): <what it is>
+  index.md                  one line per dataset, grouped by kind: - [<slug>](<slug>/README.md): <what it is>
   <slug>/
-    README.md               one row per file: what it is, source (a lab, an instrument, or <study>/NN-<slug>), date, licence, checksum
+    README.md               what it is; one row per file: source (a lab, an instrument, a database and release, a model
+                            repository, or <study>/NN-<slug>), version or access date, licence, checksum; the library page
+                            that explains it, if any
     fetch.<ext>             only for files kept outside the repo: regenerates or downloads them
     .gitignore              files above the heavy-output threshold
     <files>
 ```
 
-Probes read data by its repo-relative path (`.science/data/<slug>/<file>`) and never copy it into their folder. A probe's own outputs stay in the probe until `/promote` moves the ones later work needs into a new `.science/data/<slug>/`, with the probe as its source. Data kept outside the repo (too large, or private) gets a folder here all the same, holding the README and the fetch script, so its path never changes.
+Probes read data by its repo-relative path (`.science/data/<slug>/<file>`) and never copy it into their folder. A probe's own outputs stay in the probe until `/promote` moves the ones later work needs into a new `.science/data/<slug>/`, with the probe as its source. Data kept outside the repo (too large, like most checkpoints and full database dumps, or private) gets a folder here all the same, holding the README and the fetch script, so its path never changes.
 
 Data changes only through its own commits, limited to `.science/data/`: `data: <slug>`, or inside a promotion commit.
 

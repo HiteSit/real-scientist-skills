@@ -33,7 +33,7 @@ Lead each section with the recommended answer so the user can accept it in a wor
 
 **C. Compute.** Local machine, a scheduler on a cluster, or both. For a scheduler, record how a job is submitted and how its status is checked, because long probes are submitted and resumed later.
 
-**D. Data.** The repo's own data (measurements, structures, inputs the user brings) lives in `.science/data/`, beside the library, so every study and every promoted step finds it at the same repo-relative path. Recommend this; ask only what data exists already and where it comes from, and move or fetch it into `.science/data/<slug>/` (see `lab-notebook`). Data too large or too private for the repo stays where it is: record its location and how to reach it, and its `.science/data/<slug>/` folder holds only the README and the fetch script.
+**D. Data.** Everything probes load lives in `.science/data/`, beside the library: the user's own measurements and structures, exports from external databases, benchmark datasets, ML model checkpoints. Every study and every promoted step then finds it at the same repo-relative path. Recommend this; ask only what data exists already and where it comes from, and move or fetch it into `.science/data/<slug>/` (see **Data** in `lab-notebook`). Data too large or too private for the repo (most checkpoints and full database dumps) stays where it is: record its location and how to reach it, and its `.science/data/<slug>/` folder holds only the README and the fetch script.
 
 **E. Heavy outputs.** The size above which a probe's, the library's or the data folder's files are gitignored instead of committed. Recommend 5 MB.
 
@@ -77,7 +77,7 @@ The `## Science skills` block goes into `AGENTS.md`, created if it does not exis
 - A session works on one study: `/experiment <study>` loads it, and work for another study starts in a new session.
 - The checkout is shared: stay on the current branch, commit only your own paths (`git add <paths>` then `git commit -m "<message>" -- <paths>`), and keep history as it is: no stash, reset, amend or rebase. Retry when git's lock file is busy.
 - Commit messages start with the study (`<study>: …`); probes and fixes are tagged `<study>/NN-r<R>`. Details are in the `lab-notebook` skill.
-- Literature and downloaded reference data live once, in `.science/library/`, shared by every study; the `desk-research` skill keeps it. The repo's own data lives in `.science/data/`.
+- Two shared places, split by one test: read it to learn → `.science/library/` (papers, software docs, reviews; kept by the `desk-research` skill); a script loads it → `.science/data/` (databases, datasets, checkpoints, measurements).
 - Lost, or the question or the notebook seem to have drifted: run `/ask-science`.
 
 Commit `.science/`, the environment file and `AGENTS.md` together: `science: setup`.

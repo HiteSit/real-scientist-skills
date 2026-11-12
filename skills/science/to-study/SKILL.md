@@ -37,7 +37,7 @@ Stop as soon as the question is **sharp enough to probe**: a first probe can be 
 The user often arrives with a long, complex set of indications: many steps, conditions and checks in one go. Splitting that into probes is this skill's job, the way `wayfinder` splits a large effort into tickets. See `lab-notebook` for the map's format.
 
 1. Fan out **breadth-first** over the indications: list every piece of work they imply, without going deep on any one.
-2. Cut the work into probes, each the smallest run that answers one thing, sized to one session. Reading or gathering that later probes need (literature, reference data, tool documentation) becomes a **research row**, marked `(research)`.
+2. Cut the work into probes, each the smallest run that answers one thing, sized to one session. Reading or fetching that later probes need (literature and tool documentation for the library; database exports, datasets, model checkpoints for the data folder) becomes a **research row**, marked `(research)`.
 3. Find the **hierarchy**: group the probes into phases, each a stage that answers one sub-question or prepares what later stages need.
 4. Find the **order of execution**: for each probe, name what blocks it, the probes and research rows whose results it needs (**Blocked by**). Order the phases so the edges point forward.
 5. Leave in **Not yet mapped** whatever depends on results too much to state as a probe yet. Chart only what is sharp.

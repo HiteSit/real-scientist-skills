@@ -26,7 +26,7 @@ Iterate until the user approves the tree, word for word. Record the approved tre
 
 ## 3. Port the step
 
-1. Move the probe's working scripts into the approved tree. Move the probe outputs and inputs later work needs (a curated set, a reference result, a prepared structure) into `.science/data/<slug>/`, with this probe as their source and a line in `.science/data/index.md` (see **Data** in `lab-notebook`). The step reads them there, and library files it needs at run time stay in the library. Replace hard-coded paths and one-off values with parameters; keep the probe's values as the documented defaults.
+1. Move the probe's working scripts into the approved tree. Move the probe outputs and inputs later work needs (a curated set, a reference result, a prepared structure, a trained checkpoint) into `.science/data/<slug>/`, with this probe as their source and a line in `.science/data/index.md` (see **Data** in `lab-notebook`). The step reads all its data from `.science/data/`. Replace hard-coded paths and one-off values with parameters; keep the probe's values as the documented defaults.
 2. Call the Skill tool with `tdd` to add a regression check: the promoted step, run on the probe's committed inputs, reproduces the probe's validated result within a stated tolerance.
 3. Call the Skill tool with `code-review` on the protocol change.
 
