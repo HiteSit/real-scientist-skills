@@ -11,7 +11,7 @@ cd "$(dirname "$0")/.."
 
 OWNED=(README.md CHANGELOG.md MAINTAINING.md)
 git remote get-url upstream >/dev/null 2>&1 || git remote add upstream https://github.com/mattpocock/skills.git
-git fetch --quiet upstream main
+git fetch --quiet --no-tags upstream main
 
 if git merge-base --is-ancestor upstream/main HEAD; then
     echo "already up to date with upstream/main"

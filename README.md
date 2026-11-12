@@ -1,6 +1,9 @@
 # Skills for Real Scientists
 
-[![skills.sh](https://skills.sh/b/HiteSit/real-scientist-skills)](https://skills.sh/HiteSit/real-scientist-skills)
+[![Release](https://img.shields.io/github/v/release/HiteSit/real-scientist-skills?label=release)](https://github.com/HiteSit/real-scientist-skills/releases/latest)
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-standard-5fb3a1)](https://agentskills.io)
+[![Synced with mattpocock/skills](https://github.com/HiteSit/real-scientist-skills/actions/workflows/sync-upstream.yml/badge.svg)](https://github.com/HiteSit/real-scientist-skills/actions/workflows/sync-upstream.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
 Agent skills for doing science with a coding agent. They adapt [Matt Pocock's skills for real engineers](https://github.com/mattpocock/skills) to research, where each step follows from the last result.
 
