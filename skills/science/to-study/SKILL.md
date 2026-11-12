@@ -1,6 +1,7 @@
 ---
 name: to-study
 description: Grill the user just far enough to frame the starting scientific question of a study, reading the literature where the framing needs it, chart a provisional probe map from their indications, then write its direction and open its folder and lab notebook.
+license: MIT
 disable-model-invocation: true
 ---
 

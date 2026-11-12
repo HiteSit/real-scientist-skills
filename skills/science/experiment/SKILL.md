@@ -1,6 +1,7 @@
 ---
 name: experiment
 description: Load a science study (/experiment <study>, from any session) and run it one probe at a time. Plan a probe with a prediction, run it, show the result as plots and a brief, grill the user on what it means, and let them decide the next step after every probe. Also fixes a recorded probe in place when it turns out to have been run wrong.
+license: MIT
 disable-model-invocation: true
 ---
 

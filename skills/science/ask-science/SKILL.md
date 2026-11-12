@@ -1,6 +1,7 @@
 ---
 name: ask-science
 description: "Put a confused science session back on track: show the science flow, find where you are and what drifted (git, the study's question, the notebook, the library), repair it with the user, and say how to resume."
+license: MIT
 disable-model-invocation: true
 ---
 

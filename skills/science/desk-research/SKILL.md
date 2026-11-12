@@ -1,6 +1,7 @@
 ---
 name: desk-research
 description: Answer a science question by reading existing sources (papers, software documentation, reviews, database documentation) and keep the answer in the repo's shared library, .science/library/. Use when framing a study needs reading, when a research row on a probe map is on the frontier, or when a question needs reading before a probe can be planned.
+license: MIT
 ---
 
 # Desk Research

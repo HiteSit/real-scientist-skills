@@ -1,6 +1,7 @@
 ---
 name: lab-notebook
 description: "Layout and formats for science studies: the .science/ tree, STUDY.md, NOTEBOOK.md, the probe map, probe folders, commits and tags in a shared checkout, result briefs, plots and the study dashboard, and how to triage an off-axis ask or result. Use when planning, running, recording or promoting a probe, when reading or writing a study's notebook, or when the user asks something the current direction does not cover."
+license: MIT
 ---
 
 # Lab notebook

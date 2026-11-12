@@ -1,6 +1,7 @@
 ---
 name: promote
 description: Promote a validated probe from a science study into the protocol, after agreeing the directory tree with the user.
+license: MIT
 disable-model-invocation: true
 ---
 

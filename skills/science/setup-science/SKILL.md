@@ -1,6 +1,7 @@
 ---
 name: setup-science
 description: "Configure this repo for the science skills: initialise git if needed, record the scientific domain, the stack, the home branch, the data folder and the conventions in .science/SETUP.md, and start the shared library. Run once before first use of the other science skills."
+license: MIT
 disable-model-invocation: true
 ---
 
