@@ -57,4 +57,12 @@ A pull that can't fast-forward (the clone has commits GitHub doesn't) stops and 
 
 ## Releases
 
-Release with `gh skill publish`: run it with `--dry-run` first, which checks every skill against the Agent Skills spec, then without it to tag the version and create the GitHub release. Add a dated entry to `CHANGELOG.md` before each release.
+Release with `gh skill publish`, from a fresh clone that has only `origin`: in this clone, the `upstream` remote makes it publish to `mattpocock/skills`, which fails. Validate `skills/science` only, because one of Matt's in-progress skills doesn't parse:
+
+```bash
+T=$(mktemp -d) && git clone --depth 1 https://github.com/HiteSit/real-scientist-skills.git "$T/r" && cd "$T/r"
+gh skill publish skills/science --dry-run
+gh skill publish skills/science --tag vX.Y.Z
+```
+
+Add a dated entry to `CHANGELOG.md` before each release.
