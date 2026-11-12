@@ -67,6 +67,7 @@ The `## Science skills` block goes into `CLAUDE.md` if it exists, else `AGENTS.m
 - Each study lives on its own `science/<study>` branch, one level deep (git refuses `science/<study>/...` beside `science/<study>`), cut from the base branch named in `.science/SETUP.md` or, for a spin-off, from its parent study's branch.
 - A session works on one study: `/experiment <study>` loads it, and work for another study starts in a new session.
 - Several studies can run at once, each in its own session, git worktree or agent.
+- Lost, or the branches, the question or the notebook seem to have drifted: run `/ask-science`.
 - One commit per probe on the study branch.
 - Promoted protocol reaches the base branch only through a `protocol/<step>` branch and a pull request.
 - A study branch never merges into the base branch; it merges the base branch in after each promotion.

@@ -2,6 +2,10 @@
 
 This fork has no versions; git history is the record. Matt Pocock's releases are in [his CHANGELOG](https://github.com/mattpocock/skills/blob/main/CHANGELOG.md) and arrive here through the weekly upstream sync.
 
+## 2026-11-12
+
+- New user-invoked skill `ask-science`: it shows the science flow, checks the current branch, study and notebook for drift, repairs it with the user, suggests a guard so it doesn't recur, and ends with the command to resume. `experiment` suggests it when the notebook and folders disagree.
+
 ## 2026-11-09
 
 - Science studies now start from a configurable base branch recorded in `.science/SETUP.md`. `/experiment <study>` loads a study in any session, and each session stays with one study.

@@ -19,6 +19,7 @@ Every run starts by loading one **study**, so a fresh session continues exactly 
 1. **Pick it.** With `/experiment <study>`, the study is `science/<study>`. Without an argument, use the current branch if it is a `science/*` branch. Otherwise list the studies: for each `science/*` branch, read `.science/<study>/STUDY.md` and `NOTEBOOK.md` with `git show <branch>:<path>`, without switching branch, and show its question, last probe with verdict, and current direction; then ask which one to load. If there are no study branches, tell the user to run `/to-study` and stop.
 2. **Switch to it.** If the working tree has uncommitted changes, stop and ask the user what to do with them before switching. Then check out `science/<study>`.
 3. Call the Skill tool with `lab-notebook` for the tree and formats, and read `.science/SETUP.md` for the domain, stack and base branch.
+4. Check that the notebook and the probe folders agree: every started row of the probe map has a folder with the matching name, and the last probe has a **Decision** unless it is still `running`. If they disagree, or the branch holds work that belongs elsewhere, stop and suggest `/ask-science` instead of guessing.
 
 Done when you are on the study branch with its `NOTEBOOK.md` open.
 

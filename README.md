@@ -63,6 +63,8 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 4. **`/promote`** moves a probe that held up into the protocol on the base branch, through a pull request with a regression check.
 5. When the protocol stops changing, Matt's `/to-spec`, `/to-tickets` and `/implement-spec` take it from there.
 
+Lost, or think something has drifted? **`/ask-science`** shows where you are, repairs the drift with you, and tells you how to resume.
+
 Each step in detail: [the science flow, step by step](./skills/science/README.md#the-flow-step-by-step).
 
 ## What lives where
@@ -121,6 +123,7 @@ You start the first four by typing them. The agent can also load the last two on
 - **[promote](./skills/science/promote/SKILL.md)**: Move a validated probe into the protocol.
 - **[lab-notebook](./skills/science/lab-notebook/SKILL.md)**: The study's layout and formats: notebook, probe folders, result briefs, plots and dashboard.
 - **[desk-research](./skills/science/desk-research/SKILL.md)**: Gather papers, database records and data files in parallel, with citations and provenance.
+- **[ask-science](./skills/science/ask-science/SKILL.md)**: Find where you are in a study, repair what drifted, and get back on track.
 
 ### Matt's skills
 

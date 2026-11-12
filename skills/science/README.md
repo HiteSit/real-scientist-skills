@@ -12,6 +12,7 @@ This is a draft and can change without warning. For the short version and the re
 - **[promote](./promote/SKILL.md)**: Move a validated probe into the protocol on the base branch, after you agree on where it goes. You start it.
 - **[desk-research](./desk-research/SKILL.md)**: Gather papers, databases and data files for a study through parallel subagents, using your agent's literature tools, and save them under the study with provenance. The agent can start it.
 - **[lab-notebook](./lab-notebook/SKILL.md)**: The study's layout and formats: the `.science/` tree, the notebook, probe folders, result briefs, plots and the dashboard. The agent can start it.
+- **[ask-science](./ask-science/SKILL.md)**: When you're lost or something has drifted (branches, the study's question, the notebook), it shows the flow and where you are, repairs the drift with you, suggests a guard so it doesn't happen again, and gives you the command to resume. You start it.
 
 ## The flow, step by step
 
@@ -91,6 +92,18 @@ When a probe, or a chain of probes, has held up, `/promote` moves it from scratc
 5. Back on the study branch, it marks the probe as promoted in the notebook, adds the same **Promoted** line to `STUDY.md`, and commits `promote NN: <step>`.
 
 The study branch never merges into the base branch. After the pull request merges, the study branch merges the base branch in, so later probes use the promoted step instead of their scratch copy. Then you're back in `/experiment <study>`.
+
+### When you're lost: `/ask-science`
+
+Run `/ask-science` whenever you're unsure where you are, or the work seems to have left the tracks: probe work on the wrong branch, a direction that has moved away from the study's question, a notebook that no longer matches the probe folders. It works like Matt's `/ask-matt` and `/retro` combined:
+
+1. It shows the map of the science flow.
+2. It checks where you are, without changing anything. On a study branch, it checks that study in depth: git, the question against the current direction, and the notebook against the folders. On any other branch, it lists your studies and protocol branches.
+3. It proposes a fix for each piece of drift, most serious first, and applies it only with your yes. If the question itself has drifted, you choose: keep the new direction, spin it off as a new study, or go back to the original question.
+4. From this session and the study's git history, it finds what let the drift happen, and suggests a guard: a lesson in the notebook, a convention in `.science/SETUP.md`, or a proposed change to a science skill.
+5. It ends with the one command that resumes the work.
+
+`/experiment` suggests it on its own when the notebook and the folders don't agree.
 
 ### Hand off to engineering
 

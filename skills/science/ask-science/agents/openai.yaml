@@ -1,0 +1,5 @@
+interface:
+  display_name: "Ask Science"
+  short_description: "Find where you are in a science study and get back on track"
+policy:
+  allow_implicit_invocation: false
