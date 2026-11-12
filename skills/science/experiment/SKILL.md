@@ -54,7 +54,7 @@ When a second frontier probe is independent of this one and the user wants both 
 
 ### 3. Run
 
-Organise the probe folder however the work needs. Run every command through the environment's run command in `SETUP.md`, read data from `.science/data/` by its repo-relative path, and read `SETUP.md` for how to submit to compute. Data the user brings mid-study goes into `.science/data/<slug>/` with its own `data: <slug>` commit, never into the probe folder.
+Organise the probe folder however the work needs. Run every command through the environment's run command in `SETUP.md`, and read `SETUP.md` for how to submit to compute. Read the user's input data from the data folder by its repo-relative path; fetch everything else the probe loads (database exports, datasets, model checkpoints) into the probe's own folder, with a fetch script and the source in the README (see **Data** in `lab-notebook`). When the user hands over new data of their own mid-study, add it to the data folder with its own `data: <slug>` commit.
 
 1. Write the scripts and the probe's `.gitignore` for heavy outputs.
 2. Run. Record under **Method** the exact commands, tool versions, seeds and inputs, so the probe reruns from what is committed.

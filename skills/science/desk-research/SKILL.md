@@ -1,20 +1,17 @@
 ---
 name: desk-research
-description: Answer a science question from existing sources (papers, software documentation, reviews, database documentation) into the repo's shared library, .science/library/, and fetch the data a probe will load (external database records, structures, model checkpoints, datasets) into .science/data/. Use when framing a study needs reading, when a research row on a probe map is on the frontier, or when a question needs reading or data before a probe can be planned.
+description: Answer a science question by reading existing sources (papers, software documentation, reviews, database documentation) and keep the answer in the repo's shared library, .science/library/. Use when framing a study needs reading, when a research row on a probe map is on the frontier, or when a question needs reading before a probe can be planned.
 ---
 
 # Desk Research
 
-**Desk research** answers a question from what already exists. It is the sister of the bench work in probes: nothing is run, things are found, read and saved. What it finds goes to one of two shared places, by one test: **read it to learn → library; a script loads it → data.**
+**Desk research** answers a question by **reading** what already exists: academic papers, software and tool documentation, reviews, database documentation, standards. It is the sister of the bench work in probes: nothing is run, things are found, read and saved.
 
-- The **library**, `.science/library/`, holds what is **read**: academic papers, software and tool documentation, reviews, database documentation, standards. Its pages are the knowledge drawn from them. It follows the spirit of Karpathy's LLM Wiki in its simplest form: an index read first, an append-only log, and markdown pages the agent writes and keeps current, with the raw search outputs saved beside them.
-- The **data folder**, `.science/data/`, holds what probes **load**: records and exports from external databases, structures, benchmark datasets, ML model checkpoints and weights, reference values in machine-readable form. Its layout and provenance rules are under **Data** in `lab-notebook`.
+Everything it finds goes into the **library**, `.science/library/`: one shared collection for the whole repo, belonging to no study. Studies link to library pages; the pages themselves never name a study, so any later study can reuse them. The library follows the spirit of Karpathy's LLM Wiki in its simplest form: an index read first, an append-only log, and markdown pages the agent writes and keeps current, with the raw search outputs saved beside them.
 
-A question often touches both: "which binders of this target have measured affinities?" is a library page (what is known, from which papers and which database) and a data folder (the affinity table the probes will load). The page links to the data folder; the data README links back to the page that explains it.
+Desk research reads; it downloads no data. When the answer points to data a probe will load (a database export, a published dataset, a model checkpoint), the page names it with its source, release and licence, and the probe that needs it fetches it into its own folder (see **Data** in `lab-notebook`).
 
-Both belong to no study. Studies link to library pages and data folders; neither ever names a study, so any later study can reuse them.
-
-Read `.science/SETUP.md` for the domain, external data locations and heavy-output threshold.
+Read `.science/SETUP.md` for the domain.
 
 ## The library
 
@@ -43,7 +40,7 @@ Read `.science/SETUP.md` for the domain, external data locations and heavy-outpu
 
 ## Evidence
 - [searches/<date>-<slug>](searches/<date>-<slug>/query.md): <what that search contributed>
-- [data/<slug>](../data/<slug>/README.md): <the data this question fetched, and what it holds>
+- <a database, dataset or checkpoint the answer points to>: <source, release, licence, how to fetch it>
 
 ## Gaps
 <what could not be found or verified, and secondary sources used in place of primary ones>
@@ -55,7 +52,7 @@ A page grows: a later question on the same topic extends it instead of starting 
 
 **log.md** is append-only, one entry per event, so `grep '^## \[' log.md` lists the history: `## [YYYY-MM-DD] search | <slug>: <tool>, <hits> hits, <kept> kept (for <study>)`, `## [YYYY-MM-DD] page | <slug>: new`, `## [YYYY-MM-DD] update | <slug>: <what changed>`. The `(for <study>)` note is the only place a study is named.
 
-**Primary sources first**: the paper, the official database, the tool's own documentation, never a write-up of them. Follow every claim back to the source that owns it, and fetch data from the database or the authors' release, at a pinned version or release. A secondary source is used only when no primary one is reachable, and is marked as such under **Gaps**.
+**Primary sources first**: the paper, the official database, the tool's own documentation, never a write-up of them. Follow every claim back to the source that owns it, and name data by the database or the authors' release, at a pinned version. A secondary source is used only when no primary one is reachable, and is marked as such under **Gaps**.
 
 ## Literature tools
 
@@ -77,10 +74,10 @@ Every question starts here. Read `index.md` and open the pages that look relevan
 ## Research
 
 1. **Collect the questions** the look-up left open: the caller's, and every research row on the probe map's frontier.
-2. **Start one research subagent per question**, all at once, in the background, each with a fresh context window. They work in this checkout, on this branch, and leave git to you. Each writes only its own `searches/<date>-<slug>/` folders and, when the question needs data, its own `.science/data/<slug>/` folder, so they never collide. Brief each with **context pointers**, not copies: the question and slug, `.science/SETUP.md`, the library layout above, **Data** in `lab-notebook`, any existing page it extends, and the literature tools available. Each reports back a draft answer with its citations.
+2. **Start one research subagent per question**, all at once, in the background, each with a fresh context window. They work in this checkout, on this branch, and leave git to you. Each writes only its own `searches/<date>-<slug>/` folders, so they never collide. Brief each with **context pointers**, not copies: the question and slug, `.science/SETUP.md`, the library layout above, any existing page it extends, and the literature tools available. Each reports back a draft answer with its citations.
 3. **Keep working while they read.** The caller goes on with whatever does not depend on the answer.
-4. **Check each report**: every claim cited, every search saved as returned, every data file listed in its folder's README with source, version and licence, a fetch script for every downloaded file. Send anything missing back to the same subagent.
-5. **Write the page yourself.** You alone write pages, both index files and `log.md`, so parallel subagents and parallel studies never collide on the shared files. Write or extend the page, add or update its index line, add a line to `.science/data/index.md` for each new data folder, append the log entries.
-6. **Commit**: the library as `library: <slug>`, limited to `.science/library`; each new data folder as `data: <slug>`, limited to it and `.science/data/index.md` (see **Commits and tags** in `lab-notebook`).
+4. **Check each report**: every claim cited, every search saved as returned, every data source the answer points to named with its release and licence. Send anything missing back to the same subagent.
+5. **Write the page yourself.** You alone write pages, `index.md` and `log.md`, so parallel subagents and parallel studies never collide on the shared files. Write or extend the page, add or update its index line, append the log entries.
+6. **Commit the library**: `git add .science/library`, then `git commit -m "library: <slug>" -- .science/library` (see **Commits and tags** in `lab-notebook`).
 
-Done when every question has a committed page and an index line, and every data folder it fetched has its README and an index line. Report each page and data folder to the caller, one line each with its link. The caller links them from its study: a `done` research row, a **Background** line in `STUDY.md`, or a line under the notebook's **Library**.
+Done when every question has a committed page and an index line. Report each page to the caller, one line with its link. The caller links it from its study: a `done` research row, a **Background** line in `STUDY.md`, or a line under the notebook's **Library**.

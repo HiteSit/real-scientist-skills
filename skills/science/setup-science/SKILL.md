@@ -1,6 +1,6 @@
 ---
 name: setup-science
-description: "Configure this repo for the science skills: initialise git if needed, record the scientific domain, the stack, the home branch and the conventions in .science/SETUP.md, and start the shared library and data folder. Run once before first use of the other science skills."
+description: "Configure this repo for the science skills: initialise git if needed, record the scientific domain, the stack, the home branch, the data folder and the conventions in .science/SETUP.md, and start the shared library. Run once before first use of the other science skills."
 disable-model-invocation: true
 ---
 
@@ -33,9 +33,9 @@ Lead each section with the recommended answer so the user can accept it in a wor
 
 **C. Compute.** Local machine, a scheduler on a cluster, or both. For a scheduler, record how a job is submitted and how its status is checked, because long probes are submitted and resumed later.
 
-**D. Data.** Everything probes load lives in `.science/data/`, beside the library: the user's own measurements and structures, exports from external databases, benchmark datasets, ML model checkpoints. Every study and every promoted step then finds it at the same repo-relative path. Recommend this; ask only what data exists already and where it comes from, and move or fetch it into `.science/data/<slug>/` (see **Data** in `lab-notebook`). Data too large or too private for the repo (most checkpoints and full database dumps) stays where it is: record its location and how to reach it, and its `.science/data/<slug>/` folder holds only the README and the fetch script.
+**D. Data.** The **data folder** holds the input data the user gives, the starting point of the work: their measurements, instrument output, sample sheets, structures. Ask where it should live, `data/` at the repo root or `.science/data/`; recommend `data/` when the repo already has one, else `.science/data/`. Then ask what data they have and where it is, and on their word move or copy it into `<data>/<slug>/` (see **Data** in `lab-notebook`). Data too large or too private for the repo stays where it is: its folder holds the README with the path and how to reach it. Data a probe fetches (database exports, datasets, model checkpoints) never goes here: it lives in the probe.
 
-**E. Heavy outputs.** The size above which a probe's, the library's or the data folder's files are gitignored instead of committed. Recommend 5 MB.
+**E. Heavy outputs.** The size above which files in a probe or the data folder are gitignored instead of committed. Recommend 5 MB.
 
 **F. Plotting and dashboard.** The plotting library probes use for figures, and what builds the study dashboard. Recommend whatever the stack already uses for figures, and live HTML pages (see `lab-notebook`) for the dashboard. Record any domain viewer the pages need (for molecules, 3Dmol.js).
 
@@ -60,7 +60,7 @@ Show the user a draft of `.science/SETUP.md` and of the `## Science skills` bloc
 <conda | pixi | uv>: <environment file>; run commands with `<command>`
 ## Compute
 ## Data
-`.science/data/`; external locations: <path or store, and how to reach it, or "none">
+<data/ | .science/data/>; data kept elsewhere: <path or store, and how to reach it, or "none">
 ## Heavy outputs
 Gitignore files above <N> MB.
 ## Plotting and dashboard
@@ -68,7 +68,7 @@ Gitignore files above <N> MB.
 <commit | pull request>
 ```
 
-Start the library: `.science/library/index.md` with the heading `# Library` and nothing else, and `.science/library/log.md` with the heading `# Library log` and one entry, `## [<YYYY-MM-DD>] setup | library started`. Start the data folder: `.science/data/index.md` with the heading `# Data` and one line per dataset moved in.
+Start the library: `.science/library/index.md` with the heading `# Library` and nothing else, and `.science/library/log.md` with the heading `# Library log` and one entry, `## [<YYYY-MM-DD>] setup | library started`. Start the data folder at the chosen location: `index.md` with the heading `# Data` and one line per dataset moved in.
 
 The `## Science skills` block goes into `AGENTS.md`, created if it does not exist. It states the conventions every science session follows:
 
@@ -77,9 +77,9 @@ The `## Science skills` block goes into `AGENTS.md`, created if it does not exis
 - A session works on one study: `/experiment <study>` loads it, and work for another study starts in a new session.
 - The checkout is shared: stay on the current branch, commit only your own paths (`git add <paths>` then `git commit -m "<message>" -- <paths>`), and keep history as it is: no stash, reset, amend or rebase. Retry when git's lock file is busy.
 - Commit messages start with the study (`<study>: …`); probes and fixes are tagged `<study>/NN-r<R>`. Details are in the `lab-notebook` skill.
-- Two shared places, split by one test: read it to learn → `.science/library/` (papers, software docs, reviews; kept by the `desk-research` skill); a script loads it → `.science/data/` (databases, datasets, checkpoints, measurements).
+- Literature and documentation live once, in `.science/library/` (the `desk-research` skill keeps it). The user's input data lives in the data folder named in `.science/SETUP.md`; probes read it and never write to it. Everything else a probe loads, it fetches into its own folder.
 - Lost, or the question or the notebook seem to have drifted: run `/ask-science`.
 
-Commit `.science/`, the environment file and `AGENTS.md` together: `science: setup`.
+Commit `.science/`, the data folder, the environment file and `AGENTS.md` together: `science: setup`.
 
 Done when the folder is a git repository, `.science/SETUP.md` exists with every section filled or marked "not used", the library has its index and log, the data folder has its index, and `AGENTS.md` carries the `## Science skills` block. Then tell the user the next step is `/to-study`.

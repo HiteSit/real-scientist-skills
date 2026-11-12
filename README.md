@@ -31,13 +31,13 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 - **Keep dead ends and mistakes.** A failed probe stays in the record, so nobody runs it again. A probe that was run wrong is fixed in place, the fix is logged in its README, and the mistake becomes a lesson the agent checks before every later probe.
 - **You decide.** After every probe, the agent stops, asks how you read the result, and you choose the next step.
 - **One study per session, many studies at once.** `/experiment <study>` loads a study in any session and picks up where the last one stopped. Several studies run side by side, each in its own session. When you ask about another study, the agent records it and gives you the command for a new session.
-- **Read once, fetch once, share everywhere.** What you read along the way (papers, software docs) goes into one shared library; what your probes load (database exports, datasets, model checkpoints, your measurements) goes into one shared data folder. Every study links to both, and nothing is searched or downloaded twice.
+- **Read once, share everywhere.** What you read along the way (papers, software docs) goes into one shared library that every study links to, so nothing is searched twice. Your input data sits in one data folder every study reads; anything else a probe downloads stays in that probe until it's promoted.
 - **Keep everything in git, simply.** One branch for all studies, each study in its own folder, each session committing only its own folder. Every probe and every fix gets a tag, so you can go back to any version.
 
 ## The science flow
 
 ```
-/setup-science           once per repo: git init if needed, domain, conda | pixi | uv, AGENTS.md, empty library and data folder
+/setup-science           once per repo: git init if needed, domain, conda | pixi | uv, data folder, AGENTS.md, empty library
       │
 /to-study                frame the question (reading the library where needed), draw a rough probe map, open .science/<study>/
       │
@@ -58,7 +58,7 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
       stable protocol ─► /to-spec → /to-tickets → /implement-spec   (Matt's engineering flow)
 ```
 
-1. **`/setup-science`**, once per repo, initialises git if needed (the work stays local), lets you choose conda, pixi or uv, records your field, compute and data in `.science/SETUP.md`, writes the conventions into `AGENTS.md`, and starts the shared library and data folder.
+1. **`/setup-science`**, once per repo, initialises git if needed (the work stays local), lets you choose conda, pixi or uv and where your input data lives (`data/` or `.science/data/`), records your field and compute in `.science/SETUP.md`, writes the conventions into `AGENTS.md`, and starts the shared library.
 2. **`/to-study`** asks just enough questions to frame the question, sends what needs reading to **`desk-research`**, splits your plan into a rough probe map, and opens the study's folder with a lab notebook.
 3. **`/experiment <study>`** loads the study and runs one probe per pass: plan it with a prediction, run it, show the result, talk it through with you, and record your decision. Without a study name, it lists your studies and asks. Questions that need reading go to `desk-research`, which works in the background and answers into the library.
 4. **`/promote`** moves a probe that held up into the protocol, with a regression check, as one commit or a pull request.
@@ -76,7 +76,7 @@ The science skills keep everything they write in a `.science/` folder at the roo
 .science/
   SETUP.md              your setup
   library/              what you read: papers, software docs; one page per question, the raw search results
-  data/                 what probes load: database exports, datasets, model checkpoints, your measurements
+  data/                 your input data (or data/ at the repo root, your choice)
   <study>/              one folder per study
     STUDY.md            the starting direction, frozen; promotions and the outcome are added at the end
     NOTEBOOK.md         the current direction, the probe map table, notes on each probe, lessons
@@ -120,7 +120,7 @@ You start `setup-science`, `to-study`, `experiment`, `promote` and `ask-science`
 - **[experiment](./skills/science/experiment/SKILL.md)**: Load a study and run it one probe at a time.
 - **[promote](./skills/science/promote/SKILL.md)**: Move a validated probe into the protocol.
 - **[lab-notebook](./skills/science/lab-notebook/SKILL.md)**: The study's layout and formats: notebook, probe folders, result briefs, plots and dashboard.
-- **[desk-research](./skills/science/desk-research/SKILL.md)**: Answer questions from papers and documentation into the shared library, and fetch database exports, datasets and checkpoints into the shared data folder, in parallel, with citations and provenance.
+- **[desk-research](./skills/science/desk-research/SKILL.md)**: Answer questions by reading papers and documentation in parallel, into the shared library, with citations.
 - **[ask-science](./skills/science/ask-science/SKILL.md)**: Find where you are in a study, repair what drifted, and get back on track.
 
 ### Matt's skills

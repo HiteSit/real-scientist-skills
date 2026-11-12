@@ -10,7 +10,7 @@ This is a draft and can change without warning. For the short version and the re
 - **[to-study](./to-study/SKILL.md)**: Ask you just enough to frame the starting question, reading the literature where the framing needs it, split your plan into a rough probe map (phases, order, what blocks what), then open the study's folder and lab notebook. You start it.
 - **[experiment](./experiment/SKILL.md)**: Load a study (`/experiment <study>`, from any session) and run it one probe at a time: a prediction per probe, plots and a brief per result, and a short talk about each result before you decide the next step. You start it.
 - **[promote](./promote/SKILL.md)**: Move a validated probe into the protocol, after you agree on where it goes. You start it.
-- **[desk-research](./desk-research/SKILL.md)**: Answer a question from papers and documentation through parallel subagents, using your agent's literature tools, into the shared library; fetch the database exports, datasets and model checkpoints probes need into the shared data folder. The agent can start it.
+- **[desk-research](./desk-research/SKILL.md)**: Answer a question by reading papers and documentation through parallel subagents, using your agent's literature tools, and keep the answer in the shared library with the raw search results behind it. The agent can start it.
 - **[lab-notebook](./lab-notebook/SKILL.md)**: The layout and formats: the `.science/` tree, the notebook, the probe map, probe folders, commits and tags, result briefs, plots and the dashboard. The agent can start it.
 - **[ask-science](./ask-science/SKILL.md)**: When you're lost or something has drifted (git, the study's question, the notebook, the library), it shows the flow and where you are, repairs the drift with you, suggests a guard so it doesn't happen again, and gives you the command to resume. You start it.
 
@@ -22,12 +22,12 @@ Run `/setup-science` once per repo. If the folder isn't a git repository yet, it
 
 - **Environment:** you choose conda, pixi or uv. It recommends the one your repo already uses, or pixi for conda-forge and bioconda tools and uv for pure Python, creates the environment file if there isn't one, and records the command that runs things in it.
 - **Compute:** local, a cluster scheduler, or both.
-- **Data:** everything probes load goes into `.science/data/`, beside the library: your own measurements and structures, exports from external databases, benchmark datasets, ML model checkpoints. One folder per dataset, with an index and a README saying where each file came from. Every study reads it from the same path, and data a promoted probe produced lands there too. Data too large or too private for the repo (most checkpoints and full database dumps) stays where it is, and its folder in `.science/data/` holds the README and a fetch script.
+- **Data:** your input data, the starting point of the work (measurements, instrument output, sample sheets, structures), goes into a data folder. You choose where: `data/` at the repo root or `.science/data/`. One folder per dataset, with an index and a README saying where it came from. Probes read it and never write to it; you can add more of your own data at any time. Data too large or too private for the repo stays where it is, and its folder holds the README with the path.
 - **Heavy outputs:** the size above which files aren't committed.
 - **Plots and the dashboard:** how they're built.
 - **Promotion:** plain commits, or pull requests when the repo has a remote where changes are reviewed.
 
-All of this goes into `.science/SETUP.md`. The branch you ran it on is recorded as the **home branch**, where the science work started; studies may later run elsewhere. It also starts the empty library and data folder, and writes the conventions into `AGENTS.md`. The skills themselves don't depend on your field; the field lives in that file.
+All of this goes into `.science/SETUP.md`. The branch you ran it on is recorded as the **home branch**, where the science work started; studies may later run elsewhere. It also starts the empty library and the data folder, and writes the conventions into `AGENTS.md`. The skills themselves don't depend on your field; the field lives in that file.
 
 ### Frame the study
 
@@ -88,19 +88,17 @@ Sometimes a recorded probe turns out to have been run wrong: a bug, a wrong inpu
 5. For every probe built on the old result, it asks you whether to rerun it or keep it.
 6. It commits `<study>: fix NN: <slug>: <what was wrong> (<old verdict> → <new verdict>)` and tags it `<study>/NN-r1` (then `r2`, and so on). The wrong version stays reachable under its old tag.
 
-### Desk research: the library and the data folder
+### Desk research and the library
 
-Some questions are answered by looking things up instead of running them. `desk-research` does this work, and puts what it finds in one of two shared places, by one simple test: **if you read it to learn something, it goes in the library; if a script loads it, it goes in the data folder.**
+Some questions need reading, not running: papers, software and tool documentation, reviews, database documentation. `desk-research` answers them, and keeps every answer in the **library**, `.science/library/`. The library belongs to no study: once a question is answered, every study can reuse the page. It's a simple take on Karpathy's [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f): an index the agent reads first, an append-only log, and markdown pages the agent writes and keeps current, with the raw search results saved beside them.
 
-| | Library, `.science/library/` | Data folder, `.science/data/` |
-|---|---|---|
-| What it holds | What you **read**: academic papers, software and tool documentation, reviews, database documentation | What probes **load**: external database exports (ChEMBL, PDB, UniProt…), benchmark datasets, ML checkpoints and weights, your own measurements, data promoted out of probes |
-| What's kept | A page per question: the answer, each claim cited, plus the raw search results | The files themselves, with a README saying where each came from (database and release, model repository, instrument, or probe), its licence and checksum |
-| Large files | Not applicable | Kept outside git; the folder holds the README and a fetch script, so the path never changes |
+Desk research only reads. When an answer points to data a probe will load (a database export, a published dataset, a model checkpoint), the page names it with its source, release and licence, and the probe that needs it downloads it. Where each kind of data lives:
 
-One question often feeds both. "Which binders of this target have measured affinities?" gives a library page (what is known, from which papers and which database) and a data folder (the affinity table the probes load), each linking to the other.
-
-The library is a simple take on Karpathy's [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f): an index the agent reads first, an append-only log, and markdown pages the agent writes and keeps current, with the raw search results saved beside them.
+| Data | Where it lives |
+|---|---|
+| Your input data, the starting point | The data folder (`data/` or `.science/data/`), shared by every study |
+| Data a probe fetches (database exports, datasets, checkpoints) or produces | The probe's own folder, with a fetch script and its source; later probes in the study read it there |
+| Data worth keeping beyond the study | Moved by `/promote` into the protocol, where the tree you approve says |
 
 ```
 .science/library/
@@ -111,10 +109,10 @@ The library is a simple take on Karpathy's [LLM Wiki](https://gist.github.com/ka
 ```
 
 1. **Look up.** The agent reads `index.md` first. If a page already answers the question, it uses that page, and nothing is searched twice.
-2. **Research.** Otherwise one background subagent per question searches, using the tools your agent has (Scite, Semantic Scholar, OpenAlex and similar) before falling back to web search. Every search is saved as the tool returned it, with the query that produced it. Data the question needs is fetched at a pinned release into its own `.science/data/<slug>/` folder.
-3. **Write the page.** The main agent alone writes the page, the index lines and the log entries, so parallel studies never collide, and commits the page as `library: <slug>` and each data folder as `data: <slug>`.
+2. **Research.** Otherwise one background subagent per question searches, using the tools your agent has (Scite, Semantic Scholar, OpenAlex and similar) before falling back to web search. Every search is saved as the tool returned it, with the query that produced it.
+3. **Write the page.** The main agent alone writes the page, the index line and the log entries, so parallel studies never collide on the library, and commits it as `library: <slug>`.
 
-Neither the library nor the data folder belongs to a study. Studies only link to them: `STUDY.md` lists pages under **Background**, research rows on the map point to their page or data folder, and probes read data by its path in `.science/data/`.
+Studies only link to library pages: `STUDY.md` lists them under **Background**, research rows on the map point to them, and the notebook's **Library** section lists what the study uses.
 
 ### Promote
 
@@ -151,7 +149,7 @@ Everything the science skills write lives in `.science/` at the root of your rep
 .science/
   SETUP.md                    your setup: domain, stack, home branch, promotion mode
   library/                    what you read: papers, software docs; index, log, pages, searches
-  data/                       what probes load: databases, datasets, checkpoints, measurements, promoted probe data
+  data/                       your input data, if you chose .science/data/ over data/ at the root
   <study>/                    one folder per study
     STUDY.md                  starting direction, background and probe map, frozen; Promoted and Outcome lines added at the end
     NOTEBOOK.md               branch, current direction, probe map, probe notes, lessons, library links, dead ends, drift log
