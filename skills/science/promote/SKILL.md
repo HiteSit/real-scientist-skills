@@ -15,7 +15,7 @@ Call the Skill tool with `lab-notebook` for the tree, the formats and the rules 
 
 ## 1. Confirm the probe is ready
 
-Read the probe or chain of probes the user names, and the notebook. A probe is ready when its verdict is **held**, its decision was **promote**, and it reruns from what is committed. If any of these fails, say which and stop.
+Read the probe or chain of probes the user names, and the notebook. A step is ready when the probes provide valid evidence supporting its intended reuse, the user's decision was **promote**, and it reruns from what is committed. Check the relevant controls and validation criteria for that use: `completed` alone is not enough, and an unmet method-validation criterion still blocks that use. A result that differs from the agent's expectation can qualify; explain what the evidence supports. If readiness is not established, say what is missing and stop.
 
 ## 2. Agree the directory tree
 
@@ -35,7 +35,7 @@ Done when the regression check is green and the review's findings are fixed.
 
 ## 4. Record and commit
 
-1. Rename the probe folder to `promoted` with `git mv` (for example `03-r1-held-<slug>` → `03-r1-promoted-<slug>`) and rewrite every link to the old name (see **Renaming** in `lab-notebook`). In `NOTEBOOK.md`, set the probe's row to `promoted` and add `promoted to <its place in the protocol>` to its probe notes.
+1. Rename the probe folder to `promoted` with `git mv` (for example `03-r1-completed-<slug>` → `03-r1-promoted-<slug>`) and rewrite every link to the old name (see **Renaming** in `lab-notebook`). In `NOTEBOOK.md`, set the probe's row to `promoted` and add `promoted to <its place in the protocol>` to its probe notes.
 2. Append one line under `## Promoted` in `.science/<study>/STUDY.md`: ``- `<step>` (<its place in the protocol>): from NN-<slug>, NN-<slug>; tag `<study>/promote-<step>` ``.
 3. Commit, following the **Promotion** mode in `SETUP.md`:
    - **commit**: one commit holding the protocol files, the promoted data and the study folder, `<study>: promote NN: <step>`, limited to those paths, and tagged `<study>/promote-<step>`.

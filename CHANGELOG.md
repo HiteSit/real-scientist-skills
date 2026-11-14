@@ -2,6 +2,11 @@
 
 Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock's releases are in [his CHANGELOG](https://github.com/mattpocock/skills/blob/main/CHANGELOG.md) and arrive here through the weekly upstream sync.
 
+## 2026-11-14
+
+- Probes now reduce a relevant uncertainty rather than score an agent's prediction. Before running, the agent states its provisional expectation and basis, or says it is unknown; the result brief and dashboard explain what the evidence changes and what remains unresolved. Explicit tests retain a criterion recorded before the run.
+- Probe outcomes are `completed` or `inconclusive`, independent of agreement with the expectation. Folder names, notebook formats and commit examples follow those outcomes. Original expectations and test criteria remain recorded through corrections. Promotion requires reproducible evidence supporting the intended reuse, including relevant validation checks, rather than a `held` verdict.
+
 ## 2026-11-12
 
 - The repo is no longer a GitHub fork, so repository search and code search find it; it still merges Matt's `main` every Monday, now fetching without his tags. His inherited version tags (`v1.0.0`–`v1.3.2`, `mattpocock-skills@1.0.0`) are removed, so `v0.1.0` is this repo's first and only version. The README carries badges for the release, the Agent Skills standard, the weekly sync and the licence, leads with a skills.sh install command for the seven science skills, says the science skills need Matt's, and credits his folders in **Credits and license**.

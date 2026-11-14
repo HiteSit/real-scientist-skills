@@ -8,7 +8,7 @@ This is a draft and can change without warning. For the short version and the re
 
 - **[setup-science](./setup-science/SKILL.md)**: Set up a repo for the science skills: record the domain, the stack and the conventions in `.science/SETUP.md`, and start the shared library. You start it.
 - **[to-study](./to-study/SKILL.md)**: Ask you just enough to frame the starting question, reading the literature where the framing needs it, split your plan into a rough probe map (phases, order, what blocks what), then open the study's folder and lab notebook. You start it.
-- **[experiment](./experiment/SKILL.md)**: Load a study (`/experiment <study>`, from any session) and run it one probe at a time: a prediction per probe, plots and a brief per result, and a short talk about each result before you decide the next step. You start it.
+- **[experiment](./experiment/SKILL.md)**: Load a study (`/experiment <study>`, from any session) and run it one probe at a time: state a starting expectation, show what the evidence changes as plots and a brief, and talk about each result before you decide the next step. You start it.
 - **[promote](./promote/SKILL.md)**: Move a validated probe into the protocol, after you agree on where it goes. You start it.
 - **[desk-research](./desk-research/SKILL.md)**: Answer a question by reading papers and documentation through parallel subagents, using your agent's literature tools, and keep the answer in the shared library with the raw search results behind it. The agent can start it.
 - **[lab-notebook](./lab-notebook/SKILL.md)**: The layout and formats: the `.science/` tree, the notebook, the probe map, probe folders, commits and tags, result briefs, plots and the dashboard. The agent can start it.
@@ -41,15 +41,15 @@ Then it draws the **probe map**, a table in the notebook. You often arrive with 
 
 | # | Probe | Phase | Blocked by | Status | Rev | Tag |
 |---|-------|-------|------------|--------|-----|-----|
-| 01 | redock-xtal: does the co-crystal ligand redock? | 1 | | held | 0 | `dock/01-r0` |
+| 01 | redock-xtal: does the co-crystal ligand redock? | 1 | | completed | 0 | `dock/01-r0` |
 | | known-binders (research): which ligands have measured affinities? | 1 | | done | | |
-| 02 | protonation: does pH 7.4 prep change the poses? | 2 | 01-redock-xtal | held | 1 | `dock/02-r1` |
+| 02 | protonation: does pH 7.4 prep change the poses? | 2 | 01-redock-xtal | completed | 1 | `dock/02-r1` |
 | | ensemble-dock: do extra receptor states help? | 2 | 02-protonation, known-binders | planned | | |
 
 - **Phases** group the probes. Each phase is one stage of the work, such as the probes that answer one sub-question, and phases are listed in the order they run.
 - **Blocked by** sets the order of execution. Each probe names the probes and research rows whose results it needs.
 - The **frontier** is every planned probe whose blockers are all done. Those are the ones you can do next.
-- **Status** goes from planned to running to the verdict (held, failed, inconclusive), and to promoted once the probe reaches the protocol. **Rev** counts in-place fixes, and **Tag** is the git tag of the probe's latest version.
+- **Status** goes from planned to running to the outcome (`completed` or `inconclusive`), then to promoted or dropped when you decide so. `completed` means valid evidence answers the probe's intent, not that the starting expectation was right. **Rev** counts in-place fixes, and **Tag** is the git tag of the probe's latest version.
 - **Research** rows are questions answered by reading; they link to their library page once done.
 - **Not yet mapped** holds questions you can see coming but can't yet turn into a probe. They join the map once a result makes them clear.
 
@@ -59,17 +59,17 @@ Finally, it writes the starting direction in `STUDY.md`: the question, a startin
 
 ### Run the loop
 
-`/experiment <study>` first loads the study: it reads the notebook and the last probe's decision, so a new session picks up exactly where the last one stopped, the way a wayfinder session picks up the next ticket. Without a study name, it lists your open studies (question, last probe, verdict, current direction) and asks which one to load. If you're on a different branch than the one the study recorded, it tells you and asks before going on.
+`/experiment <study>` first loads the study: it reads the notebook and the last probe's decision, so a new session picks up exactly where the last one stopped, the way a wayfinder session picks up the next ticket. Without a study name, it lists your open studies (question, last probe, outcome, current direction) and asks which one to load. If you're on a different branch than the one the study recorded, it tells you and asks before going on.
 
 The session then stays with that study. If you ask about something that belongs to another study, the agent records it where it belongs and gives you the command to open a new session for it (`/experiment <other-study>` or `/to-study`). How many probes you run in one session is up to you.
 
 Each pass runs one probe:
 
-1. **Plan** the next probe only. It comes from your last decision. If you haven't picked one, it comes from the map's frontier, earliest phase first. The map entry was sketched before any results, so the probe is planned properly now, using what the results so far have shown. A good probe is the smallest run that could prove the current belief wrong. Its prediction is written before anything runs.
+1. **Plan** the next probe only. It comes from your last decision. If you haven't picked one, it comes from the map's frontier, earliest phase first. The map entry was sketched before any results, so the probe is planned properly now, using what the results so far have shown. A good probe is the smallest run that reduces a relevant uncertainty and updates the working picture. Before running, the agent tells you its provisional expectation and why: previous evidence, a library source, or an agent guess. "Unknown" is valid. An explicit hypothesis test or method validation also records its test criterion.
 2. **Run** it in its own folder, `.science/<study>/probes/NN-r0-running-<slug>/`, with its scripts, small inputs, outputs, and the exact commands, versions and seeds, so anyone can rerun it. A crash isn't a result: it gets fixed and rerun in the same probe. A long cluster job is submitted, marked as running, and picked up in the next session.
-3. **Inspect.** The agent makes the figures, compares the result with the prediction (held, failed, or inconclusive), writes the result brief, and updates the study dashboard. [`lab-notebook/RESULTS.md`](./lab-notebook/RESULTS.md) sets how results are presented.
-4. **Decide, with you.** The agent always stops here, whatever the verdict. It shows the verdict, the key figures and a link to the dashboard, and recommends continue, branch, drop, or promote. Then it asks you about the result in rounds: do you read it the way the brief does, which caveat matters most, what it changes in your belief, and which decision it supports. A clean result may need one round or none; a surprise may need several. Your decision wins.
-5. **Record.** Your reading of the result and your decision go into the probe's README. In the notebook, the probe's row gets its verdict, and the probe gets a few lines under **Probe notes**: what it ran, the key numbers, your decision. The map changes only as you agreed: probes you added become planned rows, probes the result made pointless are marked dropped. Any change of direction or of the map's structure gets a drift log entry that cites the probe. A probe that ran as planned isn't drift. The probe is committed as `<study>: probe NN: <slug>: <verdict>` and tagged `<study>/NN-r0`.
+3. **Inspect.** The agent makes the figures and explains the update: starting expectation → observation → what changed or stayed the same, with remaining uncertainty. The outcome is `completed` when a valid run answers the probe's intent, even negatively or surprisingly, or `inconclusive` when the evidence cannot settle it. An explicit test separately reports whether its original criterion was met. The original expectation and criterion stay on record. The result brief and study dashboard follow [`lab-notebook/RESULTS.md`](./lab-notebook/RESULTS.md).
+4. **Decide, with you.** The agent always stops here, whatever the outcome. It shows the finding, the update, the key figures and a link to the dashboard, and recommends continue, branch, drop, or promote. Then it asks you about the result in rounds: do you read it the way the brief does, which caveat matters most, what it changes in your belief, and which decision it supports. A clean result may need one round or none; a surprise may need several. Your decision wins.
+5. **Record.** Your reading of the result and your decision go into the probe's README. In the notebook, the probe's row gets its outcome, and the probe gets a few lines under **Probe notes**: what it ran, the key numbers, your decision. The map changes only as you agreed: probes you added become planned rows, probes the result made pointless are marked dropped. Any change of direction or of the map's structure gets a drift log entry that cites the probe. A probe that ran as planned isn't drift. The probe is committed as `<study>: probe NN: <slug>: <outcome>` and tagged `<study>/NN-r0`.
 
 Probes run one at a time by default, because each result decides the next. When two probes on the frontier are independent of each other (two long cluster jobs, say), they can run at once if you agree. Each still gets its own inspection and its own decision.
 
@@ -81,12 +81,12 @@ Then `/experiment` goes back to step 1. It leaves the loop when you decide to pr
 
 Sometimes a recorded probe turns out to have been run wrong: a bug, a wrong input or parameter, a mistake in the analysis or the plots. You might catch it, or the agent might. Tell `/experiment` which probe, and it fixes the probe in place instead of starting a new one:
 
-1. It confirms with you what was wrong. A new question or a changed prediction is a new probe, not a fix.
-2. It fixes and reruns the probe in the same folder, then judges the new result against the original prediction, which never changes.
-3. If the verdict or the reading changed, it talks the result through with you again, and your decision may change.
-4. It records the fix. The probe's README gets a **Revisions** entry: what was wrong, who caught it, what changed, and the verdict before and after. The map row's **Rev** goes up by one. The mistake becomes a rule under **Lessons**, which the agent reads before planning every later probe; a lesson that holds for the whole repo can also go into `.science/SETUP.md`, with your ok.
+1. It confirms with you what was wrong. A new question, changed test criterion or deliberate change of method is a new probe, not a fix; updating the interpretation is ordinary learning.
+2. It fixes and reruns the probe in the same folder, preserving the original expectation and any test criterion, then updates the outcome and interpretation.
+3. If the outcome or the reading changed, it talks the result through with you again, and your decision may change.
+4. It records the fix. The probe's README gets a **Revisions** entry: what was wrong, who caught it, what changed, and the outcome before and after. The map row's **Rev** goes up by one. The mistake becomes a rule under **Lessons**, which the agent reads before planning every later probe; a lesson that holds for the whole repo can also go into `.science/SETUP.md`, with your ok.
 5. For every probe built on the old result, it asks you whether to rerun it or keep it.
-6. It commits `<study>: fix NN: <slug>: <what was wrong> (<old verdict> → <new verdict>)` and tags it `<study>/NN-r1` (then `r2`, and so on). The wrong version stays reachable under its old tag.
+6. It commits `<study>: fix NN: <slug>: <what was wrong> (<old outcome> → <new outcome>)` and tags it `<study>/NN-r1` (then `r2`, and so on). The wrong version stays reachable under its old tag.
 
 ### Desk research and the library
 
@@ -118,7 +118,7 @@ Studies only link to library pages: `STUDY.md` lists them under **Background**, 
 
 When a probe, or a chain of probes, has held up, `/promote` moves it from scratch into the protocol: the rerunnable steps that later probes and the engineering flow build on.
 
-1. It checks that the probe is ready: the verdict held, you chose promote, and it reruns from what's committed.
+1. It checks that the evidence supports the step's intended reuse, you chose promote, and it reruns from what's committed. Completion or agreement with an agent guess is not validation: the relevant controls and method-validation criteria must support that use.
 2. It proposes where the step goes in the protocol, as a folder tree with a reason for each folder. Nothing moves until you approve the tree.
 3. It ports the scripts and turns hard-coded values into parameters, with the probe's values as defaults. It adds a regression check with Matt's `/tdd`: run on the probe's inputs, the promoted step must reproduce the validated result within a stated tolerance. For docking, that might be "the co-crystal ligand redocks under 2 Å RMSD". Matt's `/code-review` reviews the change.
 4. It marks the probe as promoted in the notebook and adds a **Promoted** line to `STUDY.md`. By default, the protocol files and the study's records go in one commit, `<study>: promote NN: <step>`, tagged `<study>/promote-<step>`. If `SETUP.md` says this repo promotes through pull requests, the protocol change goes on a short-lived branch in its own worktree, so your checkout stays where it is, and the PR is written the way Matt's `/pr` describes.
@@ -155,8 +155,8 @@ Everything the science skills write lives in `.science/` at the root of your rep
     NOTEBOOK.md               branch, current direction, probe map, probe notes, lessons, library links, dead ends, drift log
     dashboard.html            one dashboard for the study (starting vs current map), updated after every probe
     probes/
-      01-r0-held-<slug>/      NN-r<fixes>-<state>-<slug>
-        README.md             blocked by, intent, prediction, method, result, decision, revisions
+      01-r0-completed-<slug>/ NN-r<fixes>-<state>-<slug>
+        README.md             blocked by, intent, expectation, method, result, decision, revisions
         .gitignore            this probe's large outputs
         figures/
 ```
@@ -165,14 +165,14 @@ A probe folder's name carries its state, so a plain `ls probes/` shows where the
 
 ```
 01-r0-promoted-redock-xtal
-02-r1-held-protonation
-03-r2-failed-ensemble-dock
+02-r1-completed-protonation
+03-r2-inconclusive-ensemble-dock
 04-r0-running-water-maps
 ```
 
 - The **number** counts probes in run order and never changes.
-- **r** and a count say how many times the probe was fixed in place. `r2-failed` is a probe that failed even after two fixes.
-- The **state** is where it stands now: `running`, then its verdict (`held`, `failed`, `inconclusive`), or `promoted` or `dropped` once you decide so. The README keeps the original verdict.
+- **r** and a count say how many times the probe was fixed in place. `r2-inconclusive` is a probe whose evidence remains inconclusive after two fixes.
+- The **state** is where it stands now: `running`, then its outcome (`completed` or `inconclusive`), or `promoted` or `dropped` once you decide so. The README keeps the outcome.
 - The **slug** says what the probe does and never changes.
 
 When the count or the state changes, the agent renames the folder with `git mv` and updates every link to it in the same commit. Elsewhere, probes are named by their stable short form, like `02-protonation`.
@@ -190,7 +190,7 @@ Every commit message starts with its study, and tags mark the moments worth comi
 | Moment | Commit | Tag |
 |---|---|---|
 | Study opened | `<study>: open` | `<study>/open` |
-| Probe decided | `<study>: probe NN: <slug>: <verdict>` | `<study>/NN-r0` |
+| Probe decided | `<study>: probe NN: <slug>: <outcome>` | `<study>/NN-r0` |
 | Probe fixed | `<study>: fix NN: …` | `<study>/NN-r1`, `r2`, … |
 | Probe promoted | `<study>: promote NN: <step>` | `<study>/promote-<step>` |
 | Study closed | `<study>: close` | `<study>/close` |

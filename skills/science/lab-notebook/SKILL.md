@@ -25,8 +25,8 @@ The repo's stack (environment and its run command, compute, data, heavy-output t
     dashboard.html            the study's one live dashboard, grown probe after probe
     dashboard.<ext>           the script that builds it
     probes/
-      01-r0-held-<slug>/      NN-r<revisions>-<state>-<slug>, see below
-        README.md             blocked by, intent, prediction, method, result, decision
+      01-r0-completed-<slug>/ NN-r<revisions>-<state>-<slug>, see below
+        README.md             blocked by, intent, expectation, method, result, decision
         .gitignore            this probe's heavy outputs
         figures/
         <scripts, small inputs, outputs>
@@ -34,11 +34,11 @@ The repo's stack (environment and its run command, compute, data, heavy-output t
 
 Inside a probe folder, organise files however the probe needs; only `README.md`, `.gitignore` and `figures/` are fixed. The protocol's tree is a different matter: it is agreed with the human at promotion, never chosen alone.
 
-Probe folders are named `NN-r<R>-<state>-<slug>`, for example `03-r2-failed-protonation`:
+Probe folders are named `NN-r<R>-<state>-<slug>`, for example `03-r2-completed-protonation`:
 
 - `NN` counts probes in run order from `01`. A number is never reused or renumbered: a dropped probe keeps its number, so the numbers stay a faithful history.
 - `r<R>` is how many times the probe was fixed in place (see **Revisions**), from `r0`.
-- `<state>` is where the probe stands now, one of six words: `running` while it runs; then its verdict, `held`, `failed` or `inconclusive`; unless the user decided **promote** (`promoted`) or **drop** (`dropped`, a dead end), which override the verdict. The README keeps the original verdict. A fix sets the state to the new verdict, so a promoted probe that gets fixed stops being `promoted` until it is promoted again.
+- `<state>` is where the probe stands now: `running` while it runs; then its outcome, `completed` or `inconclusive`; unless the user decided **promote** (`promoted`) or **drop** (`dropped`, a dead end), which override the outcome. The README keeps the outcome. A fix sets the state to the corrected outcome, so a promoted probe that gets fixed stops being `promoted` until it is promoted again.
 - `<slug>` says what the probe does, and never changes.
 
 The short form `NN-<slug>` (`03-protonation`) is the probe's stable name: use it in plain-text references (**Blocked by**, the drift log, **Promoted** lines, commit messages). From another study, write `<study>/NN-<slug>`.
@@ -95,7 +95,7 @@ Where the study stands, readable without opening any probe: the probe map on top
 
 | # | Probe | Phase | Blocked by | Status | Rev | Tag |
 |---|-------|-------|------------|--------|-----|-----|
-| 01 | [<slug>](probes/01-r0-held-<slug>/README.md): <what it finds out> | 1 | | held | 0 | `<study>/01-r0` |
+| 01 | [<slug>](probes/01-r0-completed-<slug>/README.md): <what it finds out> | 1 | | completed | 0 | `<study>/01-r0` |
 | | [<slug>](../library/<slug>.md) (research): <the question it answers> | 1 | | done | | |
 | 02 | [<slug>](probes/02-r1-inconclusive-<slug>/README.md): <what it finds out> | 2 | 01-<slug>, <research slug> | inconclusive | 1 | `<study>/02-r1` |
 | | <slug>: <what it finds out> | 2 | 02-<slug> | planned | | |
@@ -103,7 +103,7 @@ Where the study stands, readable without opening any probe: the probe map on top
 ## Probe notes
 ### 02 <slug>
 <3 to 6 lines: the operations it ran, in plain words; the key numbers; the user's decision and why.>
-- rev 1, fixing `<study>/02-r0`: <what was wrong>, caught by <the user | the agent>; <old verdict> → <new verdict>
+- rev 1, fixing `<study>/02-r0`: <what was wrong>, caught by <the user | the agent>; <old outcome> → <new outcome>
 - built on 01 before its rev 1: <rerun as rev N | kept>, the user's call
 
 ## Lessons
@@ -140,11 +140,11 @@ The **probe map** is the study's plan and its history in one table: the probes t
 - **#**: empty while planned. A probe gets its number when it starts, and the slug becomes a link to its folder.
 - **Phase**: a stage of the work (the probes that answer one sub-question, or prepare what later phases need). Phases run in the order of the **Phases** line; rows are ordered by phase, then by run order.
 - **Blocked by**: the probes and research rows whose results this one needs, by stable name. The **frontier** is every planned row whose blockers have all been decided (probes) or are `done` (research).
-- **Status**: `planned`, then the same word as the probe's folder name once it starts (see **The tree**): `running`, `held`, `failed`, `inconclusive`, `promoted` or `dropped`. A planned row the results made pointless becomes `dropped` too and stays, with a drift log entry; it never had a folder. Research rows go `planned` → `running` → `done`.
+- **Status**: `planned`, then the same word as the probe's folder name once it starts (see **The tree**): `running`, `completed`, `inconclusive`, `promoted` or `dropped`. A planned row the results made pointless becomes `dropped` too and stays, with a drift log entry; it never had a folder. Research rows go `planned` → `running` → `done`.
 - **Rev**: how many times the probe was fixed in place (see **Revisions**); `0` for a probe never fixed.
 - **Tag**: the git tag of the probe's latest run or fix, `<study>/NN-r<R>` (see **Commits and tags**). The name is known before the commit, so write it in the same commit that creates the tag. `git show <tag>` returns the probe exactly as it stood.
 
-A **research row**, marked `(research)`, is a question answered from existing sources instead of a run: no number, no prediction, answered by `desk-research` as a page in the library, and linked to that page once `done`. Probes list it under **Blocked by** like any other row.
+A **research row**, marked `(research)`, is a question answered from existing sources instead of a run: no number or expectation, answered by `desk-research` as a page in the library, and linked to that page once `done`. Probes list it under **Blocked by** like any other row.
 
 Probes run **one at a time** by default, because each result decides the next. Two probes may run at once only when both are on the frontier, neither blocks the other, and the user agrees; typically two long cluster jobs. Each still gets its own inspection, checkpoint and commit.
 
@@ -176,13 +176,14 @@ A **session is bound to one study**, so the new study runs in a new session (or 
 **Blocked by:** <the probes and research rows it needs, by stable name, or "nothing">
 **Uses:** <promoted protocol steps and library pages it relies on, or omit>
 **Intent:** <what this probe finds out, one or two lines>
-**Prediction:** <what the result shows if the current belief is right, stated so it can be checked>
+**Expectation:** <the provisional result and why: prior evidence, a library source, or an agent guess; "unknown" when there is no defensible expectation>
+**Test criterion:** <the observable criterion, only when explicitly testing a hypothesis or validating a method; otherwise omit>
 
 ## Method
 <what was run, the exact commands, tool versions, seeds, inputs>
 
 ## Result
-**Verdict:** held | failed | inconclusive
+**Outcome:** completed | inconclusive
 <the brief: see RESULTS.md>
 
 ## Decision
@@ -190,16 +191,22 @@ continue | branch | drop | promote: <the human's call and why>
 **Next:** <the probe this points to, if any>
 
 ## Revisions
-- rev 1, fixing `<study>/NN-r0`: <what was wrong>, caught by <the user | the agent>. <what changed>. Verdict <old> → <new>; decision <kept | changed from ...>.
+- rev 1, fixing `<study>/NN-r0`: <what was wrong>, caught by <the user | the agent>. <what changed>. Outcome <old> → <new>; decision <kept | changed from ...>.
 ```
 
-**Blocked by** matches the probe's row on the map. A **prediction** turns "look at the result" into a binary check. Write it before running, never after, and never rewrite it in a revision.
+**Blocked by** matches the probe's row on the map.
+
+An **expectation** is the working picture before the run, a starting point to update rather than a target to achieve. Record it and its basis before running; "unknown" is valid, and needs no invented prediction or numerical confidence. Keep that original entry through revisions. What the evidence changes belongs in the result brief's **Update**.
+
+For an explicit hypothesis test or method validation, also record the **Test criterion** before running and report whether it was met. Keep the criterion fixed so the comparison remains meaningful.
+
+The **outcome** describes what the evidence lets us conclude: `completed` when a valid run answers the probe's stated intent, including a negative or surprising answer; `inconclusive` when the evidence cannot settle it. Agreement with the expectation does not decide the outcome. A crash or misconfigured run needs fixing, not a scientific interpretation.
 
 ## Revisions
 
 A probe that was **run wrong** is fixed **in place**: a bug, a wrong input or parameter, a mistake in the analysis or the plots. The fix goes in the same `NN` folder, the probe reruns, and **Method**, **Result** and (if the user changes it) **Decision** describe the corrected run. The README's **Revisions** section keeps one entry per fix, naming the tag of the wrong version, so the mistake stays on record; the wrong outputs survive in git under that tag.
 
-A new question, a changed prediction or a deliberate change of plan is never a revision: it is a new probe.
+A new question, a changed test criterion or a deliberate change of method is a new probe, not a revision. Updating the interpretation of a valid result is ordinary learning: record it under **Update**, without rerunning just to match the expectation.
 
 Fixing a crash before the probe's first commit is part of running it, noted under **Method**. A revision is a fix after that commit. `/experiment` describes how to make one.
 
@@ -244,9 +251,9 @@ Messages start with the study, so `git log --grep '^<study>:'` shows one study's
 | Event | Commit message | Tag |
 |---|---|---|
 | Study opened | `<study>: open` | `<study>/open` |
-| Probe decided | `<study>: probe NN: <slug>: <verdict>` | `<study>/NN-r0` |
+| Probe decided | `<study>: probe NN: <slug>: <outcome>` | `<study>/NN-r0` |
 | Long job submitted | `<study>: probe NN: <slug>: running` | |
-| Probe fixed | `<study>: fix NN: <slug>: <what was wrong> (<old verdict> → <new verdict>)` | `<study>/NN-r<R>` |
+| Probe fixed | `<study>: fix NN: <slug>: <what was wrong> (<old outcome> → <new outcome>)` | `<study>/NN-r<R>` |
 | Probe promoted | `<study>: promote NN: <step>` | `<study>/promote-<step>` |
 | Study closed | `<study>: close` | `<study>/close` |
 | Library page | `library: <slug>` | |

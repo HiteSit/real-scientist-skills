@@ -31,7 +31,7 @@ Aim the rounds at the parts of `STUDY.md`, in this order of weight: the **questi
 
 Some framing questions need **reading**, not the user: what is already known, which systems or datasets exist, which benchmark the field uses. Answer those from the library. For each one the library cannot answer yet, call the Skill tool with `desk-research` at once, and keep interviewing on what does not depend on it. Fold each answer into the next round as it arrives, citing its page.
 
-Stop as soon as the question is **sharp enough to probe**: a first probe can be planned from it, with a prediction that could fail. Every branch still open at that point is not a gap in the interview: it becomes a probe on the map, or goes under **Not yet mapped**, for a probe to answer.
+Stop as soon as the question is **sharp enough to probe**: a first run can be planned that reduces a named uncertainty. An exploratory question needs no starting prediction; mark the hypothesis unknown when appropriate. Every branch still open at that point is not a gap in the interview: it becomes a probe on the map, or goes under **Not yet mapped**, for a probe to answer.
 
 ### 3. Chart the probe map
 

@@ -6,18 +6,19 @@ Use the plotting library and dashboard builder named in `.science/SETUP.md`.
 
 ## The brief
 
-Goes under **Result** in the probe README, after the verdict.
+Goes under **Result** in the probe README. Lead with the finding and the update, not whether the starting expectation was right.
 
 ```markdown
-**Verdict:** held | failed | inconclusive
 **Headline:** <one sentence: what the result says about the question>
+**Outcome:** completed | inconclusive
 
 ![<what the figure shows>](figures/<name>.png)
 
-**Against the prediction:** <the prediction, the number or pattern observed, and the gap between them>
+**Update:** <the original expectation and its basis → the observed number or pattern → what changes in the working picture, or what stays the same>
+**Test criterion:** <met | not met | unresolved, with the evidence; only when a criterion was recorded before running>
 **What the figures show:** <one line per figure, the claim it supports>
 **Caveats:** <what could make this misleading: sample size, a failed control, a parameter left at default>
-**Suggests:** <the next probe or question this points to>
+**Suggests:** <the next probe or question, tied to what remains uncertain>
 ```
 
 Keep the brief to what a reader needs to make the decision. Raw tables and logs stay in the probe folder, linked.
@@ -26,7 +27,7 @@ Keep the brief to what a reader needs to make the decision. Raw tables and logs 
 
 Each figure makes **one claim**, stated in its caption and file name. Then:
 
-- Draw the **prediction** on the figure: a reference line, band or expected value, so held or failed is visible without reading the text.
+- When there is a quantitative expectation or test criterion, draw it as a labelled reference line, band or value. Distinguish an agent guess from an evidence-based reference; use a band only when its bounds have a basis. For an exploratory probe with no expectation, show the observation without inventing a target.
 - Show the **baseline or control** beside the result on the same axes and scale.
 - Show the spread (individual points, a distribution, or an interval), never only a mean.
 - Label every axis with its quantity and unit.
@@ -45,7 +46,7 @@ It shows, top to bottom:
 
 1. **The question and the current direction**, with the starting direction from `STUDY.md` beside it, so the drift is visible at once.
 2. **The drift log** as a timeline: each entry, the probe that caused it, and what changed.
-3. **The probes** in run order: number, title, verdict, the key figure, the headline and a short explanation of what the result means for the study, and a link to the probe README. Promoted probes say where they went; revised probes list their revisions and the **Lessons** they produced.
+3. **The probes** in run order: number, title, outcome, the key figure, the headline and the update from expectation to evidence, including what remains unresolved, with a link to the probe README. Promoted probes say where they went; revised probes list their revisions and the **Lessons** they produced.
 4. **The probe map**: the current table beside the starting one from `STUDY.md`, compared row by row (added, dropped, moved to another phase), with the frontier marked, and the **dead ends**.
 
 Write the explanations for the user who will open the dashboard cold: what was tested, what came out, and why it matters, in plain sentences.
