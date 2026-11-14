@@ -33,7 +33,7 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 ## How the flow works
 
 - **Plan one probe at a time.** A probe is a small experiment, usually one session's work. A new study starts with one agreed probe and a short list of ideas; each later probe is chosen with you when it's next.
-- **Show the starting expectation.** Before running, the agent says what it expects and why, distinguishing evidence from a guess; "unknown" is fine. The result explains what changed in that working picture, not just whether the guess was right.
+- **Start from the standard answer.** An LLM answers from the peak of a Gaussian: it gives the answer most represented in its weights, the one it met most often in training. Before running, the agent says that standard answer out loud and what it rests on: evidence, a source, or only what it learned; "unknown" is fine. The probe then shows where reality sits: at the peak, where the standard answer holds, or out in the tail, where the surprises and the real findings are. The result says how far from the standard answer it landed and what that changes.
 - **Start from a direction.** Results are allowed to change the direction. Each change is logged against the probe that caused it.
 - **Scratch is free, the protocol is agreed.** Inside a probe, the agent organizes files however the work needs. Before anything joins the protocol, you approve where it goes.
 - **Show results.** Each probe ends with a short brief and plots, and one dashboard shows the whole study.

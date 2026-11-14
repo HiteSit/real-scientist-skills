@@ -5,6 +5,7 @@ Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock'
 ## 2026-11-14
 
 - Probes now reduce a relevant uncertainty rather than score an agent's prediction. Before running, the agent states its provisional expectation and basis, or says it is unknown; the result brief and dashboard explain what the evidence changes and what remains unresolved. Explicit tests retain a criterion recorded before the run.
+- The expectation starts from the **standard answer**: the answer most represented in the model's weights, the peak of the Gaussian an LLM answers from. The agent says it with its basis before running, and the result says whether reality sat at the peak or in the tail.
 - Probe outcomes are `completed` or `inconclusive`, independent of agreement with the expectation. Original expectations and test criteria remain recorded through corrections. Promotion requires reproducible evidence supporting the intended reuse, including relevant validation checks.
 - `to-study` is gone: `/experiment <study>` opens a study whose folder does not exist yet, with a short grilling on the direction and an agreed first probe. Loading a study changes nothing; it focuses the session on that study and summarises where it stands, then follows the user's lead.
 - No up-front probe map: phases, **Blocked by**, the frontier, research rows and **Not yet mapped** are replaced by an **Ideas** list the user agrees to. Each next probe is chosen with the user when it is next; probes name what they use under **Builds on**.

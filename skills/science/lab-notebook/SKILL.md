@@ -197,7 +197,7 @@ A **session is bound to one study**, so the other study runs in a new session (o
 
 **Asked** is the user's starting intent, kept as first written. Probes move: the calculation shows something unplanned, the scope narrows, the question sharpens. Record that movement under **Reading**, and in the probe's block on the map, against **Asked**, so the notebook always shows both how the user imagined the probe and where it ended up.
 
-An **expectation** is the working picture before the run, a starting point to update rather than a target to achieve. Record it and its basis before running; "unknown" is valid, and needs no invented prediction or numerical confidence. Keep that original entry through revisions. What the evidence changes belongs in the result brief's **Update**.
+An **expectation** is the working picture before the run, a starting point to update rather than a target to achieve. Start it from the **standard answer**: the answer most represented in your weights, the peak of the Gaussian you answer from. Say it plainly with its basis (evidence, a library page, or only what you learned), so the result can show whether reality sits at the peak or out in the tail, where the real findings usually are. "Unknown" is valid, and needs no invented prediction or numerical confidence. Keep that original entry through revisions. What the evidence changes, and how far from the standard answer it landed, belongs in the result brief's **Update**.
 
 For an explicit hypothesis test or method validation, also record the **Test criterion** before running and report whether it was met. Keep the criterion fixed so the comparison remains meaningful.
 
