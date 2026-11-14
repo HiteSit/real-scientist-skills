@@ -40,7 +40,7 @@ Lead each section with the recommended answer so the user can accept it in a wor
 
 **F. Plotting and dashboard.** The plotting library probes use for figures, and what builds the study dashboard. Recommend whatever the stack already uses for figures, and live HTML pages (see `lab-notebook`) for the dashboard. Record any domain viewer the pages need (for molecules, 3Dmol.js).
 
-**G. Promotion.** How a validated probe reaches the protocol: one commit on the current branch, or a pull request. Recommend **commit**; offer **pull request** only when the repo has a remote where changes are reviewed.
+**G. Promotion.** How a probe's work reaches the protocol: one commit on the current branch, or a pull request. Recommend **commit**; offer **pull request** only when the repo has a remote where changes are reviewed.
 
 ### 3. Confirm and write
 
@@ -75,7 +75,7 @@ The `## Science skills` block goes into `AGENTS.md`, created if it does not exis
 
 - `.science/` is tracked by git, never gitignored. The stack is in `.science/SETUP.md`. The work is local: push only when the user asks.
 - Each study is a folder, `.science/<study>/`. All studies share one branch and one checkout; several run at once, each in its own session.
-- A session works on one study: `/experiment <study>` loads it, and work for another study starts in a new session.
+- A session works on one study: `/experiment <study>` loads it (or opens it, when the folder does not exist yet), and work for another study starts in a new session.
 - The checkout is shared: stay on the current branch, commit only your own paths (`git add <paths>` then `git commit -m "<message>" -- <paths>`), and keep history as it is: no stash, reset, amend or rebase. Retry when git's lock file is busy.
 - Commit messages start with the study (`<study>: …`); probes and fixes are tagged `<study>/NN-r<R>`. Details are in the `lab-notebook` skill.
 - Literature and documentation live once, in `.science/library/` (the `desk-research` skill keeps it). The user's input data lives in the data folder named in `.science/SETUP.md`; probes read it and never write to it. Everything else a probe loads, it fetches into its own folder.
@@ -83,4 +83,4 @@ The `## Science skills` block goes into `AGENTS.md`, created if it does not exis
 
 Commit `.science/`, the data folder, the environment file and `AGENTS.md` together: `science: setup`.
 
-Done when the folder is a git repository, `.science/SETUP.md` exists with every section filled or marked "not used", the library has its index and log, the data folder has its index, and `AGENTS.md` carries the `## Science skills` block. Then tell the user the next step is `/to-study`.
+Done when the folder is a git repository, `.science/SETUP.md` exists with every section filled or marked "not used", the library has its index and log, the data folder has its index, and `AGENTS.md` carries the `## Science skills` block. Then tell the user the next step is `/experiment <study>`, which opens the first study.

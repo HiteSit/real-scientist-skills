@@ -1,82 +1,84 @@
 ---
 name: ask-science
-description: "Put a confused science session back on track: show the science flow, find where you are and what drifted (git, the study's question, the notebook, the library), repair it with the user, and say how to resume."
+description: "Step back from a science study: look back over its probes and conversation to judge whether it is on track, drifting or lost, find where STUDY.md, the notebook and the probes disagree, resolve each ambiguity with the user, and say how to resume."
 license: MIT
 disable-model-invocation: true
 ---
 
-The user is lost in the science work: unsure where they are, or sensing that git, the question, the notebook or the library have drifted from the conventions. Get them back on the tracks: show the flow, find where they are, repair what drifted, guard against it happening again, and hand them the one command that resumes the work.
+The user wants to step back from a study: unsure where it stands, or sensing that the work, the notebook or the question have wandered. This is a **retrospective** on one study: look back over what was done, judge whether it still serves the question, settle every place where the records disagree, and hand the user the command that resumes the work.
 
-Change nothing until the user approves it. Call the Skill tool with `lab-notebook` for the tree, the formats, the folder names and the rules of the shared checkout; the checks below compare the repo against them.
+Change nothing until the user approves it. Call the Skill tool with `lab-notebook` for the tree, the formats and the probe states; the checks below compare the study against them.
 
 ## 1. The map
 
 Show this map, then mark where the user is once step 2 knows.
 
 ```
-/setup-science        once per repo: git init if needed, .science/SETUP.md, the home branch,
-      │               an empty library and data folder, the conventions in AGENTS.md
+/setup-science         once per repo: git, .science/SETUP.md, the library, the data folder,
+      │                the conventions in AGENTS.md
       │
-/to-study             frames the question, reading the library where needed;
-      │               opens .science/<study>/ with STUDY.md + NOTEBOOK.md, tag <study>/open
+/experiment <study>    loads a study and focuses the session on it;
+      │                opens it first when the folder does not exist (short grilling, first probe)
       │
-/experiment <study>   loads one study per session, then loops in its folder:
-      │                 plan → run → inspect → decide (with the user) → record, tag <study>/NN-r0
-      ├── fix a probe     a probe run wrong: fixed in place, rev +1, a lesson, tag <study>/NN-r<R>
-      ├── desk-research   a question answered once, into .science/library/, shared by every study
-      ├── spin-off        a new question: a new study folder, in a new session
-      └── /promote        a validated probe → the protocol, by commit or pull request,
-                          tag <study>/promote-<step>
+      ├── probes        one at a time, chosen with the user: open → evidence when the next starts
+      │                 (dropped only on the user's word)
+      ├── fix a probe   a probe run wrong: fixed in place, rev +1, a lesson
+      ├── desk-research a question answered once, into .science/library/, shared by every study
+      ├── spin-off      a different question: /experiment <new-study> in a new session
+      └── /promote      a probe's work moves into the protocol in the main tree
 
-All studies: one branch, one checkout, one session each, commits limited to their own folder.
+/ask-science           this: a step back, on one study
 ```
 
 Answer the user's direct questions about the flow from this map and the skills it names. Read a skill's `SKILL.md` before stating what it does.
 
-## 2. You are here
+## 2. Find the study
 
-A read-only check.
+No `.science/SETUP.md`: the repo is not set up; recommend `/setup-science` and skip to step 6. Otherwise the study is the one this session loaded, the one the user names, or ask, listing every study in one line (open or closed, the question, its open probes).
 
-- **No `.science/SETUP.md`**: the repo is not set up. Recommend `/setup-science` and skip to step 5.
-- **Otherwise**: list every study, one line each from its `NOTEBOOK.md` and `STUDY.md`: open or closed, the question, the last probe and its state, the recorded **Branch**. Then find the study the user is in: the one this session loaded, the one the user names, or ask. Check that study in depth against every row below; check the Git and Library rows for the repo as a whole.
+## 3. Look back
 
-| Kind | Drift to look for |
-|---|---|
-| Git | The current branch against the study's recorded **Branch**. Uncommitted changes, sorted by owner: this study's folder, another study's folder, the library, the protocol, elsewhere. Commits whose `<study>:` prefix does not match the paths they touch, and science commits with no prefix. Decided probes, fixes, promotions and closes with no tag, and tags whose probe row says otherwise. Stashes, a detached HEAD, a branch switch in the reflog during a running study. |
-| Science | The **Current direction** against the question in `STUDY.md`: has it moved away with no **Drift log** entry? Probes whose **Intent** does not serve the question. Work in this session that belongs to another study, or to no study. A question that has drifted so far it is a different study. |
-| Notebook | Every started row in the probe map has a folder whose name matches its number, **Rev** and **Status**, and every folder has a row. **Blocked by** matches between each row and its README. A `running` probe has a job id or an active run. Every decided probe has a **Decision**, and the last one a **Next**. Every revision has its probe notes line and a **Lessons** entry. Links resolve. |
-| Library and data | Every library page has an index line, and every index line a page. Every `done` research row links to a page. Every page's **Evidence** points to saved searches. Pages that name a study. Every dataset in the data folder has an index line and a README naming where it came from. Anything in the data folder besides the user's own input data (fetched exports, checkpoints, probe outputs). Fetched data in a probe with no source or fetch script. |
+Read where the study started (`STUDY.md`), where it says it is (the notebook's **Current direction**, **Drift log**, the last probes' notes and **Discussion**), what was actually done (`git log --grep '^<study>:'`, the probe READMEs), and this session's conversation. Then answer, with the evidence for each:
 
-Report the result in a few lines: the branch, the study and its last probe, and the drift found, most serious first. A clean check says so and goes to step 5.
+- What is the question now, and is it still the one in `STUDY.md`, or a change the drift log explains?
+- What have the last few probes been trying to find out, and does that work bring the answer closer?
+- Where did the direction start to shift, and did the user agree to the shift when it happened?
+- Is the study still one question, or has it grown a second that belongs to another study?
 
-## 3. Repair
+Give a **verdict** in a few lines: **on track**, **drifting** (and since when, and why), or **lost**. Then the evidence, most telling first.
 
-Take the drift one item at a time, most serious first. For each, propose the fix in a line or two, wait for the user's yes, then apply it as a new commit, limited to the paths it fixes and prefixed with the study it belongs to. History stays as it is: the checkout is shared, so every repair adds a commit. For example:
+## 4. Settle the ambiguities
 
-- Work that landed in the wrong study's folder: move it with `git mv` into the right one, and commit.
-- A folder name, a table row or a missing tag out of step: apply what `lab-notebook` says it should be; a missing tag goes on the commit that should carry it.
-- A study now running on another branch: update **Branch** in its notebook, or tell the user how to return to the recorded one.
-- A direction that moved without a drift log entry: write the entry with the user, citing the probe that moved it.
-- A library page missing from the index, or naming a study: fix the index or the page, and log it.
+Compare the records with each other and with the format in `lab-notebook`. Every place where they disagree, or where the right reading is unclear, is an **ambiguity**, and the user resolves it. Look at least for:
 
-When the **question itself has drifted**, the fix is the user's choice, so offer three options:
+- `STUDY.md` and the notebook telling different stories: a current direction with no drift log entry to explain it, a question restated differently.
+- The **Probes** table and the probe folders: a row with no folder, a folder with no row, names that do not match.
+- A probe's state against its README: open with its results long recorded while later probes ran, evidence with results still out, dropped with nothing under **Dead ends**.
+- Notebook sections outside the format, or a story told twice in different words.
+- **Ideas** that were already run, and probes run that the study never agreed to.
+- Work in the wrong place: this study's work in another study's folder or none, uncommitted changes, commits whose `<study>:` prefix does not match the paths they touch.
+- The library and data folder: pages or datasets missing from their index, fetched data inside the data folder.
+
+Ask about them in rounds, the way `grilling` does: numbered questions, each naming the ambiguity, quoting the records that disagree, and giving your recommended reading, worded so "yes" accepts it. Most serious first. Wait for the answers before the next round.
+
+When the **question itself has drifted**, offer three readings:
 
 1. **The drift is legitimate.** The study now asks the new question: rewrite **Current direction** and add a drift log entry. `STUDY.md` stays frozen.
-2. **Spin off.** The new question is a different study: start it with `/to-study` in a new session, with the probes where the drift began listed under its **Blocked by**. Record it under **Spin-offs**, and set probes that belong to the new study to `dropped` here.
-3. **Back to the question.** Set the off-axis probes to `dropped`, record them under **Dead ends** if they taught something, and replan from the last on-axis probe.
+2. **Spin off.** The new question is a different study: it starts with `/experiment <new-study>` in a new session, naming the probes where the drift began under **Builds on**. Record it under **Spin-offs**.
+3. **Back to the question.** Set the off-axis probes to `dropped`, record what they taught under **Dead ends**, and pick the next probe from the last on-axis one.
 
-## 4. Prevent
+## 5. Repair and prevent
 
-Find what let the drift happen. Read this session's conversation, the study's history (`git log --grep '^<study>:'` and `git log -- .science/<study>`), and the notebook's **Drift log**: they usually show where it began, such as the first commit touching another study's folder, or the first probe whose Intent left the question. Read older session logs only when the user points at one.
+Apply each answer as a new commit, limited to the paths it fixes and prefixed with the study it belongs to; history stays as it is, because the checkout is shared.
 
-Then suggest where the guard belongs, and write it once the user agrees:
+Then name what let the drift happen, from step 3, and suggest one guard, written once the user agrees:
 
 - **A Lesson** in the notebook, when it is about this study.
 - **A convention in `.science/SETUP.md`**, when it holds for the whole repo.
-- **A change to a science skill**, when a skill told the agent to do the wrong thing or left a gap. Report it to the user as a proposal, naming the skill and the change; the skills are edited where they are maintained, outside the study.
+- **A change to a science skill**, when a skill told the agent to do the wrong thing or left a gap: report it as a proposal naming the skill and the change; the skills are edited where they are maintained, outside the study.
 
-## 5. Back on track
+## 6. Back on track
 
-End with the one command that resumes the work, and why: `/experiment <study>` to continue, `/to-study` for a new question, `/promote` for a validated probe, or `/setup-science` for a repo with no setup. If resuming needs a new session, give the exact command for it.
+End with the one command that resumes the work, and why: `/experiment <study>` to continue, `/experiment <new-study>` for a spin-off, `/promote` for work ready for the protocol, or `/setup-science` for a repo with no setup. If resuming needs a new session, say so.
 
-Done when the user has that command, and every drift item is repaired or deliberately left as it is.
+Done when the user has the verdict, every ambiguity is resolved or deliberately left, and they have that command.

@@ -1,6 +1,6 @@
 ---
 name: desk-research
-description: Answer a science question by reading existing sources (papers, software documentation, reviews, database documentation) and keep the answer in the repo's shared library, .science/library/. Use when framing a study needs reading, when a research row on a probe map is on the frontier, or when a question needs reading before a probe can be planned.
+description: Answer a science question by reading existing sources (papers, software documentation, reviews, database documentation) and keep the answer in the repo's shared library, .science/library/. Use when framing a study needs reading, or when a question needs reading before a probe can be chosen or run.
 license: MIT
 ---
 
@@ -74,11 +74,11 @@ Every question starts here. Read `index.md` and open the pages that look relevan
 
 ## Research
 
-1. **Collect the questions** the look-up left open: the caller's, and every research row on the probe map's frontier.
+1. **Collect the questions** the look-up left open.
 2. **Start one research subagent per question**, all at once, in the background, each with a fresh context window. They work in this checkout, on this branch, and leave git to you. Each writes only its own `searches/<date>-<slug>/` folders, so they never collide. Brief each with **context pointers**, not copies: the question and slug, `.science/SETUP.md`, the library layout above, any existing page it extends, and the literature tools available. Each reports back a draft answer with its citations.
 3. **Keep working while they read.** The caller goes on with whatever does not depend on the answer.
 4. **Check each report**: every claim cited, every search saved as returned, every data source the answer points to named with its release and licence. Send anything missing back to the same subagent.
 5. **Write the page yourself.** You alone write pages, `index.md` and `log.md`, so parallel subagents and parallel studies never collide on the shared files. Write or extend the page, add or update its index line, append the log entries.
 6. **Commit the library**: `git add .science/library`, then `git commit -m "library: <slug>" -- .science/library` (see **Commits and tags** in `lab-notebook`).
 
-Done when every question has a committed page and an index line. Report each page to the caller, one line with its link. The caller links it from its study: a `done` research row, a **Background** line in `STUDY.md`, or a line under the notebook's **Library**.
+Done when every question has a committed page and an index line. Report each page to the caller, one line with its link. The caller links it from its study: a **Background** line in `STUDY.md`, a probe's **Builds on**, or a line under the notebook's **Library**.

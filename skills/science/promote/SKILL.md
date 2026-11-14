@@ -1,6 +1,6 @@
 ---
 name: promote
-description: Promote a validated probe from a science study into the protocol, after agreeing the directory tree with the user.
+description: Promote a probe's work from a science study into the protocol in the main tree, after agreeing the directory tree with the user.
 license: MIT
 disable-model-invocation: true
 ---
@@ -15,7 +15,7 @@ Call the Skill tool with `lab-notebook` for the tree, the formats and the rules 
 
 ## 1. Confirm the probe is ready
 
-Read the probe or chain of probes the user names, and the notebook. A step is ready when the probes provide valid evidence supporting its intended reuse, the user's decision was **promote**, and it reruns from what is committed. Check the relevant controls and validation criteria for that use: `completed` alone is not enough, and an unmet method-validation criterion still blocks that use. A result that differs from the agent's expectation can qualify; explain what the evidence supports. If readiness is not established, say what is missing and stop.
+Read the probe or chain of probes the user names, and the notebook. A step is ready when the probes provide valid evidence supporting its intended reuse, the user asked to promote it, and it reruns from what is committed. Check the relevant controls and validation criteria for that use: `completed` alone is not enough, and an unmet method-validation criterion still blocks that use. A result that differs from the agent's expectation can qualify; explain what the evidence supports. If readiness is not established, say what is missing and stop.
 
 ## 2. Agree the directory tree
 
@@ -23,7 +23,7 @@ This step is a hard gate: nothing is written to the protocol until the user appr
 
 Propose where the promoted step lives in the protocol: the folders and files it adds or changes, with one line per folder saying why it sits there. Show it as a tree. Read the existing protocol first so the proposal extends its layout rather than inventing a parallel one.
 
-Iterate until the user approves the tree, word for word. Record the approved tree in the probe README under **Decision**.
+Iterate until the user approves the tree, word for word. Record the approved tree in the probe README under **Discussion**.
 
 ## 3. Port the step
 
@@ -35,7 +35,7 @@ Done when the regression check is green and the review's findings are fixed.
 
 ## 4. Record and commit
 
-1. Rename the probe folder to `promoted` with `git mv` (for example `03-r1-completed-<slug>` → `03-r1-promoted-<slug>`) and rewrite every link to the old name (see **Renaming** in `lab-notebook`). In `NOTEBOOK.md`, set the probe's row to `promoted` and add `promoted to <its place in the protocol>` to its probe notes.
+1. In `NOTEBOOK.md`, set the probe's state to `promoted` and add `promoted to <its place in the protocol>` to its probe notes. The folder keeps its name.
 2. Append one line under `## Promoted` in `.science/<study>/STUDY.md`: ``- `<step>` (<its place in the protocol>): from NN-<slug>, NN-<slug>; tag `<study>/promote-<step>` ``.
 3. Commit, following the **Promotion** mode in `SETUP.md`:
    - **commit**: one commit holding the protocol files, the promoted data and the study folder, `<study>: promote NN: <step>`, limited to those paths, and tagged `<study>/promote-<step>`.

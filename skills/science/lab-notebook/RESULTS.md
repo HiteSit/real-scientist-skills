@@ -1,6 +1,6 @@
 # Results
 
-How a probe's result is shown to the user. The user decides the next step from what is shown here, so a result they cannot read at a glance is a result that was not delivered.
+How a probe's result is shown to the user. The user reads the result and chooses what comes next from what is shown here, so a result they cannot read at a glance is a result that was not delivered.
 
 Use the plotting library and dashboard builder named in `.science/SETUP.md`.
 
@@ -21,7 +21,7 @@ Goes under **Result** in the probe README. Lead with the finding and the update,
 **Suggests:** <the next probe or question, tied to what remains uncertain>
 ```
 
-Keep the brief to what a reader needs to make the decision. Raw tables and logs stay in the probe folder, linked.
+Keep the brief to what a reader needs to understand the result. Raw tables and logs stay in the probe folder, linked.
 
 ## Figures
 
@@ -38,19 +38,19 @@ Each figure makes **one claim**, stated in its caption and file name. Then:
 
 ## The study dashboard
 
-A study has **one** dashboard, and it grows **probe after probe**. There is never a dashboard per probe: each probe adds its own section to the same page and updates the parts it changed (the current direction, the drift log, the map), while every earlier probe stays on the page in run order. The dashboard is the study's whole trajectory in one place.
+A study has **one** dashboard, and it grows **probe after probe**. There is never a dashboard per probe: each probe adds its own section to the same page and updates the parts it changed (the current direction, the drift log, the probes table), while every earlier probe stays on the page in run order. The dashboard is the study's whole trajectory in one place.
 
-One **live page** (see [LIVE-HTML.md](LIVE-HTML.md)), `.science/<study>/dashboard.html`, built by the dashboard script beside it from the notebook and the probe folders. Regenerate it after every probe; never edit the HTML by hand.
+One **live page** (see [LIVE-HTML.md](LIVE-HTML.md)), `.science/<study>/dashboard.html`, built by the dashboard script beside it from the notebook and the probe folders. Regenerate it whenever a result is recorded; never edit the HTML by hand.
 
 It shows, top to bottom:
 
 1. **The question and the current direction**, with the starting direction from `STUDY.md` beside it, so the drift is visible at once.
 2. **The drift log** as a timeline: each entry, the probe that caused it, and what changed.
-3. **The probes** in run order: number, title, outcome, the key figure, the headline and the update from expectation to evidence, including what remains unresolved, with a link to the probe README. Promoted probes say where they went; revised probes list their revisions and the **Lessons** they produced.
-4. **The probe map**: the current table beside the starting one from `STUDY.md`, compared row by row (added, dropped, moved to another phase), with the frontier marked, and the **dead ends**.
+3. **The probes** in run order: number, title, state, outcome, the key figure, the headline and the update from expectation to evidence, including what remains unresolved, with a link to the probe README. Promoted probes say where they went; revised probes list their revisions and the **Lessons** they produced.
+4. **What could come next**: the **Ideas** list, and the **dead ends**.
 
 Write the explanations for the user who will open the dashboard cold: what was tested, what came out, and why it matters, in plain sentences.
 
-Updating it is part of every probe: a probe is not finished, and not committed, until the dashboard shows it.
+Updating it is part of recording a result: a result is not committed until the dashboard shows it.
 
 Done when the dashboard passes the live-page smoke test, shows every probe up to the current one, and the starting and current directions sit side by side.

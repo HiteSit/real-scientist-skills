@@ -5,7 +5,11 @@ Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock'
 ## 2026-11-14
 
 - Probes now reduce a relevant uncertainty rather than score an agent's prediction. Before running, the agent states its provisional expectation and basis, or says it is unknown; the result brief and dashboard explain what the evidence changes and what remains unresolved. Explicit tests retain a criterion recorded before the run.
-- Probe outcomes are `completed` or `inconclusive`, independent of agreement with the expectation. Folder names, notebook formats and commit examples follow those outcomes. Original expectations and test criteria remain recorded through corrections. Promotion requires reproducible evidence supporting the intended reuse, including relevant validation checks, rather than a `held` verdict.
+- Probe outcomes are `completed` or `inconclusive`, independent of agreement with the expectation. Original expectations and test criteria remain recorded through corrections. Promotion requires reproducible evidence supporting the intended reuse, including relevant validation checks.
+- `to-study` is gone: `/experiment <study>` opens a study whose folder does not exist yet, with a short grilling on the direction and an agreed first probe. Loading a study changes nothing; it focuses the session on that study and summarises where it stands, then follows the user's lead.
+- No up-front probe map: phases, **Blocked by**, the frontier, research rows and **Not yet mapped** are replaced by an **Ideas** list the user agrees to. Each next probe is chosen with the user when it is next; probes name what they use under **Builds on**.
+- Probe folders are `NN-<slug>` and never renamed. A probe's state lives in the notebook: `open` while worked on, `evidence` once the next probe starts (after checking its results are in), `dropped` only on the user's word, `promoted` by `/promote`, which is the one step that changes the main tree. The README's **Decision** becomes **Discussion**.
+- `ask-science` is a retrospective on one study: a verdict (on track, drifting, lost) from its probes, history and conversation, then a round of questions on every place where `STUDY.md`, the notebook, the probe folders and git disagree.
 
 ## 2026-11-12
 

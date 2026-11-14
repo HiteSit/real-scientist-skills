@@ -1,133 +1,87 @@
 ---
 name: experiment
-description: Load a science study (/experiment <study>, from any session) and run it one probe at a time. State the starting expectation, run the probe, show what the evidence changes as plots and a brief, and let the user decide the next step. Also fixes a recorded probe in place when it turns out to have been run wrong.
+description: Load a science study and focus the session on it (/experiment <study>, from any session), or open it when its folder does not exist yet. Then follow the user's lead on that study - explain what was done, work on an open probe, start the next probe, fix a recorded one, or close the study.
 license: MIT
 disable-model-invocation: true
 ---
 
 # Experiment
 
-Move a study forward through the **probe loop**: plan one probe, run it, inspect it, put it in front of the user, record their decision, plan the next. Each probe is planned only once the results it depends on are in, because those results are what decide it.
+`/experiment <study>` **loads** a study and **focuses** the session on its folder, `.science/<study>/`: from here on, the conversation is about this study. Loading changes nothing in the study. After it, follow the user: they may want what was done explained, more work on an open probe, the next probe, a fix, or just a discussion. The sections below are the procedures to reach for when their ask needs one.
 
-The study's **direction** is allowed to **drift**. `STUDY.md` is where the study started, and it stays frozen; the next probe follows the evidence and the user's decision, wherever that leads. Every move away from the starting direction is logged, and that log is the study's history.
+The study's **direction** is allowed to **drift**. `STUDY.md` is where the study started, and it stays frozen; each probe follows the evidence and the user's choices, wherever that leads. Every move away from the starting direction is logged.
 
-Watch the **axis** the whole time. Whenever an ask from the user or a result leaves it, at any step, triage it as `lab-notebook` describes under **Off-axis** and confirm its home with the user before creating anything. Then return to the step you were on.
+Watch the **axis** the whole time. Whenever an ask from the user or a result leaves it, triage it as `lab-notebook` describes under **Off-axis** and confirm its home with the user before creating anything. Then return to what you were doing.
 
 ## Load the study
 
-Every run starts by loading one **study**, so a fresh session continues exactly where the last one stopped, the way a wayfinder session picks up the next ticket from the map.
-
-1. Call the Skill tool with `lab-notebook` for the tree, the formats and the rules of the shared checkout, and read `.science/SETUP.md` for the domain and stack.
-2. **Pick it.** With `/experiment <study>`, the study is `.science/<study>/`. Without an argument, list the open studies (folders under `.science/` whose `STUDY.md` has no **Outcome**): for each, its question, last probe with its state, and current direction, from `NOTEBOOK.md`. Ask which one to load. If there are none, tell the user to run `/to-study` and stop.
+1. Call the Skill tool with `lab-notebook` for the tree, the formats, the probe states and the rules of the shared checkout. Read `.science/SETUP.md` for the domain and stack; if it is missing, tell the user to run `/setup-science` and stop.
+2. **Pick it.** With `/experiment <study>` and the folder `.science/<study>/` present, load it. With a name whose folder does not exist, go to **Open a new study**. Without a name, list the studies (folders under `.science/` with a `STUDY.md`): for each, open or closed, its question, its open probes and current direction, from `NOTEBOOK.md`. Ask which one to load, or the name of a new one.
 3. **Check the branch.** Compare the current branch with the notebook's **Branch**. When they differ, tell the user and ask: continue here (update **Branch** in the study's next commit), or stop so they can move to the recorded branch. This session stays on whatever branch it found.
 4. **Check the folder.** Uncommitted changes inside `.science/<study>/` are a previous session's unfinished work: show them and ask the user what to do with them. Changes anywhere else belong to other sessions; leave them alone.
-5. **Check the notebook.** Every started row of the probe map has a folder with the matching name, and every probe that is not `running` has a **Decision**. If they disagree, or the study's history holds work that belongs elsewhere, stop and suggest `/ask-science` instead of guessing.
+5. **Orient.** Read `NOTEBOOK.md` (current direction, probes, ideas, lessons, dead ends) and the README of every open probe. Tell the user in a few lines where the study stands: the question and current direction, each open probe and what it waits for, the latest evidence, and the ideas on the list. If `STUDY.md`, the notebook and the probe folders tell different stories, say so and suggest `/ask-science` instead of guessing.
 
-Done when the study's `NOTEBOOK.md` is open and the checks pass.
+Done when the user has that summary. When their `/experiment` message already asked for something, go on to it.
 
-This session is now **bound** to the study: it writes only inside `.science/<study>/` (plus the protocol files of a promotion, through `/promote`). When an ask belongs to another study (see **Off-axis** in `lab-notebook`), record it where the triage says, then give the user the exact command to start a new session for it (`/experiment <other-study>` or `/to-study`).
+This session is now **bound** to the study: it writes only inside `.science/<study>/` (plus the protocol files of a promotion, through `/promote`). When an ask belongs to another study (see **Off-axis** in `lab-notebook`), record it where the triage says, then give the user the exact command for a new session: `/experiment <other-study>`.
 
-## The loop
+## Open a new study
 
-Run steps 1 to 6 once per probe. One probe per pass by default; the exception, two independent probes at once, is in `lab-notebook` under **The probe map**.
+A **direction** is not a spec, and this interview is short: the probes answer what it leaves open, and the notebook records every move.
 
-### 1. Orient
+1. **Gather.** Read `GLOSSARY.md` for the agreed vocabulary, `.science/library/index.md` for what the repo already knows, and anything the user passes (a file, an issue, a previous study) in full. Finding facts is your job: look them up instead of asking. Call the Skill tool with `domain-modeling`, so terms are challenged and written to `GLOSSARY.md` as they crystallise. If this session already holds a study, triage the ask against its axis first: a question that belongs there becomes a probe there, not a new study.
+2. **Grill the direction** in rounds, the way `grilling` does: numbered questions, each with your recommended answer, worded so "yes" accepts it. Cover what the user's message has not already settled: the **question**, the **starting hypothesis** (or "unknown"), the **system**, **what an answer looks like**, the **constraints**. Questions that need reading, not the user, go to the library; for each one it cannot answer yet, call the Skill tool with `desk-research` at once, and keep asking about what does not depend on it.
+3. **Agree the first probe.** Stop grilling as soon as a first run can be planned that reduces a named uncertainty, and agree that probe with the user. Everything else the user mentioned becomes a line under **Ideas**; a piece that asks a different question goes under **Spin-offs** for its own `/experiment` run.
+4. **Draft `STUDY.md`** in the `lab-notebook` format, folding in the library pages the framing used under **Background**. Every section is a best current guess, not a commitment; mark what is open as unknown. Show it, iterate until the user accepts it, and name the study with a short slug unused under `.science/`.
+5. **Open it.** Write `STUDY.md` (its starting sections frozen from here on) and `NOTEBOOK.md`: **Branch** set to the current branch, the current direction copied from `STUDY.md`, an empty **Probes** table, the **Ideas** list, the **Library** list started from **Background**. Create an empty `probes/` folder and the study dashboard. Commit `<study>: open` and tag it `<study>/open`.
 
-Read `NOTEBOOK.md` (current direction, probe map, probe notes, lessons, dead ends) and the README of the most recent probe, including its **Decision** and **Next**: that is where the last session, possibly a different one, left the study.
+Done when the commit and its tag exist. Then start the first probe, below, unless the user says otherwise.
 
-If the frontier holds research rows not yet started, call the Skill tool with `desk-research` to start them in the background now; they run alongside the probe.
+## Start a probe
 
-If a probe is marked **running**, this session is resuming it: check its job as `SETUP.md` describes, and continue at step 3 or 4 depending on whether it finished.
+1. **Choose it with the user.** The next probe comes from the user's ask, the last result's **Suggests**, or the **Ideas** list. When the choice is open ("what should we do next?", "we are running X, but the aim is Y"), work it out in rounds, the way `grilling` does. A good probe is the **smallest run that reduces a relevant uncertainty and updates the working picture**. Prefer reusing promoted protocol steps over scratch copies of them, and existing library pages over new reading. Check the plan against every entry under **Lessons**.
+2. **Look at the open probes** and settle their state as `lab-notebook` describes under **Probe states**: results in and recorded → `evidence`; results still out → stays `open`, and say so.
+3. **Create** `probes/NN-<slug>/` with the next free number and write the top of its README: **Builds on**, **Intent**, **Expectation**, and **Test criterion** when applicable. In the notebook, add the row as `open`, take it off **Ideas**, and start its **Probe notes** entry.
+4. **Tell the user** in a few lines what you expect, why, and which uncertainty the probe addresses; say when the expectation is only an agent guess or is unknown. When the plan matches what the user already chose, go straight on; when it departs from it, wait for them.
 
-### 2. Plan the probe
-
-The next probe comes from the user's last decision. If there is none yet, take it from the frontier of the probe map, earliest phase first. The map row is a sketch drawn before any result: plan the probe properly now, from what the results so far have shown.
-
-When the user asks what to do next, or says where the current work should lead ("we are running X, but the aim is Y"), work the next probes out with them in rounds, the way `grilling` does, and add only the ones they agree to as `planned` rows, each with its **Blocked by**.
-
-A good probe is the **smallest run that reduces a relevant uncertainty and updates the working picture**. Size it to one session. Prefer reusing promoted protocol steps over scratch copies of them, and existing library pages over new reading. Check the plan against every entry under **Lessons**.
-
-Create `probes/NN-r0-running-<slug>/` with the next free number and write the top of its README: **Blocked by**, **Uses**, **Intent**, **Expectation**, and **Test criterion** when applicable, as defined in `lab-notebook`. In the notebook, give the probe's row its number and link, set it to `running`, and start its **Probe notes** entry.
-
-Before running, tell the user in a few lines what you expect, why, and which uncertainty the probe addresses; say when the expectation is only an agent guess or is unknown. If the plan matches what the user already chose, go straight on after that message. If it departs from it, wait for the user.
-
-When a second frontier probe is independent of this one and the user wants both running (two long cluster jobs, say), plan it the same way now. From here on, each goes through steps 3 to 6 on its own.
-
-### 3. Run
+## Run
 
 Organise the probe folder however the work needs. Run every command through the environment's run command in `SETUP.md`, and read `SETUP.md` for how to submit to compute. Read the user's input data from the data folder by its repo-relative path; fetch everything else the probe loads (database exports, datasets, model checkpoints) into the probe's own folder, with a fetch script and the source in the README (see **Data** in `lab-notebook`). When the user hands over new data of their own mid-study, add it to the data folder with its own `data: <slug>` commit.
 
 1. Write the scripts and the probe's `.gitignore` for heavy outputs.
 2. Run. Record under **Method** the exact commands, tool versions, seeds and inputs, so the probe reruns from what is committed.
 3. A run that crashes or is misconfigured is not a result: fix it and rerun inside the same probe, and note the fix under **Method**.
-4. For a long job, submit it, record the job id under **Method**, commit the probe as it stands (`<study>: probe NN: <slug>: running`), tell the user when to expect it, and end the session.
+4. For a long job, submit it, record the job id under **Method**, commit (`<study>: probe NN: <slug>: job submitted`), and tell the user when to expect it. The probe stays open; a later `/experiment <study>` collects it.
 
 Done when the outputs needed to address the probe's intent exist.
 
-### 4. Inspect
+## Show a result
 
 Read [RESULTS.md](../lab-notebook/RESULTS.md) before looking at the outputs. Then:
 
-1. Make the probe's figures.
-2. Assign the **outcome**, `completed` or `inconclusive`, using `lab-notebook`'s definitions. Compare the evidence with the original expectation; for an explicit test, also report whether its recorded criterion was met.
-3. Write the brief under **Result**, explaining what changed in the working picture and what remains unresolved. Preserve the original expectation and any test criterion.
-4. Update the study's single dashboard: regenerate it so it adds this probe's section and refreshes the direction, drift log and map, with every earlier probe still on it.
+1. Make the probe's figures, assign the **Outcome** (`completed` or `inconclusive`, as `lab-notebook` defines them), and write the brief under **Result**: what changed in the working picture and what remains unresolved, against the original expectation and any test criterion.
+2. Regenerate the study dashboard so it shows this result.
+3. **Present it** in one message: the one-sentence finding and the outcome, what shifted from the starting expectation and what remains uncertain, the key figures, a link to the dashboard, what it suggests next, the findings of any library pages finished meanwhile, and any off-axis question it raised with the home you recommend.
+4. **Talk it through** in rounds, the way `grilling` does, as short as the result allows: a clean result may need one round or none, a surprise several. Aim at how the user reads it, which caveat matters most, and what it changes in their belief about the question.
+5. **Record** under **Discussion** the reading the conversation settled. Finish the probe's **Probe notes** entry, add any ideas the user agreed to, and any new dead ends. If the direction moved even slightly, rewrite **Current direction** and add a **Drift log** entry citing this probe. Commit: the first recorded result is `<study>: probe NN: <slug>: <outcome>`, tagged `<study>/NN-r0`; later results in the same probe are `<study>: probe NN: <slug>: <what changed>`.
 
-Done when the brief, the figures and the dashboard all show this probe.
-
-### 5. Checkpoint
-
-This is a hard gate: the user decides after every probe, whatever the outcome.
-
-Present, in one message:
-
-- the one-sentence finding and the outcome, followed by what shifted from the starting expectation and what remains uncertain;
-- the probe's key figures, and a link to the dashboard;
-- a recommended decision, with the reason:
-  - **continue**: the next probe along the current direction;
-  - **branch**: a probe off a new question this result opened;
-  - **drop**: a dead end, with what it rules out;
-  - **promote**: the evidence supports the step's intended reuse and it reruns; readiness is checked by `/promote`.
-- the findings of any library pages finished since the last checkpoint, one line each with a link;
-- whether the decision would move the current direction, and how;
-- any off-axis question this result raised, with the home you recommend for it.
-
-Then **grill the result** with the user before the decision. Ask in **rounds**, the way `grilling` does: numbered questions, each with your recommended answer, worded so "yes" accepts it. Aim them at what the result means: whether the user reads it the way the brief does, which caveat matters most, what it changes in their belief about the question, and which of the decisions it supports. Keep it as short as the result allows: a clean result may need one round or none, a surprise may need several. Stop when the user's reading of the result and their decision are both settled, and any probes they want added or dropped are agreed.
-
-Their call wins over your recommendation.
-
-### 6. Record
-
-1. Write the user's decision and its reason under **Decision**, with the reading of the result the grilling settled, and **Next** if it points to a probe.
-2. Rename the probe folder from `running` to its state with `git mv`: the outcome, or `dropped` if the user decided drop. Rewrite every link to the old name (see **Renaming** in `lab-notebook`).
-3. Update `NOTEBOOK.md`: set the probe's row to that state, with **Rev** `0` and **Tag** `<study>/NN-r0`; finish its **Probe notes** entry (what it ran, the key numbers, the decision); add new dead ends. Then reshape the map as the checkpoint agreed: add the rows the user agreed to, set the rows it made pointless to `dropped`, fix the **Blocked by** edges.
-4. If the decision moved the direction or reshaped the map even slightly, rewrite **Current direction** and add a **Drift log** entry that cites this probe and says what in its result forced the move.
-5. Commit the study folder, `<study>: probe NN: <slug>: <outcome>`, and tag it `<study>/NN-r0` (see **Commits and tags** in `lab-notebook`).
-
-Done when the commit and its tag exist and the notebook reads correctly without opening the probe.
+The probe stays open: more work on it continues until the next probe starts. When the user says in plain words to drop a probe, set it to `dropped`, record what it rules out under **Dead ends**, and commit. When they want its work in the protocol, the next step is `/promote`.
 
 ## Fix a probe
 
-When the user, or you, finds that a recorded probe was **run wrong** (a bug, a wrong input or parameter, a mistake in the analysis or the plots), fix it in place as `lab-notebook` describes under **Revisions**. This can happen at any point, even in the middle of another probe: commit that probe's state as it stands first, then come back to it.
+When the user, or you, finds that a recorded probe was **run wrong** (a bug, a wrong input or parameter, a mistake in the analysis or the plots), fix it in place as `lab-notebook` describes under **Revisions**. Commit any other probe's work as it stands first, then come back to it.
 
 1. **Confirm the fix.** Name the probe, what was wrong, and whether it is a revision or a new probe (see **Revisions** in `lab-notebook`). Wait for the user's yes.
 2. **Fix and rerun** in the same folder. Update **Method** to the corrected run. Keep the original **Expectation** and any **Test criterion** exactly as written.
-3. **Inspect again** as step 4 does: new figures, the corrected outcome and interpretation, a new brief, the dashboard regenerated.
-4. **Take it to the user** as step 5 does when the outcome or the reading of the result changed; the decision may change with it. When nothing changed but the numbers, report the fix in a few lines.
-5. **Record the revision.**
-   1. In the README, add a **Revisions** entry: the tag of the wrong version, what was wrong, who caught it, what changed, the outcome and decision before and after.
-   2. Rename the folder with `git mv` to the new revision count and state, for example `03-r0-completed-<slug>` → `03-r1-inconclusive-<slug>`, and rewrite every link to the old name. In the notebook, set the row's **Status** to the new state, add 1 to **Rev**, set **Tag** to `<study>/NN-r<R>`, and add the revision line to the probe's notes.
-   3. Add a **Lessons** entry: the rule that would have prevented the mistake. If it holds for the whole repo, ask the user whether it also goes into `.science/SETUP.md`.
-   4. If the corrected result moves the direction or the map, update them and add a **Drift log** entry, as step 6 does.
-6. **Check what was built on it.** For every row whose **Blocked by** names the fixed probe, in this study or in a spin-off, add a line to its notes (`built on NN before its rev N`) and ask the user, probe by probe, whether to rerun it (a fix of its own, through these same steps, in its own study's session) or keep it. Leave its status as it is until they decide. If the fixed probe was promoted, tell the user the protocol step carries the mistake and needs a new promotion.
-7. Commit the study folder, `<study>: fix NN: <slug>: <what was wrong> (<old outcome> → <new outcome>)`, and tag it `<study>/NN-r<R>`.
+3. **Show the result again** as above when the outcome or the reading changed; when only the numbers moved, report the fix in a few lines.
+4. **Record the revision.** In the README, add a **Revisions** entry: the tag of the wrong version, what was wrong, who caught it, what changed, the outcome before and after. In the notebook, add 1 to **Rev**, set **Tag** to `<study>/NN-r<R>`, add the revision line to the probe's notes, and a **Lessons** entry: the rule that would have prevented the mistake. If the lesson holds for the whole repo, ask the user whether it also goes into `.science/SETUP.md`. If the corrected result moves the direction, update it with a **Drift log** entry.
+5. **Check what was built on it.** For every probe whose **Builds on** names the fixed one, in this study or in a spin-off, add a line to its notes (`built on NN before its rev N`) and ask the user, probe by probe, whether to rerun it (a fix of its own, in its own study's session) or keep it. If the fixed probe was promoted, tell the user the protocol step carries the mistake and needs a new promotion.
+6. Commit the study folder, `<study>: fix NN: <slug>: <what was wrong> (<old outcome> → <new outcome>)`, and tag it `<study>/NN-r<R>`.
 
 Done when the commit and its tag exist and every probe built on the old result is marked rerun or kept.
 
-## Leaving the loop
+## Close the study
 
-- **promote**: tell the user the next step is `/promote` with this probe.
-- **The user stops**: the notebook already holds the state; any later session continues with `/experiment <study>`.
-- **The question is answered**: say so at the checkpoint, and propose closing the study: a final line under **Current direction**, and the **Outcome** line in `STUDY.md`, both stating the answer and the probes that support it. Commit `<study>: close` and tag it `<study>/close`.
+When the question is answered, or the user wants to stop the study for good, propose closing it: open probes become `evidence` (or stay as the user says), a final line goes under **Current direction**, and the **Outcome** line goes into `STUDY.md`, both stating the answer, or why it stops, and the probes behind it. Commit `<study>: close` and tag it `<study>/close`.
 
-Otherwise, go back to step 1.
+When the user simply stops for the day, nothing is needed: the notebook holds the state, and `/experiment <study>` picks it up.
