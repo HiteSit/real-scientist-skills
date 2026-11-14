@@ -18,6 +18,16 @@ Current customizations:
 
 To add one, write `customizations/<skill>/customization.md`, run `scripts/build.sh`, and commit both.
 
+## Editing the science skills
+
+A change to a skill in `skills/science/` updates, in the same commit, the docs that describe it:
+
+- `skills/science/README.md`, when the change touches what the user sees: the workflow, a step, a probe state, the folder layout, a section name, a term.
+- The top-level `README.md`, when it touches the skill list, the vocabulary or the short folder layout there.
+- `CHANGELOG.md`: a line under today's date saying what changed for the user.
+
+Before committing, search both READMEs for every term the change renamed or removed. A change that leaves the user-facing behaviour as it was (wording, a clearer step) needs only the changelog line, if any.
+
 ## Weekly sync with Matt's repo
 
 Every Monday at 06:00 UTC, `.github/workflows/sync-upstream.yml` runs `scripts/sync-upstream.sh`. You can also start it from the Actions tab. The script:
