@@ -38,7 +38,7 @@ No `.science/SETUP.md`: the repo is not set up; recommend `/setup-science` and s
 
 ## 3. Look back
 
-Read where the study started (`STUDY.md`), where it says it is (the notebook's **Current direction**, **Drift log**, the last probes' notes and **Discussion**), what was actually done (`git log --grep '^<study>:'`, the probe READMEs), and this session's conversation. Then answer, with the evidence for each:
+Read where the study started (`STUDY.md`), where it says it is (the notebook's **Current direction**, **Map**, **Log** and **Drift log**), what was actually done (`git log --grep '^<study>:'`, the probe READMEs, especially **Asked** against **Reading**), and this session's conversation. Then answer, with the evidence for each:
 
 - What is the question now, and is it still the one in `STUDY.md`, or a change the drift log explains?
 - What have the last few probes been trying to find out, and does that work bring the answer closer?
@@ -52,8 +52,9 @@ Give a **verdict** in a few lines: **on track**, **drifting** (and since when, a
 Compare the records with each other and with the format in `lab-notebook`. Every place where they disagree, or where the right reading is unclear, is an **ambiguity**, and the user resolves it. Look at least for:
 
 - `STUDY.md` and the notebook telling different stories: a current direction with no drift log entry to explain it, a question restated differently.
-- The **Probes** table and the probe folders: a row with no folder, a folder with no row, names that do not match.
-- A probe's state against its README: open with its results long recorded while later probes ran, evidence with results still out, dropped with nothing under **Dead ends**.
+- The **Map** and the probe folders: a block with no folder, a folder with no block, names that do not match; a block whose **asked**, **found** or **means** says something different from its README.
+- A probe's state against its README: open with its results long recorded while later probes ran, evidence with results still out, dropped with nothing under **Dead ends**. A **means** still marked `[inference]` long after the result was discussed.
+- Work recorded in git but not in the notebook: probe commits with no log line, results the map does not show.
 - Notebook sections outside the format, or a story told twice in different words.
 - **Ideas** that were already run, and probes run that the study never agreed to.
 - Work in the wrong place: this study's work in another study's folder or none, uncommitted changes, commits whose `<study>:` prefix does not match the paths they touch.

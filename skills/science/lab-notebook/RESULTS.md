@@ -38,7 +38,7 @@ Each figure makes **one claim**, stated in its caption and file name. Then:
 
 ## The study dashboard
 
-A study has **one** dashboard, and it grows **probe after probe**. There is never a dashboard per probe: each probe adds its own section to the same page and updates the parts it changed (the current direction, the drift log, the probes table), while every earlier probe stays on the page in run order. The dashboard is the study's whole trajectory in one place.
+A study has **one** dashboard, and it grows **probe after probe**. There is never a dashboard per probe: each probe adds its own section to the same page and updates the parts it changed (the current direction, the drift log, the map), while every earlier probe stays on the page. The dashboard is the study's whole trajectory in one place.
 
 One **live page** (see [LIVE-HTML.md](LIVE-HTML.md)), `.science/<study>/dashboard.html`, built by the dashboard script beside it from the notebook and the probe folders. Regenerate it whenever a result is recorded; never edit the HTML by hand.
 
@@ -46,7 +46,7 @@ It shows, top to bottom:
 
 1. **The question and the current direction**, with the starting direction from `STUDY.md` beside it, so the drift is visible at once.
 2. **The drift log** as a timeline: each entry, the probe that caused it, and what changed.
-3. **The probes** in run order: number, title, state, outcome, the key figure, the headline and the update from expectation to evidence, including what remains unresolved, with a link to the probe README. Promoted probes say where they went; revised probes list their revisions and the **Lessons** they produced.
+3. **The map**: each thread with its prose, and under it each probe with what was asked, what was expected, what was found and what it means (marked `[inference]` until discussed), its state and outcome, the key figure, and a link to the probe README. Promoted probes say where they went; revised probes list their revisions and the **Lessons** they produced.
 4. **What could come next**: the **Ideas** list, and the **dead ends**.
 
 Write the explanations for the user who will open the dashboard cold: what was tested, what came out, and why it matters, in plain sentences.

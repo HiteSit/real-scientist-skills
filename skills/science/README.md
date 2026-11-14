@@ -45,9 +45,28 @@ A probe is the smallest run that reduces a relevant uncertainty. Each one goes l
 1. **Choose it with you.** From your ask, from what the last result suggested, or from the ideas list. Before it runs, the agent tells you what it expects and why: previous evidence, a library source, or a guess. "Unknown" is fine. An explicit hypothesis test or method validation also records its test criterion.
 2. **Run it** in its own folder, `.science/<study>/probes/NN-<slug>/`, with its scripts, small inputs, outputs, and the exact commands, versions and seeds, so anyone can rerun it. A crash isn't a result: it gets fixed and rerun in the same probe. A long cluster job is submitted, and the next `/experiment <study>` collects it.
 3. **Show the result.** Figures, a short brief and the study dashboard ([`lab-notebook/RESULTS.md`](./lab-notebook/RESULTS.md) sets how). The brief explains the update: starting expectation → what was observed → what changed or stayed the same, and what is still uncertain. The outcome is `completed` when a valid run answered the probe's question, even negatively or surprisingly, or `inconclusive` when the evidence can't settle it.
-4. **Talk it through.** The agent asks how you read the result, which caveat matters most, and what it changes in your belief, in rounds as short as the result allows. Your reading goes into the probe's README under **Discussion**, and a change of direction gets a drift log entry citing the probe.
+4. **Talk it through.** Before you discuss it, the agent has already written its own reading, marked `[inference]`. It then asks how you read the result, which caveat matters most, and what it changes in your belief, in rounds as short as the result allows. Your reading replaces its inference in the probe's README under **Reading** and in the notebook, and a change of direction gets a drift log entry citing the probe.
 
 A probe stays **open** while you work on it, across as many sessions as it needs: more results, a second look, a redo. When the next probe starts, the agent looks at the open ones: a probe whose results are in becomes **evidence**, its findings on record for the study to build on; one still waiting for results (a cluster job, say) stays open, and the agent tells you. That's the normal end of every probe, and it needs no decision from you. A probe is **dropped** only when you say so, with what it rules out written under dead ends. A probe whose work moves into the protocol is **promoted**.
+
+### The notebook: a map of the probes
+
+The notebook updates itself as the work happens. Every operation on a probe (started, job submitted, results collected, result shown, discussed, fixed, state changed) writes the probe's README and the notebook in the same commit, so the notebook is always current.
+
+It is a **map** from the question to the probes. The probes are grouped under **threads**, the parts of the question they actually worked on. A probe that goes somewhere new opens a new thread, so even a large drift from the starting question shows up as a path on the map. Each thread has a few sentences of prose, and each probe has a block:
+
+```
+- 15 tetrazolate-md · open · rev 0
+  - asked:    run all 56 complexes as a technical MD check, descriptive only
+  - expected: no ranking signal
+  - found:    112 replicas complete and verified; ProLIF/PBSA queued
+  - means:    pending
+  <prose: how it moved from what was asked, what you made of it, fixes>
+```
+
+**asked** is your intent for the probe, recorded when it starts and never rewritten. When the work moves the probe somewhere else, the move is written against it, so the notebook shows both how you imagined the probe and how it came out. Below the map, a **log** keeps one short line per operation, with the essential result: `11-14 · 15 · 112 replicas collected, all verified`.
+
+The probe's README holds the full record in the same order: **Thread**, **Asked**, **Plan** (builds on, expectation, test criterion), **Method**, **Result**, **Reading**, **Revisions**. `STUDY.md` stays the frozen starting point; when part of the framing turns out wrong, the correction goes in the notebook's current direction and drift log.
 
 ### Fix a probe
 
@@ -124,16 +143,16 @@ Everything the science skills write lives in `.science/` at the root of your rep
   data/                       your input data, if you chose .science/data/ over data/ at the root
   <study>/                    one folder per study
     STUDY.md                  starting direction, background, first probe and ideas, frozen; Promoted and Outcome lines added at the end
-    NOTEBOOK.md               branch, current direction, probes and their states, ideas, probe notes, lessons, library links, dead ends, drift log
+    NOTEBOOK.md               question, branch, current direction, map (threads and probe blocks), log, ideas, lessons, library links, dead ends, drift log
     dashboard.html            one dashboard for the study, updated whenever a result is recorded
     probes/
       01-<slug>/              NN-<slug>, named once and never renamed
-        README.md             builds on, intent, expectation, method, result, discussion, revisions
+        README.md             thread, asked, plan, method, result, reading, revisions
         .gitignore            this probe's large outputs
         figures/
 ```
 
-A probe's folder name never changes; its state (open, evidence, dropped, promoted) lives in the notebook's probes table, beside its revision count and its latest tag.
+A probe's folder name never changes; its state (open, evidence, dropped, promoted), revision count and latest tag are on its block in the notebook's map.
 
 ## Git: one branch, many studies
 

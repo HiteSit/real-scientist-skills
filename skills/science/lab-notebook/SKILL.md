@@ -21,12 +21,12 @@ The repo's stack (environment and its run command, compute, data, heavy-output t
   data/                       the user's input data, when SETUP.md puts it here instead of data/ at the root; see Data
   <study>/
     STUDY.md                  the starting direction, frozen; Promoted and Outcome lines added at the end
-    NOTEBOOK.md               branch, current direction, probes, ideas, probe notes, lessons, drift log
+    NOTEBOOK.md               question, current direction, map of threads and probes, log, ideas, lessons, drift log
     dashboard.html            the study's one live dashboard, grown probe after probe
     dashboard.<ext>           the script that builds it
     probes/
       01-<slug>/              NN-<slug>, named once and never renamed
-        README.md             builds on, intent, expectation, method, result, discussion, revisions
+        README.md             thread, asked, plan, method, result, reading, revisions
         .gitignore            this probe's heavy outputs
         figures/
         <scripts, small inputs, outputs>
@@ -38,7 +38,7 @@ A probe folder is named `NN-<slug>`, for example `03-protonation`. `NN` counts p
 
 ## Probe states
 
-A probe's **state**, kept in the notebook's **Probes** table, says whether work on it continues. It says nothing about whether the result was good: that is the README's **Outcome**.
+A probe's **state**, shown on its block in the notebook's **Map**, says whether work on it continues. It says nothing about whether the result was good: that is the README's **Outcome**.
 
 - **open**: the probe being worked on. Results arrive, get inspected, discussed, extended or redone while it is open, across as many sessions as the work needs. A probe waiting for a cluster job, or for the user to look at a figure, is open.
 - **evidence**: its findings stand on record, and the study builds on them. This is the normal end of every probe, and it happens on its own: when the next probe starts, **look** at each open probe first. One whose results are in and recorded becomes `evidence`; one whose results are still out (a job not collected, outputs not yet inspected) stays `open`, and you tell the user so.
@@ -49,7 +49,7 @@ An evidence probe can still be corrected (see **Revisions**). Several probes can
 
 ## STUDY.md
 
-The **direction** the study started from. Written once when the study opens (see **Open a new study** in `experiment`). Its starting sections are **frozen**: never edited again, because the gap between them and the notebook's current direction is the record of how far the experiments moved the study.
+The **direction** the study started from. Written once when the study opens (see **Open a new study** in `experiment`). Its starting sections are **frozen**: never edited again, because the gap between them and the notebook's current direction is the record of how far the experiments moved the study. When part of the framing turns out wrong, correct it in the notebook, under **Current direction** with a **Drift log** entry; `STUDY.md` keeps the start the drift is measured from. Keep each section to a few lines: the evidence behind the framing belongs in library pages and probes.
 
 Two sections at the end only grow, one line at a time:
 
@@ -85,34 +85,40 @@ Two sections at the end only grow, one line at a time:
 
 ## NOTEBOOK.md
 
-Where the study stands, readable without opening any probe: the probes table on top, then a short description of every probe that has started. Each probe's full detail stays in its own README.
+The **map** of the study: the question, the threads the probes have opened on it, and for every probe what was asked of it and what it gave back. Readable without opening any probe; each probe's full record stays in its README, and the notebook carries its essence.
+
+**The notebook follows the work.** Every operation on a probe updates the probe's README and the notebook in the same commit, as it happens: the probe's block on the **Map**, and one **Log** line. Operations are: a probe started, a job submitted, results collected, a result shown, a discussion, a fix, a state change. A session that ends leaves the notebook current, with no catching up for the next one.
 
 ```markdown
 # <Study title>: notebook
 
+**Question:** <the study's question, one line, from STUDY.md>
 **Branch:** <the branch this study runs on>
 
 ## Current direction
-<2 to 4 lines. Starts as a copy of STUDY.md's direction and drifts.>
+<A short paragraph: where the study is heading now and the working answer so far, with what is still open. Starts from STUDY.md's direction and drifts; rewritten whenever a result moves it.>
 
-## Probes
-| # | Probe | State | Rev | Tag |
-|---|-------|-------|-----|-----|
-| 01 | [<slug>](probes/01-<slug>/README.md): <what it found> | evidence | 0 | `<study>/01-r0` |
-| 02 | [<slug>](probes/02-<slug>/README.md): <what it found> | evidence | 1 | `<study>/02-r1` |
-| 03 | [<slug>](probes/03-<slug>/README.md): <what it is finding out> | open | 0 | |
+## Map
+
+### <thread: a part of the question the probes work on>
+<A few sentences of prose: what this thread asks, how its probes moved it, where it stands now.>
+
+- **[NN <slug>](probes/NN-<slug>/README.md)** · <state> · rev <R> · `<study>/NN-r<R>`
+  - **asked:** <the user's intent for the probe, as first given>
+  - **expected:** <the expectation and its basis, or "unknown">
+  - **found:** <the essential result, with the numbers that matter>
+  - **means:** <what it means for the question> [inference]
+
+  <Prose as the probe needs it: how it moved from what was asked, what the user made of it, revisions, what was built on it.>
+
+## Log
+- <MM-DD> · <NN> · <the essential, in a few words>
 
 ## Ideas
 - <a probe or reading that could come next, and what raised it>
 
-## Probe notes
-### 02 <slug>
-<3 to 6 lines: the operations it ran, in plain words; the key numbers; how the user read the result.>
-- rev 1, fixing `<study>/02-r0`: <what was wrong>, caught by <the user | the agent>; <old outcome> → <new outcome>
-- built on 01 before its rev 1: <rerun as rev N | kept>, the user's call
-
 ## Lessons
-- <a rule that holds from now on, stated as what to do> (from 02 rev 1)
+- <a rule that holds from now on, stated as what to do> (from NN rev 1)
 
 ## Library
 - [<page title>](../library/<slug>.md): <what this study takes from it>
@@ -127,17 +133,21 @@ Where the study stands, readable without opening any probe: the probes table on 
 - [<study>](../<study>/NOTEBOOK.md): <its question>, raised by <probe NN or the user's ask>, building on <the probes it starts from, or nothing>, run in <a new session or another agent>
 ```
 
+**Threads** are the parts of the question the probes have actually worked on, in the order they opened. They follow the study wherever it goes: a probe that goes somewhere no thread covers opens a new one, and a thread can end with a short line saying what closed it. However far the study drifts from its starting question, the map shows the path.
+
+A **probe block** is the probe's essence, written from its README: the four labelled lines first, then prose as long as the probe needs. Fill each line as the probe gets there: **asked** and **expected** when it starts, **found** when results are in, **means** at the same moment. **means** is the agent's reading until the user's reading replaces it: mark it `[inference]`, and drop the mark once the discussion settles it.
+
+**Log** lines are short and punchy: the date, the probe, and the essential event or result with the number that matters (`11-14 · 15 · 112 replicas collected, all verified`). Job ids, paths and file counts go in the probe's **Method**.
+
 **Branch** records where the study runs. Sessions check it on loading; when the user moves the study to another branch, update it in the study's next commit.
 
 **Ideas** is the study's plan: a short list of what could come next, never a schedule. Only what the user agrees to goes on it. The next probe is chosen with the user when it is next, from the list, from the last result, or from a new thought; once started, it leaves the list.
 
 A drift log entry is written whenever a decision changes the current direction, even slightly. A probe that followed the current direction is not drift. No entry means the direction held.
 
-**Probe notes** get an entry when a probe starts, filled in as it runs and is discussed, and one line per revision. Write them for someone who never opened the README: what was done and what came out, not how.
-
 **Lessons** are the study's memory of its mistakes. Every fix (see **Revisions**) adds one, phrased as the rule that would have prevented the mistake. Read them before starting any probe. A lesson that holds for the whole repo, not just this study, can go into `.science/SETUP.md` too, once the user agrees.
 
-Keep the notebook to these sections. When it needs to say more about a probe, that belongs in the probe's README; when the story needs more, that belongs in the drift log.
+Keep the notebook to these sections. What a probe needs to say goes in its block or its README; what the story needs goes in the thread prose or the drift log.
 
 ## Off-axis
 
@@ -160,36 +170,44 @@ A **session is bound to one study**, so the other study runs in a new session (o
 ```markdown
 # NN: <probe title>
 
+**Thread:** <the part of the question this probe works on; a new thread when it opens one>
+
+## Asked
+<The user's intent for this probe, as they gave it: what they wanted to learn or see, and the scope, data or limits they set. Written when the probe starts, in a few lines.>
+
+## Plan
 **Builds on:** <earlier probes, promoted protocol steps and library pages it uses, or "nothing">
-**Intent:** <what this probe finds out, one or two lines>
 **Expectation:** <the provisional result and why: prior evidence, a library source, or an agent guess; "unknown" when there is no defensible expectation>
 **Test criterion:** <the observable criterion, only when explicitly testing a hypothesis or validating a method; otherwise omit>
+<how the probe will answer what was asked, in a few lines>
 
 ## Method
-<what was run, the exact commands, tool versions, seeds, inputs>
+<what was run, the exact commands, tool versions, seeds, inputs, job ids>
 
 ## Result
 **Outcome:** completed | inconclusive
 <the brief: see RESULTS.md>
 
-## Discussion
-<how the user read the result, the caveat that mattered, what it changed; ideas it added>
+## Reading
+<What the result means for the question: the agent's reading marked [inference] until the discussion with the user settles it. How the probe moved away from what was asked, if it did. The caveat that mattered; ideas it raised.>
 
 ## Revisions
 - rev 1, fixing `<study>/NN-r0`: <what was wrong>, caught by <the user | the agent>. <what changed>. Outcome <old> → <new>.
 ```
 
+**Asked** is the user's starting intent, kept as first written. Probes move: the calculation shows something unplanned, the scope narrows, the question sharpens. Record that movement under **Reading**, and in the probe's block on the map, against **Asked**, so the notebook always shows both how the user imagined the probe and where it ended up.
+
 An **expectation** is the working picture before the run, a starting point to update rather than a target to achieve. Record it and its basis before running; "unknown" is valid, and needs no invented prediction or numerical confidence. Keep that original entry through revisions. What the evidence changes belongs in the result brief's **Update**.
 
 For an explicit hypothesis test or method validation, also record the **Test criterion** before running and report whether it was met. Keep the criterion fixed so the comparison remains meaningful.
 
-The **outcome** describes what the evidence lets us conclude: `completed` when a valid run answers the probe's stated intent, including a negative or surprising answer; `inconclusive` when the evidence cannot settle it. Agreement with the expectation does not decide the outcome. A crash or misconfigured run needs fixing, not a scientific interpretation.
+The **outcome** describes what the evidence lets us conclude: `completed` when a valid run answers what was asked, including a negative or surprising answer; `inconclusive` when the evidence cannot settle it. Agreement with the expectation does not decide the outcome. A crash or misconfigured run needs fixing, not a scientific interpretation.
 
 ## Revisions
 
-A probe that was **run wrong** is fixed **in place**: a bug, a wrong input or parameter, a mistake in the analysis or the plots. The fix goes in the same folder, the probe reruns, and **Method**, **Result** and **Discussion** describe the corrected run. The README's **Revisions** section keeps one entry per fix, naming the tag of the wrong version, so the mistake stays on record; the wrong outputs survive in git under that tag.
+A probe that was **run wrong** is fixed **in place**: a bug, a wrong input or parameter, a mistake in the analysis or the plots. The fix goes in the same folder, the probe reruns, and **Method**, **Result** and **Reading** describe the corrected run. The README's **Revisions** section keeps one entry per fix, naming the tag of the wrong version, so the mistake stays on record; the wrong outputs survive in git under that tag.
 
-A new question, a changed test criterion or a deliberate change of method is a new probe, not a revision. Updating the interpretation of a valid result is ordinary learning: record it under **Update**, without rerunning just to match the expectation.
+A new question, a changed test criterion or a deliberate change of method is a new probe, not a revision. Updating the interpretation of a valid result is ordinary learning: record it under **Reading**, without rerunning just to match the expectation.
 
 Fixing a crash before the probe's first recorded result is part of running it, noted under **Method**. A revision is a fix after that. `/experiment` describes how to make one.
 

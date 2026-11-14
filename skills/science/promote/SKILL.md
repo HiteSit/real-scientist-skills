@@ -23,7 +23,7 @@ This step is a hard gate: nothing is written to the protocol until the user appr
 
 Propose where the promoted step lives in the protocol: the folders and files it adds or changes, with one line per folder saying why it sits there. Show it as a tree. Read the existing protocol first so the proposal extends its layout rather than inventing a parallel one.
 
-Iterate until the user approves the tree, word for word. Record the approved tree in the probe README under **Discussion**.
+Iterate until the user approves the tree, word for word. Record the approved tree in the probe README under **Reading**.
 
 ## 3. Port the step
 
@@ -35,7 +35,7 @@ Done when the regression check is green and the review's findings are fixed.
 
 ## 4. Record and commit
 
-1. In `NOTEBOOK.md`, set the probe's state to `promoted` and add `promoted to <its place in the protocol>` to its probe notes. The folder keeps its name.
+1. In `NOTEBOOK.md`, set the probe's block to `promoted`, say in its prose where it went in the protocol, and add a log line. The folder keeps its name.
 2. Append one line under `## Promoted` in `.science/<study>/STUDY.md`: ``- `<step>` (<its place in the protocol>): from NN-<slug>, NN-<slug>; tag `<study>/promote-<step>` ``.
 3. Commit, following the **Promotion** mode in `SETUP.md`:
    - **commit**: one commit holding the protocol files, the promoted data and the study folder, `<study>: promote NN: <step>`, limited to those paths, and tagged `<study>/promote-<step>`.

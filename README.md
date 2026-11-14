@@ -86,7 +86,7 @@ The science skills keep everything they write in a `.science/` folder at the roo
   data/                 your input data (or data/ at the repo root, your choice)
   <study>/              one folder per study
     STUDY.md            the starting direction and first probe, frozen; promotions and the outcome are added at the end
-    NOTEBOOK.md         the current direction, the probes and their states, ideas, notes on each probe, lessons
+    NOTEBOOK.md         the map: threads of the question, each probe's asked / expected / found / means, a log of every operation
     dashboard.html      the study's dashboard
     probes/             one folder per probe, named like 03-<slug>
 ```
@@ -105,7 +105,7 @@ The full layout: [folder layout](./skills/science/README.md#folder-layout).
 - **Probe state**: open, evidence, dropped or promoted, kept in the notebook.
 - **Ideas**: what could come next, a short list you agree to; never a schedule.
 - **Expectation**: the provisional result and its basis, recorded before running; "unknown" when there is no defensible expectation.
-- **Lab notebook**: the study's current state: the probes and their states, the ideas, a few lines on each probe, and the lessons learned.
+- **Lab notebook**: a map from the question to the probes, updated at every operation: threads, each probe's intent and result, a short log, ideas and lessons.
 - **Revision**: an in-place fix of a probe that was run wrong. The probe keeps its number, and its README says what was wrong and what changed.
 - **Lesson**: a rule drawn from a mistake, read before each probe.
 - **Drift log**: every change of direction, each citing the probe that caused it.
