@@ -34,7 +34,7 @@ The repo's stack (environment and its run command, compute, data, heavy-output t
 
 Inside a probe folder, organise files however the probe needs; only `README.md`, `.gitignore` and `figures/` are fixed. The protocol's tree is a different matter: it is agreed with the human at promotion, never chosen alone.
 
-A probe folder is named `NN-<slug>`, for example `03-protonation`. `NN` counts probes in run order from `01`, and a number is never reused, so the numbers stay a faithful history. `<slug>` says what the probe does. The name is fixed for the probe's whole life: its state lives in the notebook. Refer to a probe by this name everywhere; from another study, write `<study>/NN-<slug>`.
+A probe folder is named `NN-<slug>`, for example `03-protonation`. `NN` counts probes in run order from `01`, and a number is never reused, so the numbers stay a faithful history. `<slug>` says what the probe does. The name is fixed for the probe's whole life: its state lives in the notebook. The one exception is `/ask-science` bringing an old study to the current format, which renames folders whose names carry a state or a revision. Refer to a probe by this name everywhere; from another study, write `<study>/NN-<slug>`.
 
 ## Probe states
 

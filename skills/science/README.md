@@ -11,7 +11,7 @@ This is a draft and can change without warning. For the short version and the re
 - **[promote](./promote/SKILL.md)**: Move a probe's work into the protocol in the main tree, after you agree on where it goes. You start it.
 - **[desk-research](./desk-research/SKILL.md)**: Answer a question by reading papers and documentation through parallel subagents, using your agent's literature tools, and keep the answer in the shared library with the raw search results behind it. The agent can start it.
 - **[lab-notebook](./lab-notebook/SKILL.md)**: The layout and formats: the `.science/` tree, the notebook, probe folders and their states, commits and tags, result briefs, plots and the dashboard. The agent can start it.
-- **[ask-science](./ask-science/SKILL.md)**: Step back from a study: is it on track, drifting or lost? It looks back over the probes, finds where the study, the notebook and the probes disagree, asks you how to resolve each, and gives you the command to resume. You start it.
+- **[ask-science](./ask-science/SKILL.md)**: Step back from a study: first it brings the study to the current format of these skills, then judges whether it is on track, drifting or lost, finds where the study, the notebook and the probes disagree, asks you how to resolve each, and gives you the command to resume. You start it.
 
 ## The flow, step by step
 
@@ -118,15 +118,16 @@ Then you're back in `/experiment <study>`, building on the protocol.
 
 ### When you're lost: `/ask-science`
 
-Run `/ask-science` when you want to step back from a study: unsure where it stands, or sensing that the work has wandered from the question. It works like Matt's `/ask-matt` and `/retro` combined:
+Run `/ask-science` when you want to step back from a study: unsure where it stands, sensing that the work has wandered from the question, or after these skills changed. It works like Matt's `/ask-matt` and `/retro` combined:
 
 1. It shows the map of the science flow.
-2. It looks back over the study (where it started, what the last probes tried to find out, where the direction began to shift) and gives a verdict: on track, drifting, or lost.
-3. It compares `STUDY.md`, the notebook, the probe folders and git. Every place where they disagree becomes a question for you, with a recommended reading. If the question itself has drifted, you choose: keep the new direction, spin it off as a new study, or go back to the original question.
-4. It applies your answers as new commits, and suggests a guard so the drift doesn't recur: a lesson in the notebook, a convention in `.science/SETUP.md`, or a proposed change to a science skill.
-5. It ends with the one command that resumes the work.
+2. It brings the study to the current format. When the skills change their structure (folder names, the notebook's sections, the probe README), an older study keeps its old shape until this step updates it: renamed probe folders, the notebook rebuilt as map and log, the READMEs reordered, the library and data indexes checked. It shows the whole plan as one table and applies it in one commit once you say yes. It moves content and never invents it: what the old records lack, like the intent of an old probe, is rebuilt from that probe's first README and commits and marked `[reconstructed]` for you to confirm. If `.science/SETUP.md` or the `AGENTS.md` section is out of date, it tells you to rerun `/setup-science`.
+3. It looks back over the study (where it started, what the last probes tried to find out, where the direction began to shift) and gives a verdict: on track, drifting, or lost.
+4. It compares `STUDY.md`, the notebook, the probe folders and git. Every place where they disagree, and everything marked `[reconstructed]`, becomes a question for you, with a recommended reading. If the question itself has drifted, you choose: keep the new direction, spin it off as a new study, or go back to the original question.
+5. It applies your answers as new commits, and suggests a guard so the drift doesn't recur: a lesson in the notebook, a convention in `.science/SETUP.md`, or a proposed change to a science skill.
+6. It ends with the one command that resumes the work.
 
-`/experiment` suggests it on its own when the records don't agree.
+`/experiment` suggests it on its own when the records don't agree or the study is in an older format.
 
 ### Hand off to engineering
 
@@ -152,7 +153,7 @@ Everything the science skills write lives in `.science/` at the root of your rep
         figures/
 ```
 
-A probe's folder name never changes; its state (open, evidence, dropped, promoted), revision count and latest tag are on its block in the notebook's map.
+A probe's folder name never changes (except when `/ask-science` brings an old study to the current format); its state (open, evidence, dropped, promoted), revision count and latest tag are on its block in the notebook's map.
 
 ## Git: one branch, many studies
 

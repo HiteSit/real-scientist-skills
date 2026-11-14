@@ -71,7 +71,7 @@ stable protocol ─► /to-spec → /to-tickets → /implement-spec   (Matt's en
 3. **`/promote`** moves a probe's work into the protocol in the main tree, with a regression check, as one commit or a pull request.
 4. When the protocol stops changing, Matt's `/to-spec`, `/to-tickets` and `/implement-spec` take it from there.
 
-Want to step back? **`/ask-science`** looks back over the study, tells you whether it is on track, drifting or lost, asks you about every place where the records disagree, and tells you how to resume.
+Want to step back, or did the skills change? **`/ask-science`** first brings the study to the skills' current format (folder names, notebook, probe READMEs), then looks back over it, tells you whether it is on track, drifting or lost, asks you about every place where the records disagree, and tells you how to resume.
 
 Each step in detail: [the science flow, step by step](./skills/science/README.md#the-flow-step-by-step).
 
@@ -126,7 +126,7 @@ You start `setup-science`, `experiment`, `promote` and `ask-science` by typing t
 - **[promote](./skills/science/promote/SKILL.md)**: Move a probe's work into the protocol.
 - **[lab-notebook](./skills/science/lab-notebook/SKILL.md)**: The study's layout and formats: notebook, probe folders, result briefs, plots and dashboard.
 - **[desk-research](./skills/science/desk-research/SKILL.md)**: Answer questions by reading papers and documentation in parallel, into the shared library, with citations.
-- **[ask-science](./skills/science/ask-science/SKILL.md)**: Step back: is the study on track, and do its records agree?
+- **[ask-science](./skills/science/ask-science/SKILL.md)**: Step back: bring the study to the current format, then check it is on track and its records agree.
 
 ### Matt's skills
 

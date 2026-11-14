@@ -2,6 +2,10 @@
 
 Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock's releases are in [his CHANGELOG](https://github.com/mattpocock/skills/blob/main/CHANGELOG.md) and arrive here through the weekly upstream sync.
 
+## 2026-11-15
+
+- `ask-science` first brings the study to the skills' current format: probe folders renamed to `NN-<slug>`, the notebook rebuilt as map and log, the probe READMEs reordered, corrections moved out of `STUDY.md`, the library and data indexes checked. One plan, one approval, one commit `<study>: migrate to current format`. Content is moved, never invented; what old records lack is rebuilt from the probe's first README and commits, marked `[reconstructed]`, and confirmed with the user. `.science/SETUP.md` and the `AGENTS.md` section stay with `/setup-science`.
+
 ## 2026-11-14
 
 - Probes now reduce a relevant uncertainty rather than score an agent's prediction. Before running, the agent states its provisional expectation and basis, or says it is unknown; the result brief and dashboard explain what the evidence changes and what remains unresolved. Explicit tests retain a criterion recorded before the run.
