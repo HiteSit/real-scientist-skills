@@ -25,7 +25,7 @@ Show this map, then mark where the user is once step 2 knows.
       ├── fix a probe   a probe run wrong: fixed in place, rev +1, a lesson
       ├── desk-research a question answered once, into .science/library/, shared by every study
       ├── spin-off      a different question: /experiment <new-study> in a new session
-      └── /promote      a probe's work moves into the protocol in the main tree
+      └── /promote      the work of one or more probes moves into the protocol in the main tree
 
 /ask-science           this: a step back on one study, bringing it to the current format first
 ```

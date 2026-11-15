@@ -10,7 +10,7 @@ Built on [Matt Pocock's skills for real engineers](https://github.com/mattpocock
 Agent skills for reproducible scientific experiments with any coding agent. Agree on one experiment at a time, record the expected result before running it, and use the evidence to choose what to run next. Every run leaves a Git-tracked lab notebook and rerunnable files.
 
 <p align="center">
-  <img src="./assets/flow.svg" alt="An IDE where /experiment opens a study, the agent reads the literature into a shared library, probes appear one after another, one is dropped, and /promote moves the last one into src/" width="100%">
+  <img src="./assets/flow.svg" alt="An IDE where /experiment opens a study, the agent reads the literature into a shared library and asks you to choose at each step, four probes appear one after another, one is dropped, and /promote turns the other three into the protocol under src/" width="100%">
 </p>
 
 ## Why one experiment at a time
@@ -48,7 +48,7 @@ Everything the science skills write goes in a `.science/` folder at the root of 
     probes/             one folder per probe, named like 03-<slug>
 ```
 
-Your code stays where it always was. A probe's work reaches it only through `/promote`, after you agree where each file goes. All studies share one branch, and every probe gets a Git tag, so you can go back to any version.
+Your code stays where it always was. Probes' work reaches it only through `/promote`, after you agree where each file goes. All studies share one branch, and every probe gets a Git tag, so you can go back to any version.
 
 ## The skills
 
@@ -56,7 +56,7 @@ You type `/setup-science`, `/experiment`, `/promote` and `/ask-science`. The age
 
 - [setup-science](./skills/science/setup-science/SKILL.md): set up a repo for the science skills. Run once.
 - [experiment](./skills/science/experiment/SKILL.md): load or open a study and work on it, one probe at a time.
-- [promote](./skills/science/promote/SKILL.md): move a probe's work into the protocol.
+- [promote](./skills/science/promote/SKILL.md): move the work of one or more probes into the protocol, after a round of questions and a tree you approve.
 - [lab-notebook](./skills/science/lab-notebook/SKILL.md): the study's layout and formats: notebook, probe folders, result briefs, plots and dashboard.
 - [desk-research](./skills/science/desk-research/SKILL.md): answer questions by reading papers and documentation in parallel, into a shared library, with citations.
 - [ask-science](./skills/science/ask-science/SKILL.md): step back, bring an older study to the current format, and check it is on track.

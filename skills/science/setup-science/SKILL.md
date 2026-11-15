@@ -40,7 +40,7 @@ Lead each section with the recommended answer so the user can accept it in a wor
 
 **F. Plotting and dashboard.** The plotting library probes use for figures, and what builds the study dashboard. Recommend whatever the stack already uses for figures, and live HTML pages (see `lab-notebook`) for the dashboard. Record any domain viewer the pages need (for molecules, 3Dmol.js).
 
-**G. Promotion.** How a probe's work reaches the protocol: one commit on the current branch, or a pull request. Recommend **commit**; offer **pull request** only when the repo has a remote where changes are reviewed.
+**G. Promotion.** How promoted work reaches the protocol: commits on the current branch, one per step, or a pull request per step. Recommend **commit**; offer **pull request** only when the repo has a remote where changes are reviewed.
 
 ### 3. Confirm and write
 

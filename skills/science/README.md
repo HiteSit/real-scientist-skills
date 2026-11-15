@@ -8,7 +8,7 @@ This is a draft and can change without warning. For the short version and the re
 
 - **[setup-science](./setup-science/SKILL.md)**: Set up a repo for the science skills: record the domain, the stack and the conventions in `.science/SETUP.md`, and start the shared library. You start it.
 - **[experiment](./experiment/SKILL.md)**: Load a study (`/experiment <study>`, from any session) and focus the session on it; if the study doesn't exist yet, open it with a short interview and agree the first probe. Then it follows your lead: explain what was done, work on a probe, start the next one, fix one. You start it.
-- **[promote](./promote/SKILL.md)**: Move a probe's work into the protocol in the main tree, after you agree on where it goes. You start it.
+- **[promote](./promote/SKILL.md)**: Move the work of one or more probes into the protocol in the main tree, after a round of questions and a tree you agree on. You start it.
 - **[desk-research](./desk-research/SKILL.md)**: Answer a question by reading papers and documentation through parallel subagents, using your agent's literature tools, and keep the answer in the shared library with the raw search results behind it. The agent can start it.
 - **[lab-notebook](./lab-notebook/SKILL.md)**: The layout and formats: the `.science/` tree, the notebook, probe folders and their states, commits and tags, result briefs, plots and the dashboard. The agent can start it.
 - **[ask-science](./ask-science/SKILL.md)**: Step back from a study: first it brings the study to the current format of these skills, then judges whether it is on track, drifting or lost, finds where the study, the notebook and the probes disagree, asks you how to resolve each, and gives you the command to resume. You start it.
@@ -43,7 +43,7 @@ This is a draft and can change without warning. For the short version and the re
       │  probes:  open → evidence when the next starts · dropped on your word
       │
       ▼
-/promote                 the probe's work into the protocol in the main tree: agree the tree, port, regression check
+/promote 01 02 04        the probes' work into the protocol in the main tree: grilling, agree the tree, port, regression check
       │
       ▼
 stable protocol ─► /to-spec → /to-tickets → /implement-spec   (Matt's engineering flow)
@@ -141,12 +141,13 @@ Studies only link to library pages: `STUDY.md` lists them under **Background**, 
 
 ### Promote
 
-Promotion is the one step that changes the main tree. When a probe's work has earned a place in the protocol (the rerunnable steps that later probes and the engineering flow build on), ask for `/promote`:
+Promotion is the one step that changes the main tree. When the work of one or more probes has earned a place in the protocol (the rerunnable steps that later probes and the engineering flow build on), name them, usually with what you noticed about the workflow: `/promote 01 02 04`.
 
-1. It checks that the evidence supports the step's intended reuse and that it reruns from what's committed. Completion or agreement with an agent guess is not validation: the relevant controls and method-validation criteria must support that use.
-2. It proposes where the step goes in the protocol, as a folder tree with a reason for each folder. Nothing moves until you approve the tree.
-3. It ports the scripts and turns hard-coded values into parameters, with the probe's values as defaults. It adds a regression check with Matt's `/tdd`: run on the probe's inputs, the promoted step must reproduce the validated result within a stated tolerance. For docking, that might be "the co-crystal ligand redocks under 2 Å RMSD". Matt's `/code-review` reviews the change.
-4. It marks the probe as promoted in the notebook and adds a **Promoted** line to `STUDY.md`. By default, the protocol files and the study's records go in one commit, `<study>: promote NN: <step>`, tagged `<study>/promote-<step>`. If `SETUP.md` says this repo promotes through pull requests, the protocol change goes on a short-lived branch in its own worktree, so your checkout stays where it is, and the PR is written the way Matt's `/pr` describes.
+1. It checks that each probe's evidence supports its intended reuse and that it reruns from what's committed. Completion or agreement with an agent guess is not validation: the relevant controls and method-validation criteria must support that use. A dropped probe is left out, with the reason.
+2. It grills you, like Matt's `grilling`, to understand what the promotion is for: the final protocol, the methods of a paper, a figure to regenerate. The first question is always how the probes become **steps**: one step per probe, unless one only feeds another (docking, then rescoring of the poses, is one ranking step). After that it asks only what your probes and your message leave open, such as which outputs matter, how closely a rerun must match, and which values become parameters. If a probe isn't ready, it says what's missing and promotes the rest only if you agree.
+3. It proposes one folder tree for the whole promotion, with a reason for each folder. Nothing moves until you approve the tree.
+4. It ports each step and turns hard-coded values into parameters, with the probes' values as defaults. It adds a regression check with Matt's `/tdd`: run on the probes' inputs, the promoted step must reproduce the validated result within the tolerance you agreed. For docking, that might be "the co-crystal ligand redocks under 2 Å RMSD". Matt's `/code-review` reviews the change.
+5. It marks the probes as promoted in the notebook and adds a **Promoted** line per step to `STUDY.md`. Each step gets its own commit, `<study>: promote NN: <step>`, tagged `<study>/promote-<step>`, so you can revert or rerun one step on its own. If `SETUP.md` says this repo promotes through pull requests, each step's protocol change goes on a short-lived branch in its own worktree, so your checkout stays where it is, and the PR is written the way Matt's `/pr` describes.
 
 Then you're back in `/experiment <study>`, building on the protocol.
 
@@ -227,4 +228,4 @@ Every commit message starts with its study, and tags mark the moments worth comi
 - **Dead end**: an approach the evidence gave reason to stop pursuing, kept so nobody repeats it without reason.
 - **Home branch**: the branch you ran `/setup-science` on, where the science work started.
 - **Protocol**: the promoted, rerunnable steps.
-- **Promote**: moving a probe's work into the protocol in the main tree.
+- **Promote**: moving the work of one or more probes into the protocol in the main tree, one step at a time.
