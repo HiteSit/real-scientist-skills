@@ -5,6 +5,7 @@ Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock'
 ## 2026-11-15
 
 - `ask-science` first brings the study to the skills' current format: probe folders renamed to `NN-<slug>`, the notebook rebuilt as map and log, the probe READMEs reordered, corrections moved out of `STUDY.md`, the library and data indexes checked. One plan, one approval, one commit `<study>: migrate to current format`. Content is moved, never invented; what old records lack is rebuilt from the probe's first README and commits, marked `[reconstructed]`, and confirmed with the user. `.science/SETUP.md` and the `AGENTS.md` section stay with `/setup-science`.
+- The main README is a short front page: a credit line to Matt, the tagline, an animation of the flow (`assets/flow.svg`), why one experiment at a time, the folder layout, the skills, and one install prompt to paste into your coding agent (the skills.sh command is gone). The flow principles, the flow diagram and the vocabulary moved to `skills/science/README.md`.
 
 ## 2026-11-14
 

@@ -13,7 +13,41 @@ This is a draft and can change without warning. For the short version and the re
 - **[lab-notebook](./lab-notebook/SKILL.md)**: The layout and formats: the `.science/` tree, the notebook, probe folders and their states, commits and tags, result briefs, plots and the dashboard. The agent can start it.
 - **[ask-science](./ask-science/SKILL.md)**: Step back from a study: first it brings the study to the current format of these skills, then judges whether it is on track, drifting or lost, finds where the study, the notebook and the probes disagree, asks you how to resolve each, and gives you the command to resume. You start it.
 
+## How the flow works
+
+- **Plan one probe at a time.** A probe is a small experiment, usually one session's work. A new study starts with one agreed probe and a short list of ideas; each later probe is chosen with you when it's next.
+- **Start from the standard answer.** An LLM answers from the peak of a Gaussian: it gives the answer most represented in its weights, the one it met most often in training. Before running, the agent says that standard answer out loud and what it rests on: evidence, a source, or only what it learned; "unknown" is fine. The probe then shows where reality sits: at the peak, where the standard answer holds, or out in the tail, where the surprises and the real findings are. The result says how far from the standard answer it landed and what that changes.
+- **Start from a direction.** Results are allowed to change the direction. Each change is logged against the probe that caused it.
+- **Scratch is free, the protocol is agreed.** Inside a probe, the agent organizes files however the work needs. Before anything joins the protocol, you approve where it goes.
+- **Show results.** Each probe ends with a short brief and plots, and one dashboard shows the whole study.
+- **Keep dead ends and mistakes.** A dead end stays in the record, so nobody repeats it without reason. A probe that was run wrong is fixed in place, the fix is logged in its README, and the mistake becomes a lesson the agent checks before every later probe.
+- **You decide.** After every result, the agent asks how you read it, and you choose what comes next. Probes stay open while you work on them and become evidence when the next one starts; one is dropped only when you say so.
+- **One study per session, many studies at once.** `/experiment <study>` loads a study in any session, tells you where it stands, and keeps the conversation on it. A new name opens a new study. Several studies run side by side, each in its own session. When you ask about another study, the agent records it and gives you the command for a new session.
+- **Read once, share everywhere.** What you read along the way (papers, software docs) goes into one shared library that every study links to, so nothing is searched twice. Your input data sits in one data folder every study reads; anything else a probe downloads stays in that probe until it's promoted.
+- **Keep everything in git, simply.** One branch for all studies, each study in its own folder, each session committing only its own folder. Every probe and every fix gets a tag, so you can go back to any version.
+
 ## The flow, step by step
+
+```
+/setup-science           once per repo: git init if needed, domain, conda | pixi | uv, data folder, AGENTS.md, empty library
+      │
+      ▼
+/experiment <study>      load the study and focus on it; a new name opens it (short grilling, first probe)
+      │
+      │  then, as you lead:
+      │    start a probe   choose it with you, state the expectation, run it in probes/NN-<slug>/
+      │    show a result   plots, brief, dashboard; talk it through; record your reading
+      │    keep working    an open probe takes as many sessions as it needs
+      │    fix a probe     run wrong: fixed in place, with a lesson
+      │
+      │  probes:  open → evidence when the next starts · dropped on your word
+      │
+      ▼
+/promote                 the probe's work into the protocol in the main tree: agree the tree, port, regression check
+      │
+      ▼
+stable protocol ─► /to-spec → /to-tickets → /implement-spec   (Matt's engineering flow)
+```
 
 ### Set up the repo
 
@@ -176,3 +210,21 @@ Every commit message starts with its study, and tags mark the moments worth comi
 | Data added | `data: <slug>` | |
 
 `git log --grep '^<study>:'` shows one study's history, `git tag -l '<study>/*'` its milestones, and `git checkout <study>/03-r1` takes you back to exactly that version of a probe.
+
+## Vocabulary
+
+- **Study**: one investigation around one question.
+- **Direction**: where the study is heading now. The starting one is frozen in `STUDY.md`; the current one lives in the notebook.
+- **Probe**: one small experiment, usually one session's work.
+- **Probe state**: open, evidence, dropped or promoted, kept in the notebook.
+- **Ideas**: what could come next, a short list you agree to; never a schedule.
+- **Expectation**: the provisional result and its basis, recorded before running; "unknown" when there is no defensible expectation.
+- **Lab notebook**: a map from the question to the probes, updated at every operation: threads, each probe's intent and result, a short log, ideas and lessons.
+- **Revision**: an in-place fix of a probe that was run wrong. The probe keeps its number, and its README says what was wrong and what changed.
+- **Lesson**: a rule drawn from a mistake, read before each probe.
+- **Drift log**: every change of direction, each citing the probe that caused it.
+- **Library**: the repo's shared reading, kept by `desk-research`: one page per question, with the searches behind it.
+- **Dead end**: an approach the evidence gave reason to stop pursuing, kept so nobody repeats it without reason.
+- **Home branch**: the branch you ran `/setup-science` on, where the science work started.
+- **Protocol**: the promoted, rerunnable steps.
+- **Promote**: moving a probe's work into the protocol in the main tree.
