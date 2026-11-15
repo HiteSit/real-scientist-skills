@@ -13,6 +13,13 @@ Agent skills for reproducible scientific experiments with any coding agent. Agre
   <img src="./assets/flow.svg" alt="An IDE where /experiment opens a study, the agent reads the literature into a shared library and asks you to choose at each step, four probes appear one after another, one is dropped, and /promote turns the other three into the protocol under src/" width="100%">
 </p>
 
+<details>
+<summary>Watch it as a video, with pause and seek</summary>
+
+https://github.com/user-attachments/assets/155b6bd3-aa72-4782-982f-cd4c7ec5e4ea
+
+</details>
+
 ## Why one experiment at a time
 
 Matt's engineering flow plans the whole route first: `/to-spec` writes down the goal, `/to-tickets` splits it into tickets, and `/implement-spec` builds them, many in parallel. That works because software is predictable once you agree on what to build.
