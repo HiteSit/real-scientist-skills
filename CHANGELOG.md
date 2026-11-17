@@ -2,6 +2,13 @@
 
 Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock's releases are in [his CHANGELOG](https://github.com/mattpocock/skills/blob/main/CHANGELOG.md) and arrive here through the weekly upstream sync.
 
+## v0.2.0 (2026-11-17)
+
+- Promotion now separates technical reuse from approved physical batch rollover: numbered probe directories move directly into a cycle's promoted/retained/discarded/active homes, alongside relative asset links where useful. Digest manifests preserve stable-ID/current-location lookup and captured history; study-level probes/ becomes empty for new globally numbered questions, without copies or compatibility aliases. Unfinished probes continue at their cycle active/ location under the same ID. No compulsory code porting, refactoring or reusable framework.
+- Load, run, fix and retrospective procedures follow current notebook record links across all cycles and the current batch. Physical dispositions and partial technical promotion do not change scientific validity or close unfinished work. Same-question alternatives stay unexecuted in notebook Ideas, then become ordinary next globally numbered probes only when chosen. Builds on links express dependencies; promotion organizes findings. Separate scientific approach directories, records and lifecycle requirements are removed. Approved shared datasets keep provenance/checksums, while workflow outputs stay with workflows.
+- Added `scientific-map`. Run it at any study stage or let `/promote` refresh it after updating the records. One offline project HTML shows a connected flow per study tab. The skill bundles a native HTML template and a synthetic example, with no prescribed build runtime or renderer install. Git checkpoints and branch/worktree actions still require explicit authorization.
+- The whole notebook, scientific maps and dashboards now default to concise operational English with an approximately 80% ASD-STE100-inspired style target, not formal compliance or a measured score. `STUDY.md` keeps natural, direct narrative, its structure and its frozen scientific starting record. Projects can override these defaults. Whole-notebook rewrites cover existing prose while preserving scientific results, technical terms, facts, units, uncertainty, dates, status history, machine fields, IDs, links, quotations and frozen records.
+
 ## 2026-11-16
 
 - The README offers the flow animation as a video too, under "Watch it as a video, with pause and seek": a 1080p H.264 render of `assets/flow.svg`, hosted as a GitHub attachment (uploaded through issue #1, which is closed).

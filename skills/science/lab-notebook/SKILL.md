@@ -8,9 +8,20 @@ license: MIT
 
 A **study** is one investigation around one question, living in its own folder `.science/<study>/`. It moves forward one **probe** at a time: a small run, chosen with the user once the results before it are in. The **lab notebook** is the study's single source of truth for where it stands.
 
-All studies live on one branch, in one checkout. Several studies run at once as separate sessions in that checkout, each writing only inside its own folder. Two shared places sit beside the studies. The **library** (`.science/library/`, see `desk-research`) holds what is read: papers, software documentation, reviews. The **data folder** (`data/` or `.science/data/`, as `SETUP.md` records; see **Data**) holds the input data the user gives. Everything else a probe loads or makes, it fetches or produces in its own folder.
+All studies share the current branch and checkout by default, each session writing only its own approved paths. The **library** (`.science/library/`, see `desk-research`) holds what is read. The **data folder** (`data/` or `.science/data/`, as `SETUP.md` records) holds user inputs and explicitly approved shared source/prepared/reference datasets. Other fetched or produced probe data stays in its probe until approved promotion.
 
 The repo's stack (environment and its run command, compute, data, heavy-output threshold, home branch, promotion mode) is in `.science/SETUP.md`. Read it before writing any command or script.
+
+## Presentation voices
+
+Use these defaults unless the project agrees an override:
+
+- **Operational voice:** write the whole `NOTEBOOK.md`, scientific maps and dashboards in concise operational English, aiming for approximately 80% ASD-STE100-inspired style. Use short sentences, active voice, one idea per sentence and consistent terms. This is a writing target, not formal compliance, certification or a measured score.
+- **Narrative voice:** write `STUDY.md` in natural, direct prose: speak as you eat. Keep its existing structure and frozen scientific starting record.
+
+Preserve technical terms, facts, numbers, units, scope, uncertainty, dates, status history, machine fields, IDs, links and verbatim quotations in both voices. A whole-notebook rewrite covers existing prose as well as new text; change its wording, not scientific results or recorded history. Preserve frozen statements and captured receipts. A style rewrite does not reopen `STUDY.md`'s starting record.
+
+Record agreed project overrides in `.science/SETUP.md`.
 
 ## The tree
 
@@ -18,32 +29,45 @@ The repo's stack (environment and its run command, compute, data, heavy-output t
 .science/
   SETUP.md                    the repo's science setup, written by setup-science
   library/                    what is read: papers, software docs, reviews; see desk-research
-  data/                       the user's input data, when SETUP.md puts it here instead of data/ at the root; see Data
+  data/                       user inputs and approved shared datasets, when configured here
   <study>/
-    STUDY.md                  the starting direction, frozen; Promoted and Outcome lines added at the end
+    STUDY.md                  frozen starting direction; append-only Promoted and Outcome
     NOTEBOOK.md               question, current direction, map of threads and probes, log, ideas, lessons, drift log
     dashboard.html            the study's one live dashboard, grown probe after probe
     dashboard.<ext>           the script that builds it
-    probes/
-      01-<slug>/              NN-<slug>, named once and never renamed
+    _promotion_<title>_<date>/ README, manifest.json and physical rollover; see promote
+      promoted/              numbered probe directories, plus relative links to reusable homes
+      retained/              numbered evidence directories, plus relative links as appropriate
+      discarded/             numbered retired directories, preserved not deleted
+      active/                numbered unfinished probes continuing under their existing IDs
+    probes/                  current new-question batch; empty immediately after rollover
+      NN-<slug>/             stable ID/name, later physically moved into an approved cycle
         README.md             thread, asked, plan, method, result, reading, revisions
         .gitignore            this probe's heavy outputs
         figures/
         <scripts, small inputs, outputs>
 ```
 
-Inside a probe folder, organise files however the probe needs; only `README.md`, `.gitignore` and `figures/` are fixed. The protocol's tree is a different matter: it is agreed with the human at promotion, never chosen alone.
+Inside a probe folder, organise files however the probe needs; only `README.md`, `.gitignore` and `figures/` are fixed. Main-tree homes follow the existing project and require the approved promotion tree; **protocol** names reusable steps, not a compulsory folder.
 
-A probe folder is named `NN-<slug>`, for example `03-protonation`. `NN` counts probes in run order from `01`, and a number is never reused, so the numbers stay a faithful history. `<slug>` says what the probe does. The name is fixed for the probe's whole life: its state lives in the notebook. The one exception is `/ask-science` bringing an old study to the current format, which renames folders whose names carry a state or a revision. Refer to a probe by this name everywhere; from another study, write `<study>/NN-<slug>`.
+A probe folder is `NN-<slug>`, named once. Numbers are globally unique **within the study**: take one above the highest allocated ID across notebook, history, every cycle and current batch; never reset or reuse it. The physical record can move in an approved rollover, but keeps its ID/name and captured history. Resolve a record through its current `NOTEBOOK.md` href, not an assumed `probes/NN-<slug>/` path. From another study, use `<study>/NN-<slug>` and resolve through that study's notebook.
+
+### Promotion cycles
+
+A **promotion cycle** separates technical reuse from physical batch rollover. Read `promote` for its exact-tree gate: `_promotion_<title>_<date>/` holds `README.md`, `manifest.json` (large inventories may be compressed) and `promoted/`, `retained/`, `discarded/`, `active/`. Numbered probe directories move physically and directly into those four homes, alongside relative links to current workflows/shared data/archives where appropriate. One physical home per payload; no extra `records/` or cycle `probes/` layer. Retire/archive is not a scientific verdict.
+
+After rollover, study-level `probes/` is empty (`.gitkeep` allowed), reserved for new questions and later rolled into another cycle. Existing unfinished probes continue under the same ID in cycle `active/`; neither partial technical promotion nor physical placement closes them. Do not refill `probes/` with copies or compatibility aliases. Moving records or changing dispositions in an existing cycle requires explicit approval; checkpoint tags preserve historical states. Current notebook hrefs and manifests give latest locations. Preserve frozen receipts/statements and complete captured history; update necessary live consumers and latest-location metadata only. Shared study assets remain outside the batch unless specifically approved.
+
+Use [`scientific-map`](../scientific-map/SKILL.md) to view study records as a connected flow in the shared root HTML. Each in-scope study has a tab. The map is separate from study chart dashboards.
 
 ## Probe states
 
 A probe's **state**, shown on its block in the notebook's **Map**, says whether work on it continues. It says nothing about whether the result was good: that is the README's **Outcome**.
 
 - **open**: the probe being worked on. Results arrive, get inspected, discussed, extended or redone while it is open, across as many sessions as the work needs. A probe waiting for a cluster job, or for the user to look at a figure, is open.
-- **evidence**: its findings stand on record, and the study builds on them. This is the normal end of every probe, and it happens on its own: when the next probe starts, **look** at each open probe first. One whose results are in and recorded becomes `evidence`; one whose results are still out (a job not collected, outputs not yet inspected) stays `open`, and you tell the user so.
+- **evidence**: its findings stand on record and the study builds on them. Before starting a next probe, look at every open probe: when its agreed work is finished and results inspected/recorded, it becomes `evidence`; pending jobs, analysis, discussion or partial-component work leave it `open`. Say what remains. Promotion of one component does not close the rest.
 - **dropped**: set only when the user says so in plain words. Record what it rules out under **Dead ends**.
-- **promoted**: set by `/promote`, when the probe's work moves into the protocol in the main tree.
+- **promoted**: set by `/promote` only for an agreed whole-probe transfer into reusable main-tree homes. A partial component promotion leaves the probe open when work remains, with its scientific outcome/verdict unchanged.
 
 An evidence probe can still be corrected (see **Revisions**). Several probes can be open at once, usually one waiting on a long job while the next one runs.
 
@@ -53,7 +77,7 @@ The **direction** the study started from. Written once when the study opens (see
 
 Two sections at the end only grow, one line at a time:
 
-- **Promoted**: one line per promotion, written by `promote`.
+- **Promoted**: append-only cycle entries naming components, sources, current homes, reuse limits, cycle record and checkpoint tag (or pending authorization). Organization alone never changes the scientific outcome.
 - **Outcome**: one line when the study closes: the answer, or why it was dropped, and the probes behind it.
 
 ```markdown
@@ -77,7 +101,7 @@ Two sections at the end only grow, one line at a time:
 - <a probe or reading the user mentioned for later>
 
 ## Promoted
-- `<step>` (<its place in the protocol>): from NN-<slug>, NN-<slug>; tag `<study>/promote-<step>`
+- `<title>`: [cycle](_promotion_<title>_<date>/README.md); components <names>, from NN-<slug>; homes <paths>; limits <scope>; tag `<study>/promotions/<title>-<date>` (or pending)
 
 ## Outcome
 <answered | dropped>: <one line, with the probes behind it>
@@ -96,6 +120,7 @@ The **map** of the study: the question, the threads the probes have opened on it
 **Branch:** <the branch this study runs on>
 
 ## Current direction
+<Include current promotion cycle and reusable homes, links to records, and still-open partial components when present. These are current pointers, not a replacement history.>
 <A short paragraph: where the study is heading now and the working answer so far, with what is still open. Starts from STUDY.md's direction and drifts; rewritten whenever a result moves it.>
 
 ## Map
@@ -103,7 +128,7 @@ The **map** of the study: the question, the threads the probes have opened on it
 ### <thread: a part of the question the probes work on>
 <A few sentences of prose: what this thread asks, how its probes moved it, where it stands now.>
 
-- **[NN <slug>](probes/NN-<slug>/README.md)** · <state> · rev <R> · `<study>/NN-r<R>`
+- **[NN <slug>](<current-record-relative-path>/README.md)** · <state> · rev <R> · `<study>/NN-r<R>`
   - **asked:** <the user's intent for the probe, as first given>
   - **expected:** <the expectation and its basis, or "unknown">
   - **found:** <the essential result, with the numbers that matter>
@@ -127,7 +152,7 @@ The **map** of the study: the question, the threads the probes have opened on it
 - <what was tried, which probe showed it fails, so nobody reruns it>
 
 ## Drift log
-- [NN-slug](probes/NN-<slug>/README.md): <how the direction changed, and what in the result forced it>
+- [NN-slug](<current-record-relative-path>/README.md): <how the direction changed, and what in the result forced it>
 
 ## Spin-offs
 - [<study>](../<study>/NOTEBOOK.md): <its question>, raised by <probe NN or the user's ask>, building on <the probes it starts from, or nothing>, run in <a new session or another agent>
@@ -137,11 +162,11 @@ The **map** of the study: the question, the threads the probes have opened on it
 
 A **probe block** is the probe's essence, written from its README: the four labelled lines first, then prose as long as the probe needs. Fill each line as the probe gets there: **asked** and **expected** when it starts, **found** when results are in, **means** at the same moment. **means** is the agent's reading until the user's reading replaces it: mark it `[inference]`, and drop the mark once the discussion settles it.
 
-**Log** lines are short and punchy: the date, the probe, and the essential event or result with the number that matters (`11-14 · 15 · 112 replicas collected, all verified`). Job ids, paths and file counts go in the probe's **Method**.
+**Log** lines are short: date, probe and essential event or result. Job IDs, paths and file counts go in the probe's **Method**.
 
 **Branch** records where the study runs. Sessions check it on loading; when the user moves the study to another branch, update it in the study's next commit.
 
-**Ideas** is the study's plan: a short list of what could come next, never a schedule. Only what the user agrees to goes on it. The next probe is chosen with the user when it is next, from the list, from the last result, or from a new thought; once started, it leaves the list.
+**Ideas** is the study's plan: a short list of what could come next, never a schedule. Only what the user agrees to goes on it. Alternative approaches to the same question stay here as unexecuted ideas. When the user chooses one, it becomes an ordinary next globally numbered probe and leaves the list. Its **Builds on** links name the evidence or reusable steps it uses; a later promotion cycle organizes its findings. An idea needs no separate directory, identifier or lifecycle. A different question follows **Off-axis** below.
 
 A drift log entry is written whenever a decision changes the current direction, even slightly. A probe that followed the current direction is not drift. No entry means the direction held.
 
@@ -158,7 +183,7 @@ Notice it whenever it happens, not only after a result: mid-run, mid-discussion,
 Triage it into one of three homes, testing in this order:
 
 1. **Reading**: it can be answered from existing sources, with nothing run. Check the library's `index.md` first: an existing page answers it at once. Otherwise call the Skill tool with `desk-research`.
-2. **This study**: its answer would change this study's current direction. It goes under **Ideas**, or becomes the next probe if the user wants it now. An open probe stays one question: the new one is its own probe, never an enlargement of the open one.
+2. **This study**: its answer would change this study's current direction. It follows **Ideas** above. An open probe stays one question: the new one is its own globally numbered probe, never an enlargement of the open one.
 3. **Another study**: its answer would leave this study's direction untouched, because it asks a different question, often about a different system. If an open study already covers it (a folder under `.science/` whose `STUDY.md` has no **Outcome**), it goes on that study's **Ideas** in that study's session. Otherwise it becomes a new study, with **Spun off from** filled in, and a line under **Spin-offs** here.
 
 A new study runs **in parallel** with this one. Several studies at once is the normal shape of the work: each is its own folder and its own session, in the same checkout. A spin-off that builds on this study's probes names them (`<study>/NN-<slug>`) under **Builds on** and reads them in place. Promotion is not the way to share work between studies; promote a step only when it has earned a place in the protocol on its own merits.
@@ -205,7 +230,7 @@ The **outcome** describes what the evidence lets us conclude: `completed` when a
 
 ## Revisions
 
-A probe that was **run wrong** is fixed **in place**: a bug, a wrong input or parameter, a mistake in the analysis or the plots. The fix goes in the same folder, the probe reruns, and **Method**, **Result** and **Reading** describe the corrected run. The README's **Revisions** section keeps one entry per fix, naming the tag of the wrong version, so the mistake stays on record; the wrong outputs survive in git under that tag.
+A probe that was **run wrong** is fixed at its notebook-linked physical record, whether in the current batch or an earlier cycle's `active/` or other approved disposition. It keeps its ID: correct the bug/input/analysis, rerun there and update current **Method**, **Result** and **Reading**. Keep captured receipts and frozen statements unmodified, adding corrections separately. **Revisions** names the old tag, what was wrong and what changed; tags preserve historical states. A fix does not authorize moving the record back to `probes/`.
 
 A new question, a changed test criterion or a deliberate change of method is a new probe, not a revision. Updating the interpretation of a valid result is ordinary learning: record it under **Reading**, without rerunning just to match the expectation.
 
@@ -213,7 +238,7 @@ Fixing a crash before the probe's first recorded result is part of running it, n
 
 ## Data
 
-The **data folder** holds the **input data the user gives**: their measurements, instrument output, sample sheets, structures, the starting set the work begins from. Nothing else. `setup-science` asks where it lives, `data/` at the repo root or `.science/data/`, and records the choice in `SETUP.md`; every skill reads the location from there. Below, `<data>` is that folder.
+The **data folder** holds user inputs and explicitly approved general source, prepared or reference datasets. `setup-science` records its existing or agreed location (`data/` or `.science/data/`) in `SETUP.md`; every skill reads that location. Below, `<data>` is that folder.
 
 ```
 <data>/
@@ -226,9 +251,9 @@ The **data folder** holds the **input data the user gives**: their measurements,
 
 Data too large or too private for the repo stays where it is: its `<data>/<slug>/` folder holds the README with the path and how to reach it.
 
-**Who writes it.** Only the user's own data goes in, at setup or at any later point (new measurements arriving mid-study, say). The agent adds it only when the user hands it data ("put this file in the data folder"), one `data: <slug>` commit per dataset, limited to `<data>/<slug>/` and `<data>/index.md`. Probes **read** from it by repo-relative path and never write to it.
+**Who writes it.** Add user data on their instruction, or general source/prepared/reference datasets through an explicitly approved setup or promotion tree. Each dataset has provenance, source/release, licence, preparation/fetch instructions and file checksums; indexes and consumers point to one authority. Stage only the approved dataset metadata and small files, with a scoped `data: <slug>` commit when authorized. Probes read shared datasets and never mutate them; changed prepared versions need a new recorded identity and provenance.
 
-**Everything else a probe needs lives in the probe.** External database exports, published datasets, model checkpoints, intermediate results: the probe that first needs them fetches or produces them in its own folder, with a fetch script and the source (database and release, model repository, URL, access date, licence) in its README; heavy files go in its `.gitignore`. Later probes in the study read them there, by the probe's name. Data that should outlive the study reaches the protocol only through `/promote`, into the tree the user approves.
+**Probe-local by default.** External exports, checkpoints and intermediates stay with the probe that first fetches or produces them, with the source and fetch command/script in its README and heavy files ignored. Later probes read that home directly. Promotion may approve a general dataset into shared data without retaining a duplicate authority. Workflow-specific databases, caches and run outputs stay with their workflow, not in shared data merely because they are large or useful.
 
 ## Heavy outputs
 
@@ -242,8 +267,10 @@ How to present a result (the brief, plots, the study dashboard) is in [RESULTS.m
 
 The checkout is **shared**: other sessions may be working in other study folders at this moment. Every science session keeps to these rules:
 
+Read Git status, branch/worktree/tag inventory and hooks before a checkpoint. These conventions describe how an **authorized** commit is scoped, not permission to stage, commit or publish. A hook that pushes makes a nominally local commit a remote action needing authorization.
+
 - **Stay on the current branch.** Changing branch moves every other session's files too.
-- **Commit only your own paths**: `git add <paths>`, then `git commit -m "<message>" -- <paths>`. A study session's paths are its own `.science/<study>/` folder, plus the protocol files of a promotion; the library's are `.science/library/`; the user's data, `<data>/<slug>/` and `<data>/index.md`. Changes elsewhere in the tree belong to someone else: leave them as they are.
+- **Commit only approved exact paths**: `git add <paths>`, then `git commit -m "<message>" -- <paths>`. Include the session's study records and explicitly approved main-tree/data/map paths only; exclude heavy outputs and unrelated work.
 - **Add history, keep it**: every correction is a new commit. Stash, reset, amend and rebase reach into other sessions' work.
 - When git reports its lock file (`index.lock`) is busy, another session is committing: wait a few seconds and retry.
 
@@ -256,9 +283,9 @@ Messages start with the study, so `git log --grep '^<study>:'` shows one study's
 | Other work on a probe (started, job submitted, more results) | `<study>: probe NN: <slug>: <what changed>` | |
 | Probe fixed | `<study>: fix NN: <slug>: <what was wrong> (<old outcome> → <new outcome>)` | `<study>/NN-r<R>` |
 | Probe set to evidence or dropped | `<study>: probe NN: <slug>: <state>` | |
-| Probe promoted | `<study>: promote NN: <step>` | `<study>/promote-<step>` |
+| Promotion cycle | `<study>: promote NN: <title>` | `<study>/promotions/<title>-<date>` |
 | Study closed | `<study>: close` | `<study>/close` |
 | Library page | `library: <slug>` | |
 | Data added | `data: <slug>` | |
 
-Tag right after the commit with `git tag <name>`. `git tag -l '<study>/*'` lists a study's milestones. The work is **local**: commits and tags stay in this repository, and reach a remote only when the user asks (`git push`, then `git push origin --tags`).
+When authorized, tag the checkpoint without overwriting an existing tag. Independent steps commit separately; an agreed coupled relocation can be one cycle commit. Branch inventory is read-only: no branch switch, merge, deletion, worktree creation/removal or remote action follows automatically. A specifically approved fast-forward or safe merged-ref cleanup preserves occupied worktrees, tags and unrelated work. Pull-request mode is an optional separately approved worktree flow. Record pending checkpoints honestly.

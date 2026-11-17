@@ -20,12 +20,12 @@ Show this map, then mark where the user is once step 2 knows.
 /experiment <study>    loads a study and focuses the session on it;
       │                opens it first when the folder does not exist (short grilling, first probe)
       │
-      ├── probes        one at a time, chosen with the user: open → evidence when the next starts
-      │                 (dropped only on the user's word)
+      ├── probes        chosen one at a time; recorded results become evidence when the next starts
+      │                 (pending work stays open; dropped only on the user's word)
       ├── fix a probe   a probe run wrong: fixed in place, rev +1, a lesson
       ├── desk-research a question answered once, into .science/library/, shared by every study
       ├── spin-off      a different question: /experiment <new-study> in a new session
-      └── /promote      the work of one or more probes moves into the protocol in the main tree
+      └── /promote      approved organization, reuse and preservation cycle; then return to probes
 
 /ask-science           this: a step back on one study, bringing it to the current format first
 ```
@@ -40,17 +40,17 @@ No `.science/SETUP.md`: the repo is not set up; recommend `/setup-science` and s
 
 The skills change; a study written under an older version keeps its old shape until this step brings it up to date. Compare the study, and the shared `.science/` parts it uses, with the formats in `lab-notebook`:
 
-- Probe folder names: `NN-<slug>`. An old name carrying a state or a revision, like `14-r0-failed-docking`, loses it (`14-docking`); the state goes on the probe's block.
+- Stable probe IDs/names and globally continuing numbers across notebook/history, all cycles and current batch. Resolve records by current notebook href; approved physical cycle moves are legitimate, not missing probes. No automatic renaming, relocation, duplication, numbering reset or restoration into `probes/`.
 - `STUDY.md` sections. A later correction written into it moves to the notebook's **Current direction** and **Drift log**, and `STUDY.md` goes back to its starting text.
 - `NOTEBOOK.md`, rebuilt in the current sections: the map (threads and probe blocks) and the log built from the old notebook, the probe READMEs and `git log --grep '^<study>:'`.
-- Each probe README, its sections renamed and reordered.
-- The library's layout and index, and the data folder's index.
+- Probe README formats at their actual physical homes, preserving frozen statements and captured receipts when adding current metadata.
+- Library/data indexes, provenance/checksums, current homes, notebook ideas, cycle manifests and physical dispositions with relative links. Check the current `probes/` batch is empty immediately after rollover; later new questions belong there. Cycle `active/` can physically hold continuing open probes; notebook state is current authority.
 
 `.science/SETUP.md` and the `## Science skills` section of `AGENTS.md` belong to `/setup-science`: when they are out of date, say so and recommend rerunning it; do not edit them here.
 
-Move content, never invent it. Where the current format needs something the old records lack (the **asked** of an old probe, the threads), rebuild it from the probe's first README and first commits and mark it `[reconstructed]`; step 5 asks the user about each one. Delete nothing: old text with no place of its own goes in the nearest section that fits, such as the probe's **Reading** or the thread prose.
+Preserve frozen statements and captured receipts in their physical records. Add current metadata or corrections separately rather than rewriting those sources. Where the format needs missing history (an old probe's **asked**, its thread), reconstruct from original READMEs/commits, mark it `[reconstructed]` and ask in step 5. Preserve unmatched old text with its provenance; do not fabricate or silently discard it.
 
-Show the plan as one table (path, what changes, where anything rebuilt comes from) and wait for the user's yes. Then apply it with `git mv` for the renames: one commit `<study>: migrate to current format` for the study, and one `science: migrate to current format` for the shared parts. Tags stay on their old commits and keep pointing at the old paths. When everything is already current, say so in one line and go on.
+Show one plan table (path, change, evidence for reconstruction) and wait for approval. Migrate current metadata and sections without rewriting original captured receipts or approved cycle trees. Physical reorganization belongs to `/promote` and its exact-tree gate, not automatic format repair. With checkpoint authorization, commit only the approved study paths as `<study>: migrate to current format`, and approved shared parts separately as `science: migrate to current format`. Keep tags and history unchanged. If already current, say so and continue.
 
 ## 4. Look back
 
@@ -68,14 +68,15 @@ Give a **verdict** in a few lines: **on track**, **drifting** (and since when, a
 Compare the records with each other and with the format in `lab-notebook`. Every place where they disagree, or where the right reading is unclear, is an **ambiguity**, and the user resolves it. Look at least for:
 
 - `STUDY.md` and the notebook telling different stories: a current direction with no drift log entry to explain it, a question restated differently.
-- The **Map** and the probe folders: a block with no folder, a folder with no block, names that do not match; a block whose **asked**, **found** or **means** says something different from its README.
-- A probe's state against its README: open with its results long recorded while later probes ran, evidence with results still out, dropped with nothing under **Dead ends**. A **means** still marked `[inference]` long after the result was discussed.
+- The **Map** and actual record locations: follow notebook hrefs across every cycle and current batch before calling a folder missing. Check ID uniqueness, manifest moves/dispositions, necessary live consumers and absence of duplicate copies/compatibility aliases in `probes/`. An approved archived record is not misplaced.
+- State against remaining work: recorded results with unresolved jobs/analysis/discussion or partial components may legitimately stay open. Evidence with unfinished work, dropped with no **Dead ends**, or stale inference labels need clarification; physical `active/` placement does not override current notebook state.
 - Work recorded in git but not in the notebook: probe commits with no log line, results the map does not show.
 - Everything the migration marked `[reconstructed]`: confirm or correct it, then drop the mark.
 - A story told twice in different words.
-- **Ideas** that were already run, and probes run that the study never agreed to.
+- **Ideas** that were already run, and probes run that the study never agreed to. Follow `lab-notebook` **Ideas** for same-question alternatives. If older records put them in separate approach directories, propose moving their unique content into notebook ideas or the ordinary probes that executed them, updating current links and removing obsolete scaffolding only with approval. Preserve captured history and frozen receipts.
 - Work in the wrong place: this study's work in another study's folder or none, uncommitted changes, commits whose `<study>:` prefix does not match the paths they touch.
-- The library and data folder: pages or datasets missing from their index, fetched data inside the data folder.
+- Library/data indexes and dataset authority: distinguish explicitly approved shared source/prepared/reference data from unapproved fetched probe data, and workflow databases/outputs from general datasets.
+- Ideas and cycles: proposals treated as executed, dropped probes or inconclusive evidence hidden, partial promotion incorrectly closing an open probe, archive mistaken for scientific invalidity, stale consumers or map links, and missing preservation digests.
 
 Ask about them in rounds, the way `grilling` does: numbered questions, each naming the ambiguity, quoting the records that disagree, and giving your recommended reading, worded so "yes" accepts it. Most serious first. Wait for the answers before the next round.
 
@@ -97,6 +98,6 @@ Then name what let the drift happen, from step 4, and suggest one guard, written
 
 ## 7. Back on track
 
-End with the one command that resumes the work, and why: `/experiment <study>` to continue, `/experiment <new-study>` for a spin-off, `/promote` for work ready for the protocol, or `/setup-science` for a repo with no setup. If resuming needs a new session, say so.
+End with the resumption command and why: `/experiment <study>` to continue open work, choose from notebook Ideas and keep global numbering, `/experiment <new-study>` for a different question, `/promote` for approved organization or reuse, or `/setup-science` for missing setup. If repaired records make the existing map stale, offer `/scientific-map <study>` to refresh the shared map and select this study. Say when a new session is needed.
 
 Done when the study is in the current format, the user has the verdict, every ambiguity is resolved or deliberately left, and they have that command.

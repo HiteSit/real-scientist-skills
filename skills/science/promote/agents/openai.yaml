@@ -1,5 +1,5 @@
 interface:
   display_name: "Promote"
-  short_description: "Promote a validated probe into the main protocol"
+  short_description: "Organize probe findings, preserve work and promote reuse"
 policy:
   allow_implicit_invocation: false

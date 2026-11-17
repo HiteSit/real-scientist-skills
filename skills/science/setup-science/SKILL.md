@@ -34,13 +34,15 @@ Lead each section with the recommended answer so the user can accept it in a wor
 
 **C. Compute.** Local machine, a scheduler on a cluster, or both. For a scheduler, record how a job is submitted and how its status is checked, because long probes are submitted and resumed later.
 
-**D. Data.** The **data folder** holds the input data the user gives, the starting point of the work: their measurements, instrument output, sample sheets, structures. Ask where it should live, `data/` at the repo root or `.science/data/`; recommend `data/` when the repo already has one, else `.science/data/`. Then ask what data they have and where it is, and on their word move or copy it into `<data>/<slug>/` (see **Data** in `lab-notebook`). Data too large or too private for the repo stays where it is: its folder holds the README with the path and how to reach it. Data a probe fetches (database exports, datasets, model checkpoints) never goes here: it lives in the probe.
+**D. Data.** Inspect the existing data homes. Agree `data/` or `.science/data/` for user inputs and explicitly approved general source/prepared/reference datasets, following **Data** in `lab-notebook`: provenance, licence, checksums and one authority. Move or copy only on instruction, without leaving duplicate authoritative homes. Large/private data may stay externally with a locator. Normal fetched probe data stays local until approved promotion; workflow-specific databases and run outputs stay with their workflow.
 
 **E. Heavy outputs.** The size above which files in a probe or the data folder are gitignored instead of committed. Recommend 5 MB.
 
-**F. Plotting and dashboard.** The plotting library probes use for figures, and what builds the study dashboard. Recommend whatever the stack already uses for figures, and live HTML pages (see `lab-notebook`) for the dashboard. Record any domain viewer the pages need (for molecules, 3Dmol.js).
+**F. Plotting and dashboard.** The plotting library probes use for figures, and what builds the study dashboard. Recommend whatever the stack already uses for figures, and live HTML pages (see `lab-notebook`) for the dashboard. Record any domain viewer the pages need (for molecules, 3Dmol.js). Follow [lab-notebook: Presentation voices](../lab-notebook/SKILL.md#presentation-voices); record any agreed project override here.
 
-**G. Promotion.** How promoted work reaches the protocol: commits on the current branch, one per step, or a pull request per step. Recommend **commit**; offer **pull request** only when the repo has a remote where changes are reviewed.
+**G. Promotion.** Agree repeated physical batch rollovers, technical reuse and preservation into actual working homes, not compulsory code porting or a `protocol/` folder. Read `lab-notebook` for cycle layout and stable-ID/current-location lookup. Recommend scoped authorized commits; independent steps separate, an agreed coupled relocation coherent. PR branch/worktree flow needs separate approval. Record publishing-hook and Git authorization constraints.
+
+**H. Scientific map.** Record the shared root `scientific-map.html` and any approved build home, following [`scientific-map`](../scientific-map/SKILL.md). It uses the project's existing tools and needs no renderer install. Record any scope exclusions for the HTML.
 
 ### 3. Confirm and write
 
@@ -67,6 +69,9 @@ Gitignore files above <N> MB.
 ## Plotting and dashboard
 ## Promotion
 <commit | pull request>
+<authorization and hook constraints; independent steps or agreed coupled cycle>
+## Scientific map
+<shared HTML path; existing runtime, build command and approved source home, or pending; study exclusions, if any>
 ```
 
 Start the library: `.science/library/index.md` with the heading `# Library` and nothing else, and `.science/library/log.md` with the heading `# Library log` and one entry, `## [<YYYY-MM-DD>] setup | library started`. Start the data folder at the chosen location: `index.md` with the heading `# Data` and one line per dataset moved in.
@@ -77,10 +82,12 @@ The `## Science skills` block goes into `AGENTS.md`, created if it does not exis
 - Each study is a folder, `.science/<study>/`. All studies share one branch and one checkout; several run at once, each in its own session.
 - A session works on one study: `/experiment <study>` loads it (or opens it, when the folder does not exist yet), and work for another study starts in a new session.
 - The checkout is shared: stay on the current branch, commit only your own paths (`git add <paths>` then `git commit -m "<message>" -- <paths>`), and keep history as it is: no stash, reset, amend or rebase. Retry when git's lock file is busy.
-- Commit messages start with the study (`<study>: …`); probes and fixes are tagged `<study>/NN-r<R>`. Details are in the `lab-notebook` skill.
-- Literature and documentation live once, in `.science/library/` (the `desk-research` skill keeps it). The user's input data lives in the data folder named in `.science/SETUP.md`; probes read it and never write to it. Everything else a probe loads, it fetches into its own folder.
+- Commit messages start with the study (`<study>: …`); probes and fixes use `<study>/NN-r<R>`, cycle checkpoints `<study>/promotions/<title>-<date>`, with no tag overwrites. Check branch/worktree/tag inventory and publishing hooks; staging, commits and remote actions require authorization.
+- Literature lives once in `.science/library/`. Shared data holds user inputs and approved general source/prepared/reference datasets with provenance and checksums. Fetched probe data stays local until approved promotion; workflow databases/run outputs stay with their workflow.
+- Probe IDs/names persist across physical cycle moves; numbering continues across notebook/history, all cycles and current batch. `NOTEBOOK.md` hrefs locate current records, including unfinished probes in cycle `active/`. Follow `lab-notebook` **Ideas** for alternatives and their selection as ordinary probes; **Builds on** records dependencies.
+- Promotion physically rolls numbered folders directly into cycle promoted/retained/discarded/active homes with optional relative asset links, preserving history and leaving `probes/` empty for new questions. No copies or compatibility aliases; technical promotion is a separate decision. Refresh the project map during promotion or on request with `scientific-map`.
 - Lost, or the question or the notebook seem to have drifted: run `/ask-science`.
 
-Commit `.science/`, the data folder, the environment file and `AGENTS.md` together: `science: setup`.
+Checkpoint only with repository authorization, staging exact setup, data metadata, environment and `AGENTS.md` paths and excluding heavy files: `science: setup`. If hooks publish, local commit approval alone is insufficient; record pending authorization instead.
 
 Done when the folder is a git repository, `.science/SETUP.md` exists with every section filled or marked "not used", the library has its index and log, the data folder has its index, and `AGENTS.md` carries the `## Science skills` block. Then tell the user the next step is `/experiment <study>`, which opens the first study.

@@ -41,29 +41,42 @@ When a protocol stops changing, it's predictable again, and Matt's engineering f
 
 ## What lives where
 
-Everything the science skills write goes in a `.science/` folder at the root of your repo:
+Scientific records live under `.science/`; approved reusable work and the root scientific map follow your existing project layout:
 
 ```
 .science/
   SETUP.md              your setup
   library/              what you read: papers, software docs; one page per question, the raw search results
-  data/                 your input data (or data/ at the repo root, your choice)
+  data/                 user inputs and approved shared datasets (or root data/)
   <study>/              one folder per study
     STUDY.md            the starting direction and first probe, frozen; promotions and the outcome are added at the end
     NOTEBOOK.md         the map: threads of the question, each probe's asked / expected / found / means, a log of every operation
     dashboard.html      the study's dashboard
-    probes/             one folder per probe, named like 03-<slug>
+    _promotion_<title>_<date>/ README, digest manifest; physical numbered folders under:
+      promoted/ retained/ discarded/ active/   plus relative links to current asset homes
+    probes/             current new-question batch; empty immediately after rollover
 ```
 
-Your code stays where it always was. Probes' work reaches it only through `/promote`, after you agree where each file goes. All studies share one branch, and every probe gets a Git tag, so you can go back to any version.
+`/promote` separates technical reuse from physical batch rollover. After exact-tree approval, numbered folders move directly into a cycle's `promoted/`, `retained/`, `discarded/` or `active/`, alongside relative links where appropriate. Each payload has one physical home. No extra record layer, copies or old-path aliases refill `probes/`; that empty batch accepts new globally numbered questions and later rolls into another cycle. Unfinished probes continue under the same ID at their cycle `active/` location. `NOTEBOOK.md` hrefs locate current records across cycles; physical disposition and partial technical promotion change neither scientific verdict nor unfinished status. Existing-cycle moves require explicit approval and checkpoint tags preserve history. Keep code in actual useful homes without compulsory porting/refactoring.
+
+Shared data can include approved general source/prepared/reference datasets with provenance and checksums, not just user inputs. Ordinary fetched data stays probe-local until approved promotion; workflow databases and run outputs stay with their workflow.
+
+Alternative approaches to the same question stay in notebook **Ideas**, visibly unexecuted. Once chosen, each becomes an ordinary next globally numbered probe. **Builds on** links express its dependencies; the next promotion cycle organizes its findings. No separate approach folders or lifecycle are needed. A different question still belongs in another study after off-axis triage.
+
+Run `/scientific-map` at any stage, even before the first promotion. It builds one project-root `scientific-map.html` with a tab for each in-scope study. Each tab shows the question, probes, findings, ideas and promotion cycles with typed links and source details. `/promote` refreshes the shared map and selects the study it just promoted. Build with your existing tools; open the HTML offline in a browser. Study dashboards still hold the charts.
+
+The notebook, maps and dashboards use a concise operational voice by default. `STUDY.md` keeps a natural, direct narrative and its frozen starting record. [Presentation voices](./skills/science/lab-notebook/SKILL.md#presentation-voices) defines the style target, preservation rules and project overrides.
+
+Studies share the current checkout by default. Checkpoints use exact approved paths and preserve unrelated work; hooks, commits, publishing, branch/worktree operations and optional safe cleanup respect explicit authorization. Cycle tags are `<study>/promotions/<title>-<date>`, never overwritten.
 
 ## The skills
 
-You type `/setup-science`, `/experiment`, `/promote` and `/ask-science`. The agent loads `lab-notebook` and `desk-research` on its own when the task fits.
+You type `/setup-science`, `/experiment`, `/promote`, `/scientific-map` and `/ask-science`. The agent loads `lab-notebook` and `desk-research` on its own when the task fits.
 
 - [setup-science](./skills/science/setup-science/SKILL.md): set up a repo for the science skills. Run once.
 - [experiment](./skills/science/experiment/SKILL.md): load or open a study and work on it, one probe at a time.
-- [promote](./skills/science/promote/SKILL.md): move the work of one or more probes into the protocol, after a round of questions and a tree you approve.
+- [promote](./skills/science/promote/SKILL.md): organize, technically promote and preserve work in repeated approved-tree cycles, with current-consumer checks and a scientific map.
+- [scientific-map](./skills/science/scientific-map/SKILL.md): build or refresh one offline HTML map of the project, with an experiment tab for each study. Run it on demand or through promotion.
 - [lab-notebook](./skills/science/lab-notebook/SKILL.md): the study's layout and formats: notebook, probe folders, result briefs, plots and dashboard.
 - [desk-research](./skills/science/desk-research/SKILL.md): answer questions by reading papers and documentation in parallel, into a shared library, with citations.
 - [ask-science](./skills/science/ask-science/SKILL.md): step back, bring an older study to the current format, and check it is on track.
@@ -74,7 +87,7 @@ Matt's engineering and productivity skills are included as he wrote them, and th
 
 ## Install
 
-Paste this prompt into your coding agent. It installs the six science skills, and Matt's skills too if you don't have them yet:
+Paste this prompt into your coding agent. It installs the science skills, and Matt's skills if missing. The scientific map needs no separate renderer installation:
 
 ```text
 Install the science skills from https://github.com/HiteSit/real-scientist-skills.
@@ -82,10 +95,11 @@ Install the science skills from https://github.com/HiteSit/real-scientist-skills
 1. Clone the repo, or pull it if I already have a clone.
 2. Find the folder you load skills from.
 3. Check that folder for Matt Pocock's skills, such as grilling, tdd and domain-modeling.
-   - If they're there, keep them and install only the six skills in skills/science/.
-   - If they're missing, install the six science skills plus every skill in skills/engineering/ and skills/productivity/. When a skill has a folder in customized/, use that folder instead.
+   - If they're there, keep them and install only the skills in skills/science/.
+   - If they're missing, install the skills in skills/science/ plus every skill in skills/engineering/ and skills/productivity/. When a skill has a folder in customized/, use that folder instead.
 4. Install each skill as a symlink into the clone, so a git pull updates it. If a skill with the same name is already in the folder, ask me before replacing it.
-5. Tell me what you installed and what you skipped. Then remind me to run /setup-science in my repo, and /setup-matt-pocock-skills if you installed Matt's skills.
+5. Keep scientific-map build and viewing dependency-free: native browser code and my project's existing standard-library runtime. Do not install or vendor an external renderer unless I explicitly choose that exception.
+6. Tell me what you installed and skipped. Then remind me to run /setup-science in my repo, and /setup-matt-pocock-skills if you installed Matt's skills.
 ```
 
 To update, ask your agent to pull the clone.

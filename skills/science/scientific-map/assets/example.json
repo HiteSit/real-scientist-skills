@@ -1,0 +1,32 @@
+{
+  "activeStudy": "timing",
+  "studies": [
+    {
+      "id": "calibration",
+      "title": "Calibration study",
+      "nodes": [
+        {"id":"question","kind":"question","title":"Can we reduce baseline drift?","summary":"Compare repeat readings with the same reference."},
+        {"id":"01","kind":"probe","title":"01 Inspect the baseline","state":"dropped","summary":"The first method did not isolate drift."},
+        {"id":"02","kind":"probe","title":"02 Compare reference readings","state":"open","summary":"The first two checks are complete. The repeat is pending.","details":[{"label":"Substeps","text":"1. Check the reference.\n2. Compare the traces.\n3. Repeat the measurement (pending)."}],"links":[{"label":"Current probe record","href":".science/calibration/_promotion_review_demo/active/02-compare/README.md"}]},
+        {"id":"cycle","kind":"cycle","title":"Reference review","summary":"Reused the check. Kept probe 02 open."},
+        {"id":"idea","kind":"idea","title":"Try a second reference","summary":"Proposed only. No run has started."}
+      ],
+      "edges": [
+        {"from":"question","to":"01","kind":"membership"},
+        {"from":"question","to":"02","kind":"membership"},
+        {"from":"01","to":"02","kind":"supersedes"},
+        {"from":"02","to":"cycle","kind":"promotion"},
+        {"from":"02","to":"idea","kind":"proposed"}
+      ]
+    },
+    {
+      "id":"timing",
+      "title":"Timing study",
+      "nodes":[
+        {"id":"question","kind":"question","title":"Does the reading interval matter?","summary":"Start with a comparison of two intervals."},
+        {"id":"01","kind":"probe","title":"01 Compare intervals","state":"evidence","summary":"The recorded comparison did not settle the question."}
+      ],
+      "edges":[{"from":"question","to":"01","kind":"membership"}]
+    }
+  ]
+}

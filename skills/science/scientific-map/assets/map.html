@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Scientific map</title>
+<style>
+:root{--paper:#e7e4db;--card:#faf8f2;--ink:#161c23;--muted:#4a525c;--line:#c9c3b5;--focus:#1f5f8b;
+--sans:"Inter","Segoe UI Variable","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+--serif:"Iowan Old Style","Palatino Linotype","URW Palladio L",P052,Georgia,serif;color-scheme:light}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{display:grid;grid-template-rows:auto auto minmax(0,1fr);height:100dvh;overflow:hidden;background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--focus);text-underline-offset:.18em;text-decoration-thickness:1px;overflow-wrap:anywhere}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+button{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem 1.25rem;padding:.8rem 1.25rem .5rem;border-bottom:1px solid var(--line)}
+.top h1{font:600 1.35rem/1.2 var(--serif);margin:0;letter-spacing:-.01em}
+.counts{margin:0;color:var(--muted);font-size:.8125rem;font-variant-numeric:tabular-nums}
+.toolbar{display:flex;align-items:center;gap:.75rem;padding:.45rem 1.25rem;border-bottom:1px solid var(--line);background:#efece5;min-width:0}
+.tabs{flex:1;min-width:0;display:flex;gap:.3rem;overflow-x:auto;padding:3px;scrollbar-width:thin}
+.tabs button,.zoom button,.panel-bar button{white-space:nowrap;font-size:.8125rem;line-height:1;padding:.42rem .7rem;border:1px solid var(--line);border-radius:6px;background:var(--card);cursor:pointer;display:inline-flex;align-items:center;min-height:32px}
+.tabs button:hover,.zoom button:hover,.panel-bar button:hover{border-color:#9b9384}
+.tabs button[aria-selected=true]{background:var(--ink);border-color:var(--ink);color:var(--card)}
+.zoom{display:flex;gap:.3rem;flex:none}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 380px;min-height:0;position:relative}
+.viewport{position:relative;overflow:hidden;touch-action:none;cursor:grab;min-height:0;outline:none;background:radial-gradient(circle,#cfc9bb 1px,transparent 1.2px) 0 0/22px 22px}
+.viewport:focus-visible{box-shadow:inset 0 0 0 3px var(--focus)}
+.viewport.is-dragging{cursor:grabbing}
+.world{position:absolute;left:0;top:0;transform-origin:0 0}
+.links{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.edge path.stroke{fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:.8;transition:opacity .2s,stroke-width .2s}
+.edge[data-kind=membership] path.stroke{stroke-width:1.5}
+.edge[data-kind=promotion] path.stroke{stroke-width:2.4}
+.edge text{font:600 10.5px var(--sans);letter-spacing:.02em;paint-order:stroke;stroke:#ebe8e0;stroke-width:4px;stroke-linejoin:round}
+.node{position:absolute;padding:.5rem .7rem;display:flex;flex-direction:column;gap:.12rem;text-align:left;cursor:pointer;overflow:hidden;
+--bg:var(--card);--bd:#7d7668;--fg:#3f464f;--bw:1px;--bs:solid;
+background:var(--bg);border:var(--bw) var(--bs) var(--bd);border-radius:8px;box-shadow:0 1px 2px rgba(22,28,35,.08),0 2px 8px rgba(22,28,35,.06);transition:opacity .2s,box-shadow .2s}
+.node[data-kind=question]{--bd:#161c23;--bw:1.5px}
+.node[data-kind=question] .node-title{font-family:var(--serif);font-size:15.5px}
+.node[data-kind=cycle]{--bw:3px;--bs:double}
+.node[data-kind=idea]{--bg:#f2eff8;--bd:#5f4f9c;--fg:#57478f;--bs:dashed;--bw:1.5px}
+.node[data-state=evidence]{--bd:#3d4752;--fg:#323b45}
+.node[data-state=promoted]{--bd:#1f5f8b;--fg:#1f5f8b}
+.node[data-state=open]{--bg:#e8f2eb;--bd:#1d7550;--fg:#1b6d4a;--bw:2px}
+.node[data-state=dropped]{--bg:#f5e8e2;--bd:#9a3b2e;--fg:#923628}
+.node[data-state=invalidated]{--bg:repeating-linear-gradient(135deg,#f5e8e2 0 6px,#ecdcd3 6px 12px);--bd:#9a3b2e;--fg:#923628}
+.node[data-state=unknown]{--bg:#efede7;--bd:#7d7668;--fg:#4a525c;--bs:dotted;--bw:1.5px}
+.node:hover{box-shadow:0 2px 4px rgba(22,28,35,.12),0 8px 18px rgba(22,28,35,.12)}
+.node:focus-visible{outline-offset:3px}
+.node[aria-pressed=true]{box-shadow:0 0 0 3px var(--paper),0 0 0 5px var(--ink),0 10px 24px rgba(22,28,35,.18)}
+.node-meta{display:block;font-size:12.5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-caps:all-small-caps;letter-spacing:.06em;color:var(--muted)}
+.node-meta b{color:var(--fg);font-weight:700}
+.node-title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:650;font-size:15px;line-height:1.25}
+.node-note{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12.5px;line-height:1.3;color:var(--muted)}
+.has-selection .node:not(.is-related){opacity:.7;box-shadow:none}
+.has-selection .node.is-related:not([aria-pressed=true]){box-shadow:0 0 0 2px var(--bd),0 6px 16px rgba(22,28,35,.14)}
+.has-selection .edge:not(.is-related){opacity:.18}
+.has-selection .edge.is-related path.stroke{opacity:1;stroke-width:2.8}
+.empty{position:absolute;inset:0;margin:auto;height:max-content;max-width:28rem;padding:1rem 1.2rem;text-align:center;background:var(--card);border:1px dashed #9b9384;border-radius:8px;color:var(--muted)}
+.legend{position:absolute;left:12px;bottom:12px;max-width:calc(100% - 24px);background:rgba(250,248,242,.97);border:1px solid var(--line);border-radius:8px;padding:.35rem .75rem;font-size:12.5px;box-shadow:0 2px 6px rgba(22,28,35,.07),0 10px 24px rgba(22,28,35,.09);cursor:auto}
+.legend summary{display:inline-block;cursor:pointer;font-weight:650;margin-right:.6rem}
+.legend ul{list-style:none;margin:0;padding:0;display:inline-flex;flex-wrap:wrap;gap:.2rem .9rem;vertical-align:middle}
+.legend li{display:flex;align-items:center;gap:.35rem}
+.legend p{margin:.2rem 0 0;color:var(--muted)}
+.panel{display:flex;flex-direction:column;min-height:0;background:var(--card);border-left:1px solid var(--line)}
+.panel-bar{display:flex;align-items:center;gap:.5rem;padding:.55rem 1.1rem;border-bottom:1px solid var(--line);min-height:48px}
+.panel-title{flex:1;font-weight:650;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#panel-toggle{display:none}
+.panel-body{overflow:auto;padding:1rem 1.2rem 2.5rem;overscroll-behavior:contain;scrollbar-width:thin}
+.record h2{font:600 1.22rem/1.25 var(--serif);margin:.15rem 0 .4rem}
+.record h3{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:1.35rem 0 .35rem}
+.record p{margin:.35rem 0}
+.pre{white-space:pre-line;overflow-wrap:anywhere}
+.muted{color:var(--muted);font-weight:400}
+.tags{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;margin:0 0 .2rem}
+.tag{display:inline-block;font-size:12px;font-weight:700;font-variant-caps:all-small-caps;letter-spacing:.07em;padding:0 .5rem;border-radius:999px;border:1px solid #7d7668;color:#3f464f;background:var(--card)}
+.tag[data-state=open]{color:#1b6d4a;border:2px solid #1d7550;background:#e8f2eb}
+.tag[data-state=dropped],.tag[data-state=invalidated]{color:#923628;border-color:#9a3b2e;background:#f5e8e2}
+.tag[data-state=promoted]{color:#1f5f8b;border-color:#1f5f8b}
+.tag[data-state=unknown]{border-style:dotted}
+.facts{display:grid;gap:.6rem;margin:.9rem 0 0;padding:.75rem .85rem;background:#f1eee7;border-radius:8px;font-size:.875rem}
+.facts dt{color:var(--muted);font-weight:600}
+.facts dd{margin:.1rem 0 0}
+.sources,.relations{padding-left:1.1rem;margin:.3rem 0;font-size:.875rem}
+.sources li,.relations li{margin:.35rem 0}
+.relations{list-style:none;padding:0}
+.relations li{display:flex;flex-wrap:wrap;align-items:baseline;gap:.15rem .4rem}
+.rel-kind{font-size:12px;font-weight:700;font-variant-caps:all-small-caps;letter-spacing:.06em;border:1px solid;border-radius:4px;padding:0 .3rem;background:var(--card)}
+.goto{border:0;background:none;padding:0;color:var(--focus);text-decoration:underline;text-underline-offset:.18em;text-decoration-thickness:1px;cursor:pointer;font-weight:600;text-align:left}
+.notices{margin:.3rem 0;padding-left:1.1rem;font-size:.875rem;color:#7a2e22}
+@media (max-width:760px){
+body{font-size:14px}
+.top{padding:.55rem .8rem .4rem;gap:0 .8rem}
+.top h1{font-size:1.06rem}
+.counts{font-size:.75rem}
+.toolbar{padding:.35rem .6rem;gap:.4rem}
+.stage{grid-template-columns:minmax(0,1fr)}
+.panel{position:absolute;left:0;right:0;bottom:0;max-height:55%;border-left:0;border-top:1px solid var(--line);border-radius:14px 14px 0 0;box-shadow:0 -8px 24px rgba(22,28,35,.16)}
+.panel:not(.is-open) .panel-body{display:none}
+#panel-toggle{display:inline-flex}
+.legend{bottom:60px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><h1>Scientific map</h1><p class="counts" id="counts"></p></header>
+<div class="toolbar">
+<div class="tabs" id="tabs" role="tablist" aria-label="Studies"></div>
+<div class="zoom" role="group" aria-label="View">
+<button type="button" data-zoom="out" aria-label="Zoom out">&minus;</button>
+<button type="button" data-zoom="in" aria-label="Zoom in">+</button>
+<button type="button" data-zoom="fit">Fit</button>
+<button type="button" data-zoom="reset">Reset</button>
+</div>
+</div>
+<main class="stage" id="stage" role="tabpanel">
+<div class="viewport" id="viewport" tabindex="0" role="region" aria-label="Study map. Arrow keys pan, plus and minus zoom, F fits, 0 resets.">
+<div class="world" id="world"></div>
+<p class="empty" id="empty" hidden></p>
+<details class="legend" id="legend" open><summary>Link types</summary><ul id="legend-list"></ul><p>Arrows run from source to destination. Column position is layout, not time.</p></details>
+</div>
+<aside class="panel" id="panel" aria-label="Record details">
+<div class="panel-bar"><div class="panel-title" id="panel-title">Overview</div><button type="button" id="panel-home" hidden>Overview</button><button type="button" id="panel-toggle" aria-expanded="false" aria-controls="panel-body">Details</button></div>
+<div class="panel-body" id="panel-body"></div>
+</aside>
+</main>
+<noscript><p class="empty">This map needs JavaScript to draw its records.</p></noscript>
+<script type="application/json" id="map-data">__SCIENTIFIC_MAP_DATA__</script>
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = String(text); return e; };
+const NS = 'http://www.w3.org/2000/svg';
+const svg = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+const str = v => typeof v === 'string' ? v : v == null ? '' : String(v);
+const cap = v => v ? v.charAt(0).toUpperCase() + v.slice(1) : '';
+const KIND = {question: 'Question', probe: 'Probe', idea: 'Idea', cycle: 'Cycle'};
+const STATE = {open: 'Open', dropped: 'Dropped', evidence: 'Evidence', promoted: 'Promoted', unknown: 'Unknown', invalidated: 'Invalidated'};
+// One table for every link kind: stroke colour, dash pattern and the words used in the legend and details.
+const LINK = {
+  membership: {color: '#857e70', dash: '1.5 4.5', word: 'Study membership', note: 'question to its member; not evidence'},
+  dependency: {color: '#36404a', dash: '', word: 'dependency'},
+  control: {color: '#8a5a12', dash: '9 3 2 3', word: 'control'},
+  supersedes: {color: '#9a3b2e', dash: '6 4', word: 'supersedes', note: 'earlier record to its replacement'},
+  proposed: {color: '#5f4f9c', dash: '11 5', word: 'proposed'},
+  promotion: {color: '#1f5f8b', dash: '', word: 'promotion'},
+};
+const OTHER_LINK = {color: '#5e6670', dash: '', word: ''};
+const linkOf = k => LINK[k] || {...OTHER_LINK, word: k};
+const W = 232, H = 112, GX = 104, GY = 48, PAD = 32;
+const TOKEN = '__SCIENTIFIC_MAP_' + 'DATA__';
+
+const vp = $('viewport'), world = $('world'), panel = $('panel'), body = $('panel-body'), toggle = $('panel-toggle');
+const home = $('panel-home'), ptitle = $('panel-title'), tabsEl = $('tabs'), stage = $('stage'), empty = $('empty');
+const legend = $('legend'), legendList = $('legend-list'), counts = $('counts');
+
+// A relative path with no scheme, host or root: resolved against this HTML file, never a remote request.
+const localHref = h => h !== '' && h.trim() === h && !/^[a-z][a-z0-9+.-]*:/i.test(h) && !/^[\/\\]/.test(h) && !/[\u0000-\u001f]/.test(h);
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+const describe = n => [KIND[n.kind] || cap(n.kind) || 'Record', STATE[n.state] || cap(n.state)].filter(Boolean).join(' · ');
+
+function normStudy(s, i) {
+  s = s && typeof s === 'object' ? s : {};
+  const notes = [], nodes = [], byId = new Map(), edges = [];
+  for (const n of Array.isArray(s.nodes) ? s.nodes : []) {
+    const id = str(n && n.id);
+    if (!id) { notes.push('A record without an id was not drawn.'); continue; }
+    if (byId.has(id)) { notes.push(`Record id "${id}" appears twice; only the first was drawn.`); continue; }
+    const node = {id, kind: str(n.kind), title: str(n.title) || id, summary: str(n.summary), state: str(n.state),
+      details: (Array.isArray(n.details) ? n.details : []).filter(d => d && typeof d === 'object').map(d => ({label: str(d.label), text: str(d.text)})),
+      links: Array.isArray(n.links) ? n.links : [], dom: 'node-' + nodes.length};
+    if (!KIND[node.kind]) notes.push(`"${node.title}" has kind "${node.kind || 'none'}", not question, probe, idea or cycle.`);
+    nodes.push(node); byId.set(id, node);
+  }
+  for (const e of Array.isArray(s.edges) ? s.edges : []) {
+    const from = str(e && e.from), to = str(e && e.to), kind = str(e && e.kind);
+    if (!byId.has(from) || !byId.has(to)) { notes.push(`A ${kind || 'untyped'} link from "${from}" to "${to}" names a missing record and was not drawn.`); continue; }
+    if (!LINK[kind]) notes.push(`The link from "${byId.get(from).title}" to "${byId.get(to).title}" has kind "${kind || 'none'}", not a known link kind.`);
+    edges.push({from, to, kind: kind || 'untyped', label: str(e.label)});
+  }
+  // Each connected component needs a question card; report, never invent, a missing one.
+  const root = new Map(nodes.map(n => [n.id, n.id]));
+  const find = v => { while (root.get(v) !== v) v = root.get(v); return v; };
+  edges.forEach(e => root.set(find(e.from), find(e.to)));
+  const groups = new Map();
+  nodes.forEach(n => { const r = find(n.id); (groups.get(r) || groups.set(r, []).get(r)).push(n); });
+  for (const g of groups.values()) if (!g.some(n => n.kind === 'question'))
+    notes.push(`Not connected to any question: ${g.map(n => n.title).join(', ')}.`);
+  return {id: str(s.id) || `study-${i + 1}`, title: str(s.title) || str(s.id) || `Study ${i + 1}`, nodes, edges, byId,
+    links: Array.isArray(s.links) ? s.links : [], notes};
+}
+
+let studies = [], active = 0, fatal = '';
+try {
+  const raw = $('map-data').textContent.trim();
+  if (!raw || raw === TOKEN) throw Error('No map data was written into this file.');
+  const data = JSON.parse(raw);
+  if (!data || !Array.isArray(data.studies)) throw Error('The map data has no "studies" list.');
+  studies = data.studies.map(normStudy);
+  if (!studies.length) throw Error('This map has no studies.');
+  active = Math.max(0, studies.findIndex(s => s.id === str(data.activeStudy)));
+} catch (e) { fatal = e instanceof SyntaxError ? 'The map data is not valid JSON.' : e.message; }
+
+// Layered layout: columns follow the links (longest path), rows keep cards aligned on one grid,
+// and every connector turns only in the gaps between columns or the gutters between rows.
+function layout(study) {
+  const {nodes, edges, byId} = study;
+  const outs = new Map(nodes.map(n => [n.id, []]));
+  edges.forEach(e => outs.get(e.from).push(e));
+  const seen = new Map(), back = new Set();
+  const dfs = v => { seen.set(v, 1); for (const e of outs.get(v)) { const m = seen.get(e.to); if (m === 1) back.add(e); else if (!m) dfs(e.to); } seen.set(v, 2); };
+  [...nodes].sort((a, b) => (b.kind === 'question') - (a.kind === 'question')).forEach(n => { if (!seen.get(n.id)) dfs(n.id); });
+  const fwd = edges.filter(e => !back.has(e) && e.from !== e.to);
+  const indeg = new Map(nodes.map(n => [n.id, 0])), fout = new Map(nodes.map(n => [n.id, []]));
+  fwd.forEach(e => { indeg.set(e.to, indeg.get(e.to) + 1); fout.get(e.from).push(e.to); });
+  const layer = new Map(nodes.map(n => [n.id, 0])), order = nodes.filter(n => !indeg.get(n.id)).map(n => n.id);
+  for (let k = 0; k < order.length; k++) for (const t of fout.get(order[k])) {
+    layer.set(t, Math.max(layer.get(t), layer.get(order[k]) + 1));
+    indeg.set(t, indeg.get(t) - 1); if (!indeg.get(t)) order.push(t);
+  }
+  const cols = [], row = new Map();
+  order.forEach(v => (cols[layer.get(v)] || (cols[layer.get(v)] = [])).push(v));
+  for (const col of cols) {
+    if (!col) continue;
+    const bary = v => { const p = fwd.filter(e => e.to === v && row.has(e.from)).map(e => row.get(e.from)); return p.length ? p.reduce((a, b) => a + b) / p.length : Infinity; };
+    let prev = -1;
+    col.map((v, i) => ({v, b: bary(v), i})).sort((a, b) => (a.b - b.b) || (a.i - b.i))
+      .forEach(({v, b}) => { prev = Math.max(prev + 1, Number.isFinite(b) ? Math.round(b) : 0); row.set(v, prev); });
+  }
+  // A connector into the first column needs a gap to its left.
+  const loopsLeft = edges.some(e => e.from !== e.to && layer.get(e.to) === 0);
+  const PX = loopsLeft ? GX + PAD : PAD;
+  let maxL = 0, maxR = 0;
+  for (const n of nodes) {
+    n.layer = layer.get(n.id); n.row = row.get(n.id);
+    n.x = PX + n.layer * (W + GX); n.y = PAD + n.row * (H + GY);
+    maxL = Math.max(maxL, n.layer); maxR = Math.max(maxR, n.row);
+  }
+  // Lanes keep parallel connectors apart: vertical lanes inside a column gap, horizontal lanes inside a row gutter.
+  const gapUse = new Map(), gutUse = new Map();
+  const gapLeft = g => PX + g * (W + GX) + W;
+  const laneX = g => { const k = gapUse.get(g) || 0; gapUse.set(g, k + 1); return gapLeft(g) + 14 + (k % 10) * 8; };
+  const laneY = r => { const k = gutUse.get(r) || 0; gutUse.set(r, k + 1); return PAD + r * (H + GY) - GY / 2 + [0, -6, 6, -12, 12, -18, 18][k % 7]; };
+  const drawn = edges.filter(e => e.from !== e.to);
+  const port = (list, n) => { const k = list.indexOf(n); return (k + 1) / (list.length + 1); };
+  const outPorts = new Map(), inPorts = new Map();
+  for (const n of nodes) {
+    outPorts.set(n.id, drawn.filter(e => e.from === n.id).sort((a, b) => byId.get(a.to).y - byId.get(b.to).y));
+    inPorts.set(n.id, drawn.filter(e => e.to === n.id).sort((a, b) => byId.get(a.from).y - byId.get(b.from).y));
+  }
+  const routes = drawn.map(e => {
+    const s = byId.get(e.from), t = byId.get(e.to);
+    const sx = s.x + W, sy = s.y + H * port(outPorts.get(s.id), e), tx = t.x, ty = t.y + H * port(inPorts.get(t.id), e);
+    let pts;
+    if (t.layer === s.layer + 1) { const x = laneX(s.layer); pts = [[sx, sy], [x, sy], [x, ty], [tx, ty]]; }
+    else {
+      const gy = laneY(t.row < s.row ? s.row : s.row + 1), x1 = laneX(s.layer), x2 = laneX(t.layer - 1);
+      pts = [[sx, sy], [x1, sy], [x1, gy], [x2, gy], [x2, ty], [tx, ty]];
+    }
+    // Label on the longest segment; a vertical one is labelled at the centre of its column gap.
+    let best = 0, at = [0, 0];
+    for (let k = 1; k < pts.length; k++) {
+      const [ax, ay] = pts[k - 1], [bx, by] = pts[k], len = Math.abs(bx - ax) + Math.abs(by - ay);
+      if (len <= best) continue;
+      best = len;
+      const gapMid = x => gapLeft(Math.floor((x - PX - W) / (W + GX))) + GX / 2;
+      at = ax === bx ? [gapMid(ax), (ay + by) / 2 + 4] : [len <= GX ? gapMid((ax + bx) / 2) : (ax + bx) / 2, ay - 5];
+    }
+    return {e, d: 'M' + pts.map(p => p.join(' ')).join(' L'), at};
+  });
+  return {routes, w: PX + (maxL + 1) * (W + GX) - GX + PAD, h: PAD * 2 + (maxR + 1) * (H + GY) - GY};
+}
+
+// View: a transformed world inside a clipped viewport.
+let S = 1, X = 0, Y = 0, L = null, study = null, sel = null, cards = new Map(), edgeEls = [];
+const apply = () => { world.style.transform = `translate(${X}px,${Y}px) scale(${S})`; };
+const overlay = () => getComputedStyle(panel).position === 'absolute';
+const viewW = () => vp.clientWidth;
+const viewH = () => vp.clientHeight - (overlay() ? panel.offsetHeight : 0);
+const fitScale = () => L ? Math.min(1, (viewW() - 48) / L.w, (viewH() - 48) / L.h) : 1;
+const clamp = v => Math.min(2, Math.max(Math.min(0.25, fitScale()), v));
+function zoomAt(f, cx, cy) { const n = clamp(S * f); X = cx - (cx - X) * n / S; Y = cy - (cy - Y) * n / S; S = n; apply(); }
+function reset() { S = 1; X = 0; Y = 0; apply(); }
+function fit() { if (!L) return; S = clamp(fitScale()); X = (viewW() - L.w * S) / 2; Y = Math.max(0, (viewH() - L.h * S) / 2); apply(); }
+function reveal(n) {
+  const m = 24, w = viewW(), h = viewH(), l = X + n.x * S, t = Y + n.y * S, r = l + W * S, b = t + H * S;
+  if (l < m) X += m - l; else if (r > w - m) X -= Math.min(r - (w - m), l - m);
+  if (t < m) Y += m - t; else if (b > h - m) Y -= Math.min(b - (h - m), t - m);
+  apply();
+}
+// Narrow screens: the sheet covers the lower map, so centre the card above it at no less than full size.
+function centerOn(n) { S = Math.min(2, Math.max(S, 1)); X = viewW() / 2 - (n.x + W / 2) * S; Y = viewH() / 2 - (n.y + H / 2) * S; apply(); }
+
+function setOpen(open) {
+  panel.classList.toggle('is-open', open);
+  toggle.setAttribute('aria-expanded', String(open));
+  toggle.textContent = open ? 'Hide' : 'Details';
+}
+
+function linkList(links) {
+  const ul = el('ul', 'sources');
+  for (const l of links) {
+    const href = str(l && l.href), label = str(l && l.label) || href || 'Unnamed link', li = el('li');
+    if (localHref(href)) { const a = el('a', null, label); a.setAttribute('href', href); li.append(a); }
+    else li.append(el('span', null, label), el('span', 'muted', href ? ` (not linked: "${href}" is not a relative local path)` : ' (no path recorded)'));
+    ul.append(li);
+  }
+  return ul;
+}
+
+function tally(list, key, names, many) {
+  const c = new Map();
+  list.forEach(x => { const k = x[key]; if (k) c.set(k, (c.get(k) || 0) + 1); });
+  return [...c].map(([k, n]) => { const w = (names[k] || k).toLowerCase(); return many ? plural(n, w) : `${n} ${w}`; });
+}
+
+function overview() {
+  const a = el('article', 'record');
+  a.append(el('h2', null, study.title));
+  if (!study.nodes.length) a.append(el('p', null, 'This study has no records yet.'));
+  else {
+    const kinds = tally(study.nodes, 'kind', KIND, true);
+    a.append(el('p', null, `${plural(study.nodes.length, 'record')} (${kinds.join(', ')}) and ${plural(study.edges.length, 'link')}.`));
+    const states = tally(study.nodes, 'state', STATE);
+    if (states.length) a.append(el('p', null, `States: ${states.join(', ')}.`));
+  }
+  a.append(el('h3', null, 'How to read the map'));
+  a.append(el('p', null, 'Each card is one record. Its first line names the kind and, when recorded, the scientific state. Arrows run from source to destination; the legend names each link type.'));
+  a.append(el('p', null, 'Dotted grey lines ending in a dot are study membership: a question and the work that belongs to it. Membership is not evidence.'));
+  a.append(el('p', 'muted', 'Drag or scroll to pan; Ctrl or \u2318 with scroll zooms. Tab moves through the cards, arrow keys follow their links, Enter opens a record and Esc returns here.'));
+  if (study.links.length) { a.append(el('h3', null, 'Study records')); a.append(linkList(study.links)); }
+  if (study.notes.length) {
+    a.append(el('h3', null, 'Map notices'));
+    const ul = el('ul', 'notices'); study.notes.forEach(t => ul.append(el('li', null, t))); a.append(ul);
+  }
+  return a;
+}
+
+function relations(n, dir) {
+  const list = study.edges.filter(e => (dir === 'out' ? e.from : e.to) === n.id);
+  const ul = el('ul', 'relations');
+  for (const e of list) {
+    const other = study.byId.get(dir === 'out' ? e.to : e.from), k = linkOf(e.kind), li = el('li');
+    const tag = el('span', 'rel-kind', k.word); tag.style.color = k.color;
+    const go = el('button', 'goto', other.title); go.type = 'button'; go.dataset.goto = other.id;
+    li.append(tag, el('span', 'muted', dir === 'out' ? '\u2192' : '\u2190'), go, el('span', 'muted', describe(other)));
+    if (e.label) li.append(el('span', 'muted pre', e.label));
+    ul.append(li);
+  }
+  return list.length ? ul : el('p', 'muted', 'None.');
+}
+
+function record(n) {
+  const a = el('article', 'record'), tags = el('p', 'tags');
+  tags.append(el('span', 'tag', KIND[n.kind] || cap(n.kind) || 'Record'));
+  if (n.state) { const t = el('span', 'tag', 'State: ' + (STATE[n.state] || n.state)); t.dataset.state = n.state; tags.append(t); }
+  a.append(tags, el('h2', null, n.title));
+  if (n.summary) a.append(el('p', 'pre', n.summary));
+  if (n.details.length) {
+    const dl = el('dl', 'facts');
+    n.details.forEach(d => { const div = el('div'); div.append(el('dt', null, d.label || 'Detail'), el('dd', 'pre', d.text)); dl.append(div); });
+    a.append(dl);
+  }
+  if (n.links.length) { a.append(el('h3', null, 'Records')); a.append(linkList(n.links)); }
+  a.append(el('h3', null, 'Links from this record'), relations(n, 'out'));
+  a.append(el('h3', null, 'Links into this record'), relations(n, 'in'));
+  return a;
+}
+
+function select(id) {
+  sel = id;
+  const n = id != null ? study.byId.get(id) : null;
+  const near = new Set(n ? study.edges.filter(e => e.from === id || e.to === id).flatMap(e => [e.from, e.to]) : []);
+  world.classList.toggle('has-selection', !!n);
+  for (const [k, b] of cards) { b.setAttribute('aria-pressed', String(k === id)); b.classList.toggle('is-related', near.has(k)); }
+  for (const [e, g] of edgeEls) g.classList.toggle('is-related', !!n && (e.from === id || e.to === id));
+  body.replaceChildren(n ? record(n) : overview());
+  body.scrollTop = 0;
+  ptitle.textContent = n ? n.title : 'Overview';
+  home.hidden = !n;
+  if (n && overlay()) { setOpen(true); centerOn(n); }
+  else if (n) reveal(n);
+}
+
+function draw() {
+  world.replaceChildren(); cards = new Map(); edgeEls = []; legendList.replaceChildren();
+  L = study.nodes.length ? layout(study) : null;
+  empty.hidden = !!L; legend.hidden = !L || !study.edges.length;
+  if (!L) { empty.textContent = 'This study has no records yet.'; return; }
+  world.style.width = L.w + 'px'; world.style.height = L.h + 'px';
+  const s = svg('svg', {class: 'links', width: L.w, height: L.h, 'aria-hidden': 'true'}), defs = svg('defs', {});
+  const kinds = [...new Set(study.edges.map(e => e.kind))];
+  kinds.forEach((k, i) => {
+    const c = linkOf(k), m = svg('marker', {id: 'head-' + i, viewBox: '0 0 10 10', refX: k === 'membership' ? 5 : 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto'});
+    m.append(k === 'membership' ? svg('circle', {cx: 5, cy: 5, r: 3.2, fill: c.color}) : svg('path', {d: 'M0 0 L10 5 L0 10 z', fill: c.color}));
+    defs.append(m);
+    const li = el('li'), sample = svg('svg', {width: 30, height: 10, 'aria-hidden': 'true'});
+    sample.append(svg('path', {d: 'M1 5 L24 5', stroke: c.color, 'stroke-width': 2, 'stroke-dasharray': c.dash, fill: 'none', 'marker-end': `url(#head-${i})`}));
+    li.append(sample, el('b', null, c.word || 'untyped'));
+    if (c.note) li.append(el('span', 'muted', `(${c.note})`));
+    legendList.append(li);
+  });
+  s.append(defs);
+  for (const r of L.routes) {
+    const c = linkOf(r.e.kind), g = svg('g', {class: 'edge', 'data-kind': r.e.kind});
+    const from = study.byId.get(r.e.from).title, to = study.byId.get(r.e.to).title;
+    g.append(svg('title', {}));
+    g.firstChild.textContent = `${c.word}: ${from} \u2192 ${to}${r.e.label ? ' (' + r.e.label + ')' : ''}`;
+    g.append(svg('path', {class: 'stroke', d: r.d, stroke: c.color, 'stroke-dasharray': c.dash, 'marker-end': `url(#head-${kinds.indexOf(r.e.kind)})`}));
+    // Membership stays unlabelled on the canvas (style + legend + details carry it); other links show their label or kind.
+    if (r.e.kind !== 'membership') {
+      const t = svg('text', {x: r.at[0], y: r.at[1], 'text-anchor': 'middle', fill: c.color});
+      t.textContent = r.e.label || c.word || 'untyped';
+      g.append(t);
+    }
+    s.append(g); edgeEls.push([r.e, g]);
+  }
+  world.append(s);
+  for (const n of study.nodes) {
+    const b = el('button', 'node'); b.type = 'button'; b.id = n.dom; b.dataset.id = n.id;
+    b.dataset.kind = KIND[n.kind] ? n.kind : 'other';
+    if (n.state) b.dataset.state = n.state;
+    b.setAttribute('aria-pressed', 'false');
+    Object.assign(b.style, {left: n.x + 'px', top: n.y + 'px', width: W + 'px', height: H + 'px'});
+    const meta = el('span', 'node-meta', (KIND[n.kind] || cap(n.kind) || 'Record'));
+    if (n.state) meta.append(' \u00b7 ', el('b', null, STATE[n.state] || n.state));
+    b.append(meta, el('span', 'node-title', n.title));
+    if (n.summary) b.append(el('span', 'node-note', n.summary));
+    world.append(b); cards.set(n.id, b);
+  }
+}
+
+function activate(i) {
+  active = i; study = studies[i];
+  [...tabsEl.children].forEach((b, j) => { b.setAttribute('aria-selected', String(j === i)); b.tabIndex = j === i ? 0 : -1; });
+  stage.setAttribute('aria-labelledby', 'tab-' + i);
+  document.title = `${study.title} \u00b7 Scientific map`;
+  const states = tally(study.nodes, 'state', STATE);
+  counts.textContent = [plural(study.nodes.length, 'record'), plural(study.edges.length, 'link'), ...states].join(' \u00b7 ');
+  tabsEl.children[i].scrollIntoView({block: 'nearest', inline: 'nearest'});
+  draw(); reset(); select(null);
+}
+
+if (fatal) {
+  empty.textContent = fatal; empty.hidden = false; legend.hidden = true;
+  document.querySelectorAll('.zoom button').forEach(b => { b.disabled = true; });
+  body.append(el('p', null, fatal));
+  return;
+}
+
+studies.forEach((s, i) => {
+  const b = el('button', null, s.title); b.type = 'button'; b.id = 'tab-' + i;
+  b.setAttribute('role', 'tab'); b.setAttribute('aria-controls', 'stage');
+  b.addEventListener('click', () => activate(i));
+  tabsEl.append(b);
+});
+tabsEl.addEventListener('keydown', e => {
+  const n = studies.length, k = {ArrowRight: 1, ArrowLeft: -1}[e.key];
+  const i = k ? (active + k + n) % n : e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : null;
+  if (i == null) return;
+  e.preventDefault(); activate(i); tabsEl.children[i].focus();
+});
+
+// Keyboard: arrow keys on a card follow its links (right = outgoing, left = incoming) or the nearest card that way.
+function step(n, key) {
+  const [dx, dy] = {ArrowRight: [1, 0], ArrowLeft: [-1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1]}[key];
+  const linked = dx > 0 ? study.edges.filter(e => e.from === n.id).map(e => e.to) : dx < 0 ? study.edges.filter(e => e.to === n.id).map(e => e.from) : [];
+  const pool = linked.length ? linked.map(k => study.byId.get(k)) : study.nodes.filter(o => (o.x - n.x) * dx + (o.y - n.y) * dy > 0);
+  let best = null, score = Infinity;
+  for (const o of pool) {
+    const ax = o.x - n.x, ay = o.y - n.y, v = Math.abs(ax * dx + ay * dy) + 2 * Math.abs(ax * dy + ay * dx);
+    if (o !== n && v < score) { score = v; best = o; }
+  }
+  return best;
+}
+
+let drag = null, moved = false, pinch = null;
+const pts = new Map();
+vp.addEventListener('pointerdown', e => {
+  if (e.target.closest('.legend') || (e.pointerType === 'mouse' && e.button !== 0)) return;
+  pts.set(e.pointerId, {x: e.clientX, y: e.clientY}); moved = false;
+  drag = {x: e.clientX, y: e.clientY, ox: X, oy: Y};
+  if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = {d: Math.hypot(a.x - b.x, a.y - b.y), s: S}; }
+});
+vp.addEventListener('pointermove', e => {
+  if (!pts.has(e.pointerId)) return;
+  pts.set(e.pointerId, {x: e.clientX, y: e.clientY});
+  if (pts.size === 2 && pinch) {
+    const [a, b] = [...pts.values()], r = vp.getBoundingClientRect();
+    zoomAt(pinch.s * Math.hypot(a.x - b.x, a.y - b.y) / pinch.d / S, (a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top);
+    moved = true; return;
+  }
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (!moved && Math.hypot(dx, dy) < 5) return;
+  if (!moved) { moved = true; vp.setPointerCapture(e.pointerId); vp.classList.add('is-dragging'); }
+  X = drag.ox + dx; Y = drag.oy + dy; apply();
+});
+const end = e => {
+  pts.delete(e.pointerId); pinch = null;
+  if (pts.size === 1) { const p = [...pts.values()][0]; drag = {x: p.x, y: p.y, ox: X, oy: Y}; }
+  if (!pts.size) vp.classList.remove('is-dragging');
+};
+vp.addEventListener('pointerup', end); vp.addEventListener('pointercancel', end);
+vp.addEventListener('click', e => {
+  if (moved) { moved = false; e.preventDefault(); e.stopPropagation(); return; }
+  if (e.target.closest('.legend')) return;
+  const card = e.target.closest('.node');
+  if (card) select(card.dataset.id); else if (sel != null) select(null);
+}, true);
+vp.addEventListener('wheel', e => {
+  if (e.target.closest('.legend')) return;
+  e.preventDefault();
+  const k = e.deltaMode === 1 ? 16 : 1, r = vp.getBoundingClientRect();
+  if (e.ctrlKey || e.metaKey) zoomAt(Math.exp(-e.deltaY * k * 0.01), e.clientX - r.left, e.clientY - r.top);
+  else { X -= (e.shiftKey && !e.deltaX ? e.deltaY : e.deltaX) * k; Y -= (e.shiftKey && !e.deltaX ? 0 : e.deltaY) * k; apply(); }
+}, {passive: false});
+// Native focus scrolling would shift the clipped viewport under the transform; pan instead.
+vp.addEventListener('scroll', () => { vp.scrollTop = 0; vp.scrollLeft = 0; });
+vp.addEventListener('focusin', e => { const c = e.target.closest('.node'); if (c) reveal(study.byId.get(c.dataset.id)); });
+vp.addEventListener('keydown', e => {
+  if (e.target.closest('.legend') || e.altKey || e.ctrlKey || e.metaKey) return;
+  const card = e.target.closest('.node');
+  if (card && e.key.startsWith('Arrow')) {
+    const next = step(study.byId.get(card.dataset.id), e.key);
+    if (next) cards.get(next.id).focus({preventScroll: true});
+    e.preventDefault(); return;
+  }
+  const w = viewW() / 2, h = viewH() / 2;
+  switch (e.key) {
+    case 'ArrowLeft': X += 64; apply(); break;
+    case 'ArrowRight': X -= 64; apply(); break;
+    case 'ArrowUp': Y += 64; apply(); break;
+    case 'ArrowDown': Y -= 64; apply(); break;
+    case '+': case '=': zoomAt(1.2, w, h); break;
+    case '-': case '_': zoomAt(1 / 1.2, w, h); break;
+    case '0': reset(); break;
+    case 'f': case 'F': fit(); break;
+    default: return;
+  }
+  e.preventDefault();
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (sel != null) { const c = cards.get(sel); select(null); if (c) c.focus({preventScroll: true}); }
+  else if (panel.classList.contains('is-open')) setOpen(false);
+});
+document.querySelectorAll('[data-zoom]').forEach(b => b.addEventListener('click', () => {
+  const z = b.dataset.zoom, w = viewW() / 2, h = viewH() / 2;
+  if (z === 'in') zoomAt(1.25, w, h); else if (z === 'out') zoomAt(1 / 1.25, w, h); else if (z === 'fit') fit(); else reset();
+}));
+body.addEventListener('click', e => {
+  const g = e.target.closest('[data-goto]');
+  if (!g) return;
+  select(g.dataset.goto);
+  cards.get(g.dataset.goto).focus({preventScroll: true});
+});
+toggle.addEventListener('click', () => setOpen(!panel.classList.contains('is-open')));
+home.addEventListener('click', () => select(null));
+if (overlay()) legend.open = false;
+activate(active);
+})();
+</script>
+</body>
+</html>
