@@ -1,0 +1,5 @@
+interface:
+  display_name: "Curate Probe"
+  short_description: "Organize one science probe around your direction"
+policy:
+  allow_implicit_invocation: false

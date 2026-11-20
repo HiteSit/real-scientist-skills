@@ -8,6 +8,7 @@ This is a draft and can change without warning. For the short version and the re
 
 - **[setup-science](./setup-science/SKILL.md)**: Set up a repo for the science skills: record the domain, the stack and the conventions in `.science/SETUP.md`, and start the shared library. You start it.
 - **[experiment](./experiment/SKILL.md)**: Load a study (`/experiment <study>`, from any session) and focus the session on it; if the study doesn't exist yet, open it with a short interview and agree the first probe. Then it follows your lead: explain what was done, work on a probe, start the next one, fix one. You start it.
+- **[curate-probe](./curate-probe/SKILL.md)**: Read the relevant chat and arrange one probe around what you wanted to learn and what you want to use next. Approve the exact moves and any path repairs separately. You start it.
 - **[promote](./promote/SKILL.md)**: Roll over probe batches, preserve evidence and technically promote supported work after tree approval, checking consumers and rebuilding one connected scientific map. You start it.
 - **[scientific-map](./scientific-map/SKILL.md)**: Build or refresh one offline project HTML map with a tab per study. You can run it at any stage; promotion also calls it.
 - **[desk-research](./desk-research/SKILL.md)**: Answer a question by reading papers and documentation through parallel subagents, using your agent's literature tools, and keep the answer in the shared library with the raw search results behind it. The agent can start it.
@@ -41,6 +42,7 @@ This is a draft and can change without warning. For the short version and the re
       │    show a result   plots, brief, dashboard; talk it through; record your reading
       │    keep working    an open probe takes as many sessions as it needs
       │    fix a probe     run wrong: fixed in place, with a lesson
+      │    curate a probe  arrange its files around your direction, with move and path-repair approvals
       │
       │  probes:  open → evidence when the next starts · dropped on your word
       │

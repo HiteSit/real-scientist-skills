@@ -2,6 +2,10 @@
 
 Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock's releases are in [his CHANGELOG](https://github.com/mattpocock/skills/blob/main/CHANGELOG.md) and arrive here through the weekly upstream sync.
 
+## 2026-11-20
+
+- Added `/curate-probe`: use the conversation to arrange one probe around your direction, without a fixed layout. Preview and approve moves and renames without deleting or replacing files. Path-reference edits require separate approval.
+
 ## v0.2.0 (2026-11-17)
 
 - Promotion now separates technical reuse from approved physical batch rollover: numbered probe directories move directly into a cycle's promoted/retained/discarded/active homes, alongside relative asset links where useful. Digest manifests preserve stable-ID/current-location lookup and captured history; study-level probes/ becomes empty for new globally numbered questions, without copies or compatibility aliases. Unfinished probes continue at their cycle active/ location under the same ID. No compulsory code porting, refactoring or reusable framework.
