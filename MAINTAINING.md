@@ -13,7 +13,8 @@ A customization changes one of Matt's skills without touching his files, so the 
 
 Current customizations:
 
-- **[grilling](./customizations/grilling/customization.md)**: asks each round's questions through the harness's question tool (Claude Code or Codex `AskUserQuestion`, OMP `ask`) when it has one.
+- **[grilling](./customizations/grilling/customization.md)**: asks each round through the harness's question tool when it has one, with the recommended answer preselected where possible and an optional Additional notes entry closing every block.
+- **[grill-me](./customizations/grill-me/customization.md)**: loads `grilling` in harnesses without a Skill tool.
 - **[chief-of-staff](./customizations/chief-of-staff/customization.md)**, from Matt's `in-progress/`: agent routing for the OMP harness, and `.wiki/` as the default wiki location.
 
 To add one, write `customizations/<skill>/customization.md`, run `scripts/build.sh`, and commit both.

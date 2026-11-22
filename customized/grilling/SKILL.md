@@ -29,11 +29,14 @@ Finding _facts_ is your job, never the user's. When a frontier question needs a 
 
 The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Do not act on it until the user confirms you have reached a shared understanding.
 
-## Asking through the harness GUI
+## Asking through a question tool
 
-If this session's harness exposes a GUI question tool (Claude Code / Codex `AskUserQuestion`, OMP `ask`), deliver every frontier question through it instead of as plain text. The question content does not change — same Q-number, title, body, choices, and ➡️ recommended answer — only the channel changes.
+When the harness has a tool for asking the user questions (Claude Code's or Codex's `AskUserQuestion`, OMP's `ask`), ask each round through it; the ❓/➡️ content moves into the tool unchanged.
 
-- One GUI call per round, one question entry per frontier question: `question` carries the ❓ Qn title and body verbatim, `options` carries the multiple choices with the recommended answer first and marked `(recommended)` in its label, `header` is `Round N`.
-- `multi`-select only when the round genuinely asks several independent decisions; otherwise one question per call, in Q-number order.
-- Wait for the GUI answers before recomputing the frontier, exactly as with text questions. The frontier, rounds, and completion criterion are unchanged.
-- If no GUI question tool is available in this harness, fall back to the ❓/➡️ text format above. Never drop or reword a frontier question because the channel differs.
+- **One block per round.** Split it only at the tool's per-call question limit.
+- **Fit the input to the question**: single choice, multiple choice, free text, number.
+- **Recommended answer**: listed first, labelled `(recommended)`, and preselected wherever the tool allows.
+- **Additional notes** closes every block: an optional free-text field, or, in a tool without one, a last question "Anything to add?" with "Nothing to add" recommended, whose write-in carries the note. It takes one slot of the per-call limit.
+- Read **Additional notes** as answers: they can override a choice or open new branches when you recompute the frontier.
+
+Without a question tool, end each text round with a `📝 **Additional notes:**` line inviting anything else.
