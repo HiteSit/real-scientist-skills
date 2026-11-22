@@ -35,7 +35,7 @@ Every Monday at 06:00 UTC, `.github/workflows/sync-upstream.yml` runs `scripts/s
 
 1. merges Matt's `main`;
 2. keeps this fork's own `README.md`, `CHANGELOG.md` and `MAINTAINING.md`;
-3. deletes again every path in `fork-removed.txt`: Matt's plugin packaging, release tooling and issue bots, which this fork doesn't use;
+3. deletes again every path in `fork-removed.txt`: Matt's plugin packaging, release tooling and issue bots, which this fork doesn't use. His `check.yml` is listed there because it needs his `package.json`; the fork's `frontmatter.yml` runs the same `scripts/check-frontmatter.mjs` with only `yaml` installed;
 4. rebuilds `customized/`, commits the merge, and pushes it.
 
 The run summary lists any new skills Matt added. The run fails and opens an issue if the merge leaves a conflict, a customization no longer applies, or GitHub refuses the push (which happens when Matt changes `.github/workflows/`). To finish a failed run, run `scripts/sync-upstream.sh` on your machine, then push.

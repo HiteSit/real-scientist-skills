@@ -1,4 +1,4 @@
-name: Check
+name: Frontmatter
 
 on:
   pull_request:
@@ -21,8 +21,9 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
-        run: npm ci
+      # The fork deletes Matt's package.json (fork-removed.txt); install only the parser his script imports.
+      - name: Install yaml
+        run: npm install --no-save --no-package-lock yaml@^2.9.1
 
       - name: Check frontmatter
-        run: npm run check-frontmatter
+        run: node scripts/check-frontmatter.mjs
