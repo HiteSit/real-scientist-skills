@@ -75,7 +75,7 @@ You type `/setup-science`, `/experiment`, `/curate-probe`, `/promote`, `/scienti
 
 - [setup-science](./skills/science/setup-science/SKILL.md): set up a repo for the science skills. Run once.
 - [experiment](./skills/science/experiment/SKILL.md): load or open a study and work on it, one probe at a time.
-- [curate-probe](./skills/science/curate-probe/SKILL.md): organize one probe around your direction. Approve the exact moves, and approve any needed path repairs separately.
+- [curate-probe](./skills/science/curate-probe/SKILL.md): map one probe by role and propose a complete layout. Approve moves and path repairs separately; a temporary tree records what changed.
 - [promote](./skills/science/promote/SKILL.md): organize, technically promote and preserve work in repeated approved-tree cycles, with current-consumer checks and a scientific map.
 - [scientific-map](./skills/science/scientific-map/SKILL.md): build or refresh one offline HTML map of the project, with an experiment tab for each study. Run it on demand or through promotion.
 - [lab-notebook](./skills/science/lab-notebook/SKILL.md): the study's layout and formats: notebook, probe folders, result briefs, plots and dashboard.

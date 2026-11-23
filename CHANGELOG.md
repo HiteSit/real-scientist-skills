@@ -2,6 +2,10 @@
 
 Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock's releases are in [his CHANGELOG](https://github.com/mattpocock/skills/blob/main/CHANGELOG.md) and arrive here through the weekly upstream sync.
 
+## 2026-11-23
+
+- `/curate-probe` maps the whole probe by default, groups files by role without forcing a layout, and records approved moves and path edits in a temporary Markdown tree. If a change or check fails, it stops and proposes undo steps for approval.
+
 ## 2026-11-20
 
 - Added `/curate-probe`: use the conversation to arrange one probe around your direction, without a fixed layout. Preview and approve moves and renames without deleting or replacing files. Path-reference edits require separate approval.
