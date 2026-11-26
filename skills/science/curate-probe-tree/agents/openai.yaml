@@ -1,0 +1,5 @@
+interface:
+  display_name: "Curate Probe Tree"
+  short_description: "Arrange one probe directory for the task you specify"
+policy:
+  allow_implicit_invocation: false

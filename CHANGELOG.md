@@ -4,6 +4,8 @@ Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock'
 
 ## 2026-11-26
 
+- Ask `/maintain-science` to “curate the workflow” across the repo or just the studies and probes you name. It repairs live records, traces existing commits and accounts for outstanding `.science/` changes without moving files. Authorized checkpoints include only verified work with clear ownership.
+- Renamed `/curate-probe` to `/curate-probe-tree`. Give it a specific probe directory and what its layout should make easier; safe moves and reference repairs do not need per-file approval.
 - `/experiment` keeps ordinary files, links and documentation usable as it works. Where supported, one worker takes a substantial probe through verified local checkpoints under existing authorization. The lead handles user decisions.
 - Results can be recorded now and compared later across probes. New interpretations and user decisions are dated and attributed without overwriting earlier readings. `/curate-probe` now acts on your stated purpose without a second approval for paths or link edits; move and recovery safeguards still apply.
 - `/maintain-science` replaces `/setup-science` and `/ask-science`. Configure or refresh the repo, approve a format-only migration, review a study without migrating it, or combine those requests.

@@ -71,11 +71,11 @@ Studies share the current checkout by default. Checkpoints use exact approved pa
 
 ## The skills
 
-You type `/maintain-science`, `/experiment`, `/curate-probe`, `/promote` and `/scientific-map`. The agent loads `lab-notebook` and `desk-research` on its own when the task fits.
+You type `/maintain-science`, `/experiment`, `/curate-probe-tree`, `/promote` and `/scientific-map`. The agent loads `lab-notebook` and `desk-research` on its own when the task fits.
 
-- [maintain-science](./skills/science/maintain-science/SKILL.md): set up or refresh a repo, migrate older record formats with approval, or review a study as it stands. Ask for just the parts you want.
+- [maintain-science](./skills/science/maintain-science/SKILL.md): set up or refresh a repo, migrate older formats with approval, or review a study. Ask it to “curate the workflow” to repair live records and account for outstanding `.science/` changes without moving files.
 - [experiment](./skills/science/experiment/SKILL.md): open or resume a study. Run, organize, verify and checkpoint probe work; compare results or record your decision when you're ready.
-- [curate-probe](./skills/science/curate-probe/SKILL.md): tell it what you want to find, compare or use. It arranges one probe for that purpose, repairs live references and keeps a recovery record.
+- [curate-probe-tree](./skills/science/curate-probe-tree/SKILL.md): say which probe directory to arrange and what you want to find, compare or use. It organizes files for that purpose, repairs live references and keeps a recovery record.
 - [promote](./skills/science/promote/SKILL.md): organize, technically promote and preserve work in repeated approved-tree cycles, with current-consumer checks and a scientific map.
 - [scientific-map](./skills/science/scientific-map/SKILL.md): build or refresh one offline HTML map of the project, with an experiment tab for each study. Run it on demand or through promotion.
 - [lab-notebook](./skills/science/lab-notebook/SKILL.md): the study's layout and formats: notebook, probe folders, result briefs, plots and dashboard.

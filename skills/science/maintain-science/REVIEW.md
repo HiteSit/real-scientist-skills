@@ -48,4 +48,4 @@ If a guard against recurrence would help, propose one where it belongs:
 
 ## Resume
 
-Name the next action and why: `/experiment <study>` for open work or a chosen idea, `/experiment <new-study>` in a new session for a different question, `/curate-probe` for a user-directed layout, or `/promote` for technical reuse or batch rollover. Offer `/scientific-map <study>` if changed records made the map stale. Report unresolved questions without inventing answers.
+Name the next action and why: `/experiment <study>` for open work or a chosen idea, `/experiment <new-study>` in a new session for a different question, `/curate-probe-tree` for a user-directed layout, or `/promote` for technical reuse or batch rollover. Offer `/scientific-map <study>` if changed records made the map stale. Report unresolved questions without inventing answers.

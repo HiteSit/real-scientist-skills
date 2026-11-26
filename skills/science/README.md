@@ -6,9 +6,9 @@ This is a draft and can change without warning. For the short version and the re
 
 ## Skills
 
-- **[maintain-science](./maintain-science/SKILL.md)**: Set up or refresh a repo, migrate older record formats with approval, or review a study without migrating it. You tell it what you need.
+- **[maintain-science](./maintain-science/SKILL.md)**: Set up or refresh a repo, migrate older record formats with approval, review a study, or curate the workflow across studies and probes without moving files.
 - **[experiment](./experiment/SKILL.md)**: Open or load a study, run and organize probes, checkpoint findings, and compare them when you're ready to decide. You start it.
-- **[curate-probe](./curate-probe/SKILL.md)**: Tell it what you want to inspect or use next. It arranges one probe around that purpose, checks live references and records the moves for recovery. You start it.
+- **[curate-probe-tree](./curate-probe-tree/SKILL.md)**: Name a probe directory and what you want to inspect or use next. It arranges the files around that purpose, checks live references and records moves for recovery.
 - **[promote](./promote/SKILL.md)**: Roll over probe batches, preserve evidence and technically promote supported work after tree approval, checking consumers and rebuilding one connected scientific map. You start it.
 - **[scientific-map](./scientific-map/SKILL.md)**: Build or refresh one offline project HTML map with a tab per study. You can run it at any stage; promotion also calls it.
 - **[desk-research](./desk-research/SKILL.md)**: Answer a question by reading papers and documentation through parallel subagents, using your agent's literature tools, and keep the answer in the shared library with the raw search results behind it. The agent can start it.
@@ -31,7 +31,7 @@ This is a draft and can change without warning. For the short version and the re
 ## The flow, step by step
 
 ```
-/maintain-science        configure or refresh a repo; also available later for migration or review
+/maintain-science        configure or refresh a repo; later, review a study, migrate records or curate the workflow
       │
       ▼
 /experiment <study>      load the study and focus on it; a new name opens it (short grilling, first probe)
@@ -42,7 +42,7 @@ This is a draft and can change without warning. For the short version and the re
       │    keep working    an open probe takes as many sessions as it needs
       │    fix a probe     run wrong: fixed in place, with a lesson
       │    compare         discuss one or several results; record decisions when you make them
-      │    curate a probe  arrange files for a use you specify; verify moves and path repairs
+      │    curate a tree   arrange one probe's files for a use you specify; verify moves and path repairs
       │
       │  probes: open while agreed work remains; evidence when finished; dropped on your word
       │
@@ -89,7 +89,7 @@ A probe is the smallest run that reduces a relevant uncertainty. Each one goes l
 
 A probe stays **open** while work remains, even if some components are promoted. Before the next probe starts, completed recorded work normally becomes **evidence**; unfinished work stays open. **Dropped** requires your words. **Promoted** applies only to an agreed whole-probe transfer. These states and scientific outcomes are distinct from organization dispositions: promote, retain, retire or defer. Archiving does not mean scientifically invalid; a valid negative result may support limited reuse.
 
-Use `/curate-probe` when the layout itself should serve a purpose you specify, such as putting alternatives side by side for review. If the purpose is missing, the agent asks before moving anything. Once clear, it inventories the scope, checks consumers, saves the recovery tree and applies safe moves and necessary live path repairs without separate approvals for paths and diffs. Blocked or unowned files stay put. This does not rename the numbered record, change the result or promote anything.
+Use `/curate-probe-tree` when a particular probe directory's layout should serve a purpose you specify, such as putting alternatives side by side for review. If the purpose is missing, the agent asks before moving anything. Once clear, it inventories the scope, checks consumers, saves the recovery tree and applies safe moves and necessary live path repairs without separate approvals for paths and diffs. Blocked or unowned files stay put. This does not rename the numbered record, change the result or promote anything.
 
 ### The notebook: a map of the probes
 
@@ -173,6 +173,7 @@ Alternatives to the **same question** stay in notebook **Ideas**, visibly unexec
 Tell `/maintain-science` what you want, without selecting a mode or running a fixed sequence:
 
 - **“Where did the study change direction?”** It reviews the starting question, notebook, probe evidence, history and available conversation as they stand. It identifies where the accounts disagree and whether the study is on track, drifting or lost, with evidence and limits. You can keep a documented change of direction, spin off a different question or return to the original. A review alone does not authorize repairs.
+- **“Curate the workflow.”** That's enough for a repo-wide pass. It follows each probe from question to evidence and decisions, including probes in earlier cycles. Name studies or probes to narrow the pass. It repairs live records when the evidence is clear, accounts for existing commits and outstanding `.science/` changes, and checkpoints complete, verified work only when authorized. It identifies drafts, conflicts and unclear ownership rather than sweeping them into a commit. One dated decision can resolve a question for several probes. Files stay where they are; use `/curate-probe-tree` to arrange a particular directory for a purpose you specify.
 - **“Bring these old records to the current format.”** It shows the affected paths, proposed format changes and sources. Missing history reconstructed from original READMEs or commits is marked `[reconstructed]` for you to confirm or correct. It applies the approved plan without moving records, rewriting evidence or changing scientific decisions. You do not have to request a review.
 - **“Refresh the repo settings and review the study.”** It combines those requests, preserving existing setup and leaving the study format alone unless you also ask to migrate it.
 

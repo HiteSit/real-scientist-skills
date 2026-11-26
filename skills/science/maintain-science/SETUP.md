@@ -72,7 +72,7 @@ The `## Science skills` block goes into `AGENTS.md`, created if it does not exis
 - Literature lives once in `.science/library/`. Shared data holds user inputs and approved general source/prepared/reference datasets with provenance and checksums. Fetched probe data stays local until approved promotion; workflow databases/run outputs stay with their workflow.
 - Probe IDs/names persist across physical cycle moves; numbering continues across notebook/history, all cycles and current batch. `NOTEBOOK.md` hrefs locate current records, including unfinished probes in cycle `active/`. Follow `lab-notebook` **Ideas** for alternatives and their selection as ordinary probes; **Builds on** records dependencies.
 - Promotion physically rolls numbered folders directly into cycle promoted/retained/discarded/active homes with optional relative asset links, preserving history and leaving `probes/` empty for new questions. No copies or compatibility aliases; technical promotion is a separate decision. Refresh the project map during promotion or on request with `scientific-map`.
-- To review drift, update record formats or refresh this configuration, ask the user to run `/maintain-science` with that purpose.
+- To review drift, curate workflow records, update record formats or refresh this configuration, ask the user to run `/maintain-science` with that purpose.
 
 Checkpoint only with repository authorization, staging exact setup, data metadata, environment and `AGENTS.md` paths and excluding heavy files: `science: setup`. If hooks publish, local commit approval alone is insufficient; record pending authorization instead.
 

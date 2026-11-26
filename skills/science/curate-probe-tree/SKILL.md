@@ -1,13 +1,13 @@
 ---
-name: curate-probe
-description: Reorganize one science probe around what you wanted to learn and what you want to use next.
+name: curate-probe-tree
+description: Arrange files within a specific science probe for a task you want to do with them.
 license: MIT
 disable-model-invocation: true
 ---
 
-# Curate probe
+# Curate a probe tree
 
-`/curate-probe [probe]` arranges one existing probe for a purpose the user specifies: for instance, put two alternatives side by side for inspection, or make a chosen result the entry point. The distinction from `/experiment` is **why** the files are being organized, not where they live. Routine naming, moves, link repairs and documentation needed to carry out a probe are experiment work. Neither workflow promotes a component or rolls over a batch.
+`/curate-probe-tree [probe]` arranges one existing probe directory for a purpose the user specifies: for instance, put two alternatives side by side for inspection, or make a chosen result the entry point. `/maintain-science` curates workflow records without moving files. Routine naming, moves, link repairs and documentation needed to carry out a probe are `/experiment` work. Reorganizing files does not promote a component or roll over a batch.
 
 ## 1. Read the direction
 

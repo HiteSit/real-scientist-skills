@@ -1,5 +1,5 @@
 interface:
   display_name: "Maintain Science"
-  short_description: "Configure a repo, migrate records or review a study"
+  short_description: "Configure, migrate, review or curate science workflow records"
 policy:
   allow_implicit_invocation: false

@@ -1,5 +1,0 @@
-interface:
-  display_name: "Curate Probe"
-  short_description: "Arrange a probe for the task you want to do next"
-policy:
-  allow_implicit_invocation: false
