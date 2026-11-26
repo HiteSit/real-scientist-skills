@@ -1,0 +1,5 @@
+interface:
+  display_name: "Maintain Science"
+  short_description: "Configure a repo, migrate records or review a study"
+policy:
+  allow_implicit_invocation: false

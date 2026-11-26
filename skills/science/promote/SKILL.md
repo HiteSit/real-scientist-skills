@@ -9,6 +9,8 @@ disable-model-invocation: true
 
 Run an approved **promotion cycle**: physically roll over the current probe batch, promote components ready for their stated reuse, and preserve the rest. Technical promotion and batch rollover are separate decisions; neither requires pointless code porting. Return to experimentation and repeat. **Protocol** means reusable steps in their actual working homes, not a required directory.
 
+Routine probe housekeeping stays in `/experiment`; arranging an existing probe for a particular user task belongs to `/curate-probe`. Neither needs a promotion cycle. The exact-tree gate below applies to promotion and rollover.
+
 Read `lab-notebook` and `.science/SETUP.md`. Before proposing the tree, read [`scientific-map`](../scientific-map/SKILL.md) for the shared project HTML, build files and verification.
 
 ## 1. Inspect the work

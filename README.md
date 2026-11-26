@@ -24,7 +24,7 @@ https://github.com/user-attachments/assets/155b6bd3-aa72-4782-982f-cd4c7ec5e4ea
 
 Matt's engineering flow plans the whole route first: `/to-spec` writes down the goal, `/to-tickets` splits it into tickets, and `/implement-spec` builds them, many in parallel. That works because software is predictable once you agree on what to build.
 
-Research and scientific exploration aren't. A plan is a map, and in research nobody has mapped the territory yet. You learn what's relevant by running something and looking at the result: each result shows you more of the territory, and it often shows that the route you planned goes nowhere. So the science flow plans one experiment, called a probe, at a time, and you choose each next probe after seeing the last result. The study's notebook is the map of your scientific question, redrawn after every probe.
+Research and scientific exploration aren't. You learn what's relevant by running something and looking at the result. So the science flow agrees one experiment, called a probe, at a time. Each observation goes in the notebook while it is fresh. You can compare several probes later before deciding which direction to take.
 
 Ask a language model a question without steering it, and it gives you the most common answer, the middle of everything it has read. New findings sit away from that middle, and only a clear intention moves the work away from it, away from what you could call AI slop. So before each run the agent writes down the standard answer, and the result shows how far from it reality lands. That distance is what makes the work worth doing, and a rough measure of how unique it is.
 
@@ -32,7 +32,7 @@ Ask a language model a question without steering it, and it gives you the most c
 | ------------------ | ----------------------------------- | ---------------------------------------------------- |
 | The unknown        | How to build it                     | What's relevant, and so what to do next              |
 | Plan               | Every ticket, up front              | The first probe and a list of ideas; each next probe chosen when it's next |
-| Shape of the work  | A task graph, run in parallel       | A chain of probes, each one checked by you           |
+| Shape of the work  | A task graph, run in parallel       | Agreed probes; findings can be interpreted together |
 | Where work happens | Feature branches, into the codebase | Scratch probes in a study folder; the main tree changes only by promotion |
 | The starting doc   | A spec, which is a contract         | A direction, which is expected to change             |
 | Failure            | A bug to fix                        | Unexpected results teach; invalid runs need fixing   |
@@ -71,16 +71,15 @@ Studies share the current checkout by default. Checkpoints use exact approved pa
 
 ## The skills
 
-You type `/setup-science`, `/experiment`, `/curate-probe`, `/promote`, `/scientific-map` and `/ask-science`. The agent loads `lab-notebook` and `desk-research` on its own when the task fits.
+You type `/maintain-science`, `/experiment`, `/curate-probe`, `/promote` and `/scientific-map`. The agent loads `lab-notebook` and `desk-research` on its own when the task fits.
 
-- [setup-science](./skills/science/setup-science/SKILL.md): set up a repo for the science skills. Run once.
-- [experiment](./skills/science/experiment/SKILL.md): load or open a study and work on it, one probe at a time.
-- [curate-probe](./skills/science/curate-probe/SKILL.md): map one probe by role and propose a complete layout. Approve moves and path repairs separately; a temporary tree records what changed.
+- [maintain-science](./skills/science/maintain-science/SKILL.md): set up or refresh a repo, migrate older record formats with approval, or review a study as it stands. Ask for just the parts you want.
+- [experiment](./skills/science/experiment/SKILL.md): open or resume a study. Run, organize, verify and checkpoint probe work; compare results or record your decision when you're ready.
+- [curate-probe](./skills/science/curate-probe/SKILL.md): tell it what you want to find, compare or use. It arranges one probe for that purpose, repairs live references and keeps a recovery record.
 - [promote](./skills/science/promote/SKILL.md): organize, technically promote and preserve work in repeated approved-tree cycles, with current-consumer checks and a scientific map.
 - [scientific-map](./skills/science/scientific-map/SKILL.md): build or refresh one offline HTML map of the project, with an experiment tab for each study. Run it on demand or through promotion.
 - [lab-notebook](./skills/science/lab-notebook/SKILL.md): the study's layout and formats: notebook, probe folders, result briefs, plots and dashboard.
 - [desk-research](./skills/science/desk-research/SKILL.md): answer questions by reading papers and documentation in parallel, into a shared library, with citations.
-- [ask-science](./skills/science/ask-science/SKILL.md): step back, bring an older study to the current format, and check it is on track.
 
 The flow step by step, the principles behind it and the vocabulary: [skills/science/README.md](./skills/science/README.md).
 
@@ -100,7 +99,7 @@ Install the science skills from https://github.com/HiteSit/real-scientist-skills
    - If they're missing, install the skills in skills/science/ plus every skill in skills/engineering/ and skills/productivity/. When a skill has a folder in customized/, use that folder instead.
 4. Install each skill as a symlink into the clone, so a git pull updates it. If a skill with the same name is already in the folder, ask me before replacing it.
 5. Keep scientific-map build and viewing dependency-free: native browser code and my project's existing standard-library runtime. Do not install or vendor an external renderer unless I explicitly choose that exception.
-6. Tell me what you installed and skipped. Then remind me to run /setup-science in my repo, and /setup-matt-pocock-skills if you installed Matt's skills.
+6. Tell me what you installed and skipped. Then remind me to run /maintain-science to configure my repo, and /setup-matt-pocock-skills if you installed Matt's skills.
 ```
 
 To update, ask your agent to pull the clone.

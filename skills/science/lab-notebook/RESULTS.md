@@ -1,6 +1,6 @@
 # Results
 
-How a probe's result is shown to the user. The user reads the result and chooses what comes next from what is shown here, so a result they cannot read at a glance is a result that was not delivered.
+Present each observation so the user can understand it now and compare it with other probes later. Reporting a result does not require a decision about what to do next.
 
 Use the plotting library and dashboard builder named in `.science/SETUP.md`.
 
@@ -46,7 +46,7 @@ It shows, top to bottom:
 
 1. **The question and the current direction**, with the starting direction from `STUDY.md` beside it, so the drift is visible at once.
 2. **The drift log** as a timeline: each entry, the probe that caused it, and what changed.
-3. **The map**: each thread with its prose, and under it each probe with what was asked, what was expected, what was found and what it means (marked `[inference]` until discussed), its state and outcome, the key figure, and a link to the probe README. Promoted probes say where they went; revised probes list their revisions and the **Lessons** they produced.
+3. **The map**: each thread with its prose, and each probe's question, original expectation, findings, current dated and attributed reading (agent interpretations marked `[inference]`), state, outcome when known, key figure and link to the record. Promoted probes say where they went; revised probes list their revisions and the **Lessons** they produced.
 4. **What could come next**: the **Ideas** list, and the **dead ends**.
 
 Write the explanations for the user who will open the dashboard cold: what was tested, what came out, and why it matters, in plain sentences.

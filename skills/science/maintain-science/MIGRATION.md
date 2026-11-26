@@ -1,0 +1,9 @@
+# Migrate record formats
+
+Compare the requested study and only the shared records it uses against `lab-notebook`. Follow current notebook links through the batch and previous cycles. Check stable IDs, numbering, sections in `STUDY.md`, notebook threads, probe blocks and log, README fields, library and data indexes, provenance, and cycle manifests. A continuing probe in `active/` is not missing. A missing digest or an uncertain disposition is a gap, not something to infer from today's filesystem.
+
+Propose the smallest changes that make the existing information readable in the current format. Use original probe READMEs, old notebook text and commits (`git log --grep '^<study>:'`) to reconstruct missing fields. Show a table of path, proposed edit and source. Label reconstructed text `[reconstructed]`; ask the user to confirm or correct it. Leave unsupported history unknown and unmatched text intact with its provenance. For an overwritten starting passage, follow the separate [frozen-record repair rule](../lab-notebook/SKILL.md#studymd).
+
+Wait for approval of the plan before writing. Apply only approved metadata and section changes, keeping immutable evidence and historical readings intact. Remove a reconstruction label only for a detail the user has settled, retaining its source. Do not revise scientific outcomes, run work, renumber or move probes, delete legacy material or alter a cycle tree. Surface disagreements for a review only if wanted. An outdated setup is a separate configuration change.
+
+Check the migrated records against their sources and verify affected live links. If authorized, checkpoint study paths as `<study>: migrate to current format` and shared paths separately as `science: migrate to current format`; leave existing tags and history unchanged. Report changes, outstanding reconstruction questions and any pending checkpoint. If already current, say so and leave it alone.

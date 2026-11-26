@@ -2,9 +2,16 @@
 
 Releases are tagged from `v0.1.0` on, made with `gh skill publish`. Matt Pocock's releases are in [his CHANGELOG](https://github.com/mattpocock/skills/blob/main/CHANGELOG.md) and arrive here through the weekly upstream sync.
 
+## 2026-11-26
+
+- `/experiment` keeps ordinary files, links and documentation usable as it works. Where supported, one worker takes a substantial probe through verified local checkpoints under existing authorization. The lead handles user decisions.
+- Results can be recorded now and compared later across probes. New interpretations and user decisions are dated and attributed without overwriting earlier readings. `/curate-probe` now acts on your stated purpose without a second approval for paths or link edits; move and recovery safeguards still apply.
+- `/maintain-science` replaces `/setup-science` and `/ask-science`. Configure or refresh the repo, approve a format-only migration, review a study without migrating it, or combine those requests.
+
 ## 2026-11-23
 
 - `/curate-probe` maps the whole probe by default, groups files by role without forcing a layout, and records approved moves and path edits in a temporary Markdown tree. If a change or check fails, it stops and proposes undo steps for approval.
+- `/experiment` checkpoints the probe and notebook at meaningful milestones and before pausing or switching probes, using standing local-commit authorization when available.
 
 ## 2026-11-20
 

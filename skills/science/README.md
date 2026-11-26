@@ -6,14 +6,13 @@ This is a draft and can change without warning. For the short version and the re
 
 ## Skills
 
-- **[setup-science](./setup-science/SKILL.md)**: Set up a repo for the science skills: record the domain, the stack and the conventions in `.science/SETUP.md`, and start the shared library. You start it.
-- **[experiment](./experiment/SKILL.md)**: Load a study (`/experiment <study>`, from any session) and focus the session on it; if the study doesn't exist yet, open it with a short interview and agree the first probe. Then it follows your lead: explain what was done, work on a probe, start the next one, fix one. You start it.
-- **[curate-probe](./curate-probe/SKILL.md)**: Inventory one probe and group its files by role. See what would move, stay, or be blocked. Approve the exact moves and any path repairs separately. Before changing the checkout, the agent saves a temporary Markdown tree and records changes as they land. You start it.
+- **[maintain-science](./maintain-science/SKILL.md)**: Set up or refresh a repo, migrate older record formats with approval, or review a study without migrating it. You tell it what you need.
+- **[experiment](./experiment/SKILL.md)**: Open or load a study, run and organize probes, checkpoint findings, and compare them when you're ready to decide. You start it.
+- **[curate-probe](./curate-probe/SKILL.md)**: Tell it what you want to inspect or use next. It arranges one probe around that purpose, checks live references and records the moves for recovery. You start it.
 - **[promote](./promote/SKILL.md)**: Roll over probe batches, preserve evidence and technically promote supported work after tree approval, checking consumers and rebuilding one connected scientific map. You start it.
 - **[scientific-map](./scientific-map/SKILL.md)**: Build or refresh one offline project HTML map with a tab per study. You can run it at any stage; promotion also calls it.
 - **[desk-research](./desk-research/SKILL.md)**: Answer a question by reading papers and documentation through parallel subagents, using your agent's literature tools, and keep the answer in the shared library with the raw search results behind it. The agent can start it.
 - **[lab-notebook](./lab-notebook/SKILL.md)**: The layout and formats: the `.science/` tree, the notebook, probe folders and their states, commits and tags, result briefs, plots and the dashboard. The agent can start it.
-- **[ask-science](./ask-science/SKILL.md)**: Step back from a study: first it brings the study to the current format of these skills, then judges whether it is on track, drifting or lost, finds where the study, the notebook and the probes disagree, asks you how to resolve each, and gives you the command to resume. You start it.
 
 ## How the flow works
 
@@ -23,7 +22,7 @@ This is a draft and can change without warning. For the short version and the re
 - **Scratch is free, shared homes are agreed.** Promotion extends the existing project layout. Organization does not require parameterizing or refactoring a validated method.
 - **Show results.** Each probe ends with a short brief and plots, and one dashboard shows the whole study.
 - **Keep dead ends and mistakes.** A dead end stays in the record, so nobody repeats it without reason. A probe that was run wrong is fixed in place, the fix is logged in its README, and the mistake becomes a lesson the agent checks before every later probe.
-- **You decide.** After every result, the agent asks how you read it, and you choose what comes next. Probes stay open while you work on them and become evidence when the next one starts; one is dropped only when you say so.
+- **You decide when to interpret.** The agent records observations now. You can discuss one immediately or compare several later. Asking for a comparison does not choose a winner. A probe is dropped only when you say so.
 - **One study per session, many studies at once.** `/experiment <study>` loads a study in any session, tells you where it stands, and keeps the conversation on it. A new name opens a new study. Several studies run side by side, each in its own session. When you ask about another study, the agent records it and gives you the command for a new session.
 - **One data authority.** User inputs and approved general source/prepared/reference datasets live in shared data with provenance/checksums. Other fetched data stays probe-local until approved promotion; workflow databases and run outputs stay with the workflow.
 - **Keep history scoped.** Studies share the current checkout by default. Authorized checkpoints include exact study and approved shared/main-tree paths, not other sessions' work or heavy files. Probe and cycle tags keep earlier versions reachable.
@@ -32,19 +31,20 @@ This is a draft and can change without warning. For the short version and the re
 ## The flow, step by step
 
 ```
-/setup-science           once per repo: git init if needed, domain, conda | pixi | uv, data folder, AGENTS.md, empty library
+/maintain-science        configure or refresh a repo; also available later for migration or review
       │
       ▼
 /experiment <study>      load the study and focus on it; a new name opens it (short grilling, first probe)
       │
       │  then, as you lead:
       │    start a probe   choose it with you, state the expectation, run it in probes/NN-<slug>/
-      │    show a result   plots, brief, dashboard; talk it through; record your reading
+      │    show a result   plots, brief, dashboard; checkpoint without waiting for a decision
       │    keep working    an open probe takes as many sessions as it needs
       │    fix a probe     run wrong: fixed in place, with a lesson
-      │    curate a probe  map files by role, approve moves and path repairs, record the changes
+      │    compare         discuss one or several results; record decisions when you make them
+      │    curate a probe  arrange files for a use you specify; verify moves and path repairs
       │
-      │  probes:  open → evidence when the next starts · dropped on your word
+      │  probes: open while agreed work remains; evidence when finished; dropped on your word
       │
       ▼
 /promote 01 02 04        inspect, group steps, approve tree, organize/reuse/preserve, verify, map
@@ -55,7 +55,7 @@ This is a draft and can change without warning. For the short version and the re
 
 ### Set up the repo
 
-Run `/setup-science` once per repo. If the folder isn't a git repository yet, it runs `git init`; the work stays local, and nothing is pushed unless you ask. It first asks which field the work belongs to (chemistry, bioinformatics, physics, ecology, and so on). Then it records the setup every probe will use:
+Ask `/maintain-science` to set up the repo. It inspects what exists, proposes the missing pieces and confirms the changes before writing. In a new folder that can include `git init`; nothing is pushed unless you authorize it. It records the field and the setup every probe will use:
 
 - **Environment:** you choose conda, pixi or uv. It recommends the one your repo already uses, or pixi for conda-forge and bioconda tools and uv for pure Python, creates the environment file if there isn't one, and records the command that runs things in it.
 - **Compute:** local, a cluster scheduler, or both.
@@ -64,7 +64,7 @@ Run `/setup-science` once per repo. If the folder isn't a git repository yet, it
 - **Plots and the dashboard:** how they're built.
 - **Promotion:** repeated physical batch rollovers and separately agreed technical reuse, with scoped authorized checkpoints or an approved PR/worktree flow.
 
-All of this goes into `.science/SETUP.md`. The branch you ran it on is recorded as the **home branch**, where the science work started; studies may later run elsewhere. It also starts the empty library and the data folder, and writes the conventions into `AGENTS.md`. The skills themselves don't depend on your field; the field lives in that file.
+All of this goes into `.science/SETUP.md`. The initial branch is recorded as the **home branch**; studies may later run elsewhere. Setup starts the library and data index and adds the science conventions to `AGENTS.md`. Ask for a refresh when the stack changes. Existing indexes, library history, project settings, home branch and unrelated instructions are preserved.
 
 ### Open or load a study
 
@@ -76,20 +76,24 @@ It stops as soon as a first probe can be planned, and you agree that **first pro
 
 The session then stays with that study. If you ask about something that belongs to another study, the agent records it where it belongs and gives you the command for a new session (`/experiment <other-study>`).
 
+For substantial agreed work, the lead assigns one high-effort worker where supported. Its brief identifies the question, records, owned paths and checks. The worker takes that scope through execution, reporting, verification and authorized local checkpoints. Only the lead asks you for a decision. If workers cannot commit, the lead takes the verified handoff; if no worker is available, the lead works inline.
+
 ### Probes
 
 A probe is the smallest run that reduces a relevant uncertainty. Each one goes like this:
 
 1. **Choose it with you.** From your ask, from what the last result suggested, or from the ideas list. Before it runs, the agent tells you the standard answer it starts from (the one most represented in its weights, the peak of the Gaussian) and what that rests on: previous evidence, a library source, or only what it learned. "Unknown" is fine. An explicit hypothesis test or method validation also records its test criterion.
-2. **Run it** at its current notebook-linked location: a new question starts in `.science/<study>/probes/NN-<slug>/`; unfinished work physically rolled into a cycle continues there under the same ID. Keep rerunnable scripts, inputs and execution metadata together, without rewriting frozen receipts. A crash is fixed at that record, not copied into a new batch. Long jobs resume through `/experiment <study>`.
+2. **Run it** at its notebook-linked location: a new question starts in `.science/<study>/probes/NN-<slug>/`; unfinished work rolled into a cycle continues there under the same ID. The experiment handles ordinary naming, safe moves, live link repairs and documentation needed to rerun or inspect the work. Captured receipts stay unchanged. A crash is fixed at that record; long jobs resume through `/experiment <study>`.
 3. **Show the result.** Figures, a short brief and the study dashboard ([`lab-notebook/RESULTS.md`](./lab-notebook/RESULTS.md) sets how). The brief explains the update: starting expectation → what was observed → what changed or stayed the same, and what is still uncertain. The outcome is `completed` when a valid run answered the probe's question, even negatively or surprisingly, or `inconclusive` when the evidence can't settle it.
-4. **Talk it through.** Before you discuss it, the agent has already written its own reading, marked `[inference]`. It then asks how you read the result, which caveat matters most, and what it changes in your belief, in rounds as short as the result allows. Your reading replaces its inference in the probe's README under **Reading** and in the notebook, and a change of direction gets a drift log entry citing the probe.
+4. **Discuss it when useful.** Ask a question in your own words, even across probes: “How do these two compare?” gets a comparison, not a selection. “Use the second for the next run” is a decision, not a request for confirmation. The agent adds dated, attributed readings to the affected records without replacing earlier interpretations, evidence or expectations. If direction changed, it cites the relevant probes in the drift log.
 
 A probe stays **open** while work remains, even if some components are promoted. Before the next probe starts, completed recorded work normally becomes **evidence**; unfinished work stays open. **Dropped** requires your words. **Promoted** applies only to an agreed whole-probe transfer. These states and scientific outcomes are distinct from organization dispositions: promote, retain, retire or defer. Archiving does not mean scientifically invalid; a valid negative result may support limited reuse.
 
+Use `/curate-probe` when the layout itself should serve a purpose you specify, such as putting alternatives side by side for review. If the purpose is missing, the agent asks before moving anything. Once clear, it inventories the scope, checks consumers, saves the recovery tree and applies safe moves and necessary live path repairs without separate approvals for paths and diffs. Blocked or unowned files stay put. This does not rename the numbered record, change the result or promote anything.
+
 ### The notebook: a map of the probes
 
-The notebook updates itself as the work happens. Every operation on a probe (started, job submitted, results collected, result shown, discussed, fixed, state changed) writes the probe's README and the notebook in the same commit, so the notebook is always current.
+The notebook stays current as you work. At each meaningful milestone, the agent updates the probe README and notebook, then makes a scoped local commit when authorized. Before pausing or switching probes, it checkpoints any remaining verified work and tells you what is still pending.
 
 It is a **map** from the question to the probes. The probes are grouped under **threads**, the parts of the question they actually worked on. A probe that goes somewhere new opens a new thread, so even a large drift from the starting question shows up as a path on the map. Each thread has a few sentences of prose, and each probe has a block:
 
@@ -110,9 +114,9 @@ The probe's README holds the full record in the same order: **Thread**, **Asked*
 
 Sometimes a recorded probe turns out to have been run wrong: a bug, a wrong input or parameter, a mistake in the analysis or the plots. You might catch it, or the agent might. Tell `/experiment` which probe, and it fixes the probe in place instead of starting a new one:
 
-1. It confirms with you what was wrong. A new question, changed test criterion or deliberate change of method is a new probe, not a fix; updating the interpretation is ordinary learning.
+1. It identifies what went wrong and resolves any uncertainty about the fix. A new question, changed test criterion or deliberate change of method is a new probe; updating an interpretation is ordinary learning.
 2. It fixes and reruns at the notebook-linked physical record, even inside an earlier cycle, preserving original expectations, criteria, frozen statements and captured receipts while adding corrected current results.
-3. If the outcome or the reading changed, it talks the result through with you again.
+3. If the outcome or reading changed, it presents the corrected finding and keeps the earlier record.
 4. It records the fix. The probe's README gets a **Revisions** entry: what was wrong, who caught it, what changed, and the outcome before and after. The probe's **Rev** goes up by one. The mistake becomes a rule under **Lessons**, which the agent reads before every later probe; a lesson that holds for the whole repo can also go into `.science/SETUP.md`, with your ok.
 5. For every probe built on the old result, it asks you whether to rerun it or keep it.
 6. It commits `<study>: fix NN: <slug>: <what was wrong> (<old outcome> → <new outcome>)` and tags it `<study>/NN-r1` (then `r2`, and so on). The wrong version stays reachable under its old tag.
@@ -164,18 +168,15 @@ Run `/scientific-map [study]` without moving or promoting anything. It reads the
 
 Alternatives to the **same question** stay in notebook **Ideas**, visibly unexecuted. When you choose one, it becomes an ordinary next globally numbered probe. Its **Builds on** links express dependencies; the next promotion cycle organizes its findings. There are no separate approach directories, records or lifecycle. [`lab-notebook` **Ideas**](./lab-notebook/SKILL.md#notebookmd) defines this rule. A different question still follows off-axis triage into reading or another study.
 
-### When you're lost: `/ask-science`
+### Maintain a study or its records
 
-Run `/ask-science` when you want to step back from a study: unsure where it stands, sensing that the work has wandered from the question, or after these skills changed. It works like Matt's `/ask-matt` and `/retro` combined:
+Tell `/maintain-science` what you want, without selecting a mode or running a fixed sequence:
 
-1. It shows the map of the science flow.
-2. It proposes approved record-format repairs, reconstructing missing history from original READMEs/commits and marking it `[reconstructed]` for you to confirm. Canonical numbered probe records and approved cycle trees are not automatically renamed, moved or duplicated. Physical organization goes through `/promote`. Outdated `.science/SETUP.md` or `AGENTS.md` goes through `/setup-science`.
-3. It looks back over the study (where it started, what the last probes tried to find out, where the direction began to shift) and gives a verdict: on track, drifting, or lost.
-4. It compares `STUDY.md`, the notebook, the probe folders and git. Every place where they disagree, and everything marked `[reconstructed]`, becomes a question for you, with a recommended reading. If the question itself has drifted, you choose: keep the new direction, spin it off as a new study, or go back to the original question.
-5. It applies your answers as new commits, and suggests a guard so the drift doesn't recur: a lesson in the notebook, a convention in `.science/SETUP.md`, or a proposed change to a science skill.
-6. It ends with the one command that resumes the work.
+- **“Where did the study change direction?”** It reviews the starting question, notebook, probe evidence, history and available conversation as they stand. It identifies where the accounts disagree and whether the study is on track, drifting or lost, with evidence and limits. You can keep a documented change of direction, spin off a different question or return to the original. A review alone does not authorize repairs.
+- **“Bring these old records to the current format.”** It shows the affected paths, proposed format changes and sources. Missing history reconstructed from original READMEs or commits is marked `[reconstructed]` for you to confirm or correct. It applies the approved plan without moving records, rewriting evidence or changing scientific decisions. You do not have to request a review.
+- **“Refresh the repo settings and review the study.”** It combines those requests, preserving existing setup and leaving the study format alone unless you also ask to migrate it.
 
-`/experiment` suggests it on its own when the records don't agree or the study is in an older format.
+It reports what changed, what is still uncertain and how to resume. `/experiment` can suggest maintenance when records disagree.
 
 ### Hand off to engineering
 
@@ -241,7 +242,7 @@ Every commit message starts with its study, and tags mark the moments worth comi
 - **Drift log**: every change of direction, each citing the probe that caused it.
 - **Library**: the repo's shared reading, kept by `desk-research`: one page per question, with the searches behind it.
 - **Dead end**: an approach the evidence gave reason to stop pursuing, kept so nobody repeats it without reason.
-- **Home branch**: the branch you ran `/setup-science` on, where the science work started.
+- **Home branch**: the branch on which the repo's science work started, recorded at initial setup.
 - **Protocol**: promoted reusable steps in existing project homes, not a prescribed directory.
 - **Promotion cycle**: approved physical batch rollover, preservation and separately agreed technical reuse, followed by experimentation.
 - **Disposition**: promote, retain, retire or defer; distinct from scientific state/outcome.

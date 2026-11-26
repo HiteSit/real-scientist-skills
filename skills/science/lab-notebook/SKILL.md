@@ -27,7 +27,7 @@ Record agreed project overrides in `.science/SETUP.md`.
 
 ```
 .science/
-  SETUP.md                    the repo's science setup, written by setup-science
+  SETUP.md                    the repo's science setup, written with maintain-science
   library/                    what is read: papers, software docs, reviews; see desk-research
   data/                       user inputs and approved shared datasets, when configured here
   <study>/
@@ -52,6 +52,12 @@ Inside a probe folder, organise files however the probe needs; only `README.md`,
 
 A probe folder is `NN-<slug>`, named once. Numbers are globally unique **within the study**: take one above the highest allocated ID across notebook, history, every cycle and current batch; never reset or reuse it. The physical record can move in an approved rollover, but keeps its ID/name and captured history. Resolve a record through its current `NOTEBOOK.md` href, not an assumed `probes/NN-<slug>/` path. From another study, use `<study>/NN-<slug>` and resolve through that study's notebook.
 
+### Moving working files
+
+Ordinary organization belongs to the work that needs it. Keep the numbered record name and its fixed entry points stable. Move only owned working files within the agreed scope. Before moving, check the source, destination, active writers and queued jobs. Include ignored and untracked payloads. Resolve symlinks, incoming references and the moved files' outgoing relative paths; compare glob matches and ignore behavior at the new location. If a consumer, overlap or boundary is uncertain, leave that move blocked.
+
+Use non-overwriting moves, not deletion, copies or aliases. Repair necessary live links, commands, manifests and documentation only within write authority. Preserve captured commands, receipts, frozen records and historical manifests; add a current locator separately where needed. Verify file identity apart from intended live edits, exercise affected consumers with existing project checks and confirm the heavy files remain ignored. Report incomplete moves honestly; do not undo over another writer's changes.
+
 ### Promotion cycles
 
 A **promotion cycle** separates technical reuse from physical batch rollover. Read `promote` for its exact-tree gate: `_promotion_<title>_<date>/` holds `README.md`, `manifest.json` (large inventories may be compressed) and `promoted/`, `retained/`, `discarded/`, `active/`. Numbered probe directories move physically and directly into those four homes, alongside relative links to current workflows/shared data/archives where appropriate. One physical home per payload; no extra `records/` or cycle `probes/` layer. Retire/archive is not a scientific verdict.
@@ -73,7 +79,9 @@ An evidence probe can still be corrected (see **Revisions**). Several probes can
 
 ## STUDY.md
 
-The **direction** the study started from. Written once when the study opens (see **Open a new study** in `experiment`). Its starting sections are **frozen**: never edited again, because the gap between them and the notebook's current direction is the record of how far the experiments moved the study. When part of the framing turns out wrong, correct it in the notebook, under **Current direction** with a **Drift log** entry; `STUDY.md` keeps the start the drift is measured from. Keep each section to a few lines: the evidence behind the framing belongs in library pages and probes.
+Write the **starting direction** once, when the study opens (see **Open a new study** in `experiment`). Its starting sections are **frozen**. If the framing turns out wrong, correct **Current direction** in the notebook and add a **Drift log** entry; `STUDY.md` keeps the starting point. Keep each section to a few lines: the evidence behind the framing belongs in library pages and probes.
+
+If an earlier edit overwrote a frozen passage, restore it only when a dated original source establishes the exact text. Show the source, the text to restore and the later wording. Obtain approval for **that specific repair**; approval to migrate formats does not cover it. Preserve the later text verbatim with its dates and provenance in the notebook, then restore only the overwritten passage. Without exact evidence or specific approval, leave it untouched and report the discrepancy.
 
 Two sections at the end only grow, one line at a time:
 
@@ -111,7 +119,7 @@ Two sections at the end only grow, one line at a time:
 
 The **map** of the study: the question, the threads the probes have opened on it, and for every probe what was asked of it and what it gave back. Readable without opening any probe; each probe's full record stays in its README, and the notebook carries its essence.
 
-**The notebook follows the work.** Every operation on a probe updates the probe's README and the notebook in the same commit, as it happens: the probe's block on the **Map**, and one **Log** line. Operations are: a probe started, a job submitted, results collected, a result shown, a discussion, a fix, a state change. A session that ends leaves the notebook current, with no catching up for the next one.
+**The notebook follows the work.** At each meaningful milestone (start, job submission, verified collection, observation, later decision, correction or state change), update the affected probe README, **Map** block and **Log** together. Checkpoint under **Commits and tags** without waiting for a scientific decision.
 
 ```markdown
 # <Study title>: notebook
@@ -132,7 +140,7 @@ The **map** of the study: the question, the threads the probes have opened on it
   - **asked:** <the user's intent for the probe, as first given>
   - **expected:** <the expectation and its basis, or "unknown">
   - **found:** <the essential result, with the numbers that matter>
-  - **means:** <what it means for the question> [inference]
+  - **means:** <dated, attributed current reading; mark an agent inference [inference], or state what is unresolved>
 
   <Prose as the probe needs it: how it moved from what was asked, what the user made of it, revisions, what was built on it.>
 
@@ -160,7 +168,7 @@ The **map** of the study: the question, the threads the probes have opened on it
 
 **Threads** are the parts of the question the probes have actually worked on, in the order they opened. They follow the study wherever it goes: a probe that goes somewhere no thread covers opens a new one, and a thread can end with a short line saying what closed it. However far the study drifts from its starting question, the map shows the path.
 
-A **probe block** is the probe's essence, written from its README: the four labelled lines first, then prose as long as the probe needs. Fill each line as the probe gets there: **asked** and **expected** when it starts, **found** when results are in, **means** at the same moment. **means** is the agent's reading until the user's reading replaces it: mark it `[inference]`, and drop the mark once the discussion settles it.
+A **probe block** summarizes the README. Fill **asked** and **expected** before running and **found** from observations. **Means** gives the current reading, not another measurement. Date it and distinguish the agent's `[inference]` from what the user said. A later comparison or decision can span several blocks. Retain earlier readings with their dates and attribution in the record, even when the current summary changes. A user decision is not needed to checkpoint an observation.
 
 **Log** lines are short: date, probe and essential event or result. Job IDs, paths and file counts go in the probe's **Method**.
 
@@ -188,7 +196,7 @@ Triage it into one of three homes, testing in this order:
 
 A new study runs **in parallel** with this one. Several studies at once is the normal shape of the work: each is its own folder and its own session, in the same checkout. A spin-off that builds on this study's probes names them (`<study>/NN-<slug>`) under **Builds on** and reads them in place. Promotion is not the way to share work between studies; promote a step only when it has earned a place in the protocol on its own merits.
 
-A **session is bound to one study**, so the other study runs in a new session (or another agent, handed its `STUDY.md`): give the user the exact command, `/experiment <study>`, which opens the study when its folder does not exist yet. Then confirm with the user before creating anything: one question naming the item, the home you recommend and the test that put it there, worded so "yes" accepts it. Their answer decides. When the item changes this study's direction, it also gets a **Drift log** entry citing the ask or the probe that raised it.
+A **session is bound to one study**, so give the user `/experiment <study>` for the other study in a new session. It opens the study if it does not exist. If the user has not decided the item's home, name the item, recommend a home and ask before creating anything. Follow an explicit choice without asking again. When the item changes this study's direction, add a **Drift log** entry citing the ask or probe that raised it.
 
 ## Probe README
 
@@ -214,7 +222,7 @@ A **session is bound to one study**, so the other study runs in a new session (o
 <the brief: see RESULTS.md>
 
 ## Reading
-<What the result means for the question: the agent's reading marked [inference] until the discussion with the user settles it. How the probe moved away from what was asked, if it did. The caveat that mattered; ideas it raised.>
+<Dated entries: who read the evidence how, with the key caveat or uncertainty. Mark agent interpretations [inference]. Append later comparisons and user decisions with the probes they draw on; preserve earlier readings.>
 
 ## Revisions
 - rev 1, fixing `<study>/NN-r0`: <what was wrong>, caught by <the user | the agent>. <what changed>. Outcome <old> → <new>.
@@ -238,7 +246,7 @@ Fixing a crash before the probe's first recorded result is part of running it, n
 
 ## Data
 
-The **data folder** holds user inputs and explicitly approved general source, prepared or reference datasets. `setup-science` records its existing or agreed location (`data/` or `.science/data/`) in `SETUP.md`; every skill reads that location. Below, `<data>` is that folder.
+The **data folder** holds user inputs and explicitly approved general source, prepared or reference datasets. `maintain-science` records its existing or agreed location (`data/` or `.science/data/`) in `SETUP.md`; every skill reads that location. Below, `<data>` is that folder.
 
 ```
 <data>/
@@ -267,10 +275,13 @@ How to present a result (the brief, plots, the study dashboard) is in [RESULTS.m
 
 The checkout is **shared**: other sessions may be working in other study folders at this moment. Every science session keeps to these rules:
 
-Read Git status, branch/worktree/tag inventory and hooks before a checkpoint. These conventions describe how an **authorized** commit is scoped, not permission to stage, commit or publish. A hook that pushes makes a nominally local commit a remote action needing authorization.
+**Checkpoint as you work.** If the repository grants standing local-commit authorization, use it without asking again. Before switching probes, pausing or handing off, checkpoint any remaining coherent, verified work. An open probe can have several commits.
+
+Read Git status, branch/worktree/tag inventory and hooks before a checkpoint. A hook that pushes makes a nominally local commit a remote action needing separate authorization.
 
 - **Stay on the current branch.** Changing branch moves every other session's files too.
-- **Commit only approved exact paths**: `git add <paths>`, then `git commit -m "<message>" -- <paths>`. Include the session's study records and explicitly approved main-tree/data/map paths only; exclude heavy outputs and unrelated work.
+- **Commit only the milestone.** Use exact files or hunks, including that probe's notebook edits and any other approved records. Keep heavy outputs out under the project's `SETUP.md` rules, and record how to retrieve or rebuild them. Leave unrelated work untouched.
+- **Verify and report.** Run the repository-required checks. If the repository permits it, known unrelated failures do not block a checkpoint whose own checks pass. Report the commit hash, confirm no checkpoint-ready work remains in scope, and name any uncommitted work and why it is pending.
 - **Add history, keep it**: every correction is a new commit. Stash, reset, amend and rebase reach into other sessions' work.
 - When git reports its lock file (`index.lock`) is busy, another session is committing: wait a few seconds and retry.
 
@@ -279,7 +290,8 @@ Messages start with the study, so `git log --grep '^<study>:'` shows one study's
 | Event | Commit message | Tag |
 |---|---|---|
 | Study opened | `<study>: open` | `<study>/open` |
-| Probe's first result recorded | `<study>: probe NN: <slug>: <outcome>` | `<study>/NN-r0` |
+| Verified partial observation, no outcome yet | `<study>: probe NN: <slug>: <what was observed>` | None |
+| First recorded result with an outcome (`completed` or `inconclusive`) | `<study>: probe NN: <slug>: <outcome>` | `<study>/NN-r0` only if tagging is authorized |
 | Other work on a probe (started, job submitted, more results) | `<study>: probe NN: <slug>: <what changed>` | |
 | Probe fixed | `<study>: fix NN: <slug>: <what was wrong> (<old outcome> → <new outcome>)` | `<study>/NN-r<R>` |
 | Probe set to evidence or dropped | `<study>: probe NN: <slug>: <state>` | |
